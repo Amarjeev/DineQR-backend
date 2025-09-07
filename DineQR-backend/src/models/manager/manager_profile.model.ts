@@ -63,7 +63,6 @@ const ManagerProfileSchema: Schema = new Schema({
   MobileNumber: {
     type: String,
     required: true,
-    unique: true,
     index: true,
     trim: true,
     match: [/^\d{10}$/, 'Please fill a valid 10-digit mobile number'],
