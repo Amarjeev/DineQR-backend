@@ -9,7 +9,7 @@ const PORT: number = Number(process.env.PORT) || 5000;
 
 // Middleware (optional)
 app.use(express.json());
-;
+
 
 // Function to start server after DB connection
 const startServer = async () => {
