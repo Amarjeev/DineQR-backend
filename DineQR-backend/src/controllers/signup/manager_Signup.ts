@@ -20,15 +20,21 @@ signupManager.post(
 
       // 1. Validate request
       if (!name || !email || !MobileNumber || !password) {
-          res.status(400).json({ message: "All fields are required" });
-          return
+        res.status(400).json({
+          success: false,
+          message: "All fields are required",
+        });
+        return;
       }
 
-      // 2. Check if user already exists
-      const existingManager = await manager_profileModel.findOne({ email ,deletedAt:null});
+      // 2. Check if manager already exists
+      const existingManager = await manager_profileModel.findOne({ email, deletedAt: null }).select('email'). lean();
       if (existingManager) {
-          res.status(409).json({ message: "Manager already exists" });
-        return
+        res.status(409).json({
+          success: false,
+          message: "Manager already exists",
+        });
+        return;
       }
 
       // 3. Hash password
@@ -44,13 +50,17 @@ signupManager.post(
 
       await newManager.save();
 
-      // 5. Send response
-      res
-        .status(201)
-        .json({ message: "Manager registered successfully"});
+      // 5. Send success response
+      res.status(201).json({
+        success: true,
+        message: "✅ Manager registered successfully!",
+      });
     } catch (error) {
       console.error("❌ Signup error:", error);
-      res.status(500).json({ message: "Server error, please try again later" });
+      res.status(500).json({
+        success: false,
+        message: "Server error, please try again later",
+      });
     }
   }
 );
