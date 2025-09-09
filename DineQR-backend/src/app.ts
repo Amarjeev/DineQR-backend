@@ -11,6 +11,7 @@
 
 import dotenv from "dotenv";
 import express, { Application } from "express";
+import cors, { CorsOptions } from 'cors';
 
 // Database connection
 import connectDB from "./config/database";
@@ -28,12 +29,22 @@ const app: Application = express();
 // Define server port (fallback to 5000 if not defined in .env)
 const PORT: number = Number(process.env.PORT) || 5000;
 
+// ✅ CORS options
+const corsOptions: CorsOptions = {
+  origin: ['http://localhost:5173'], // allowed frontends
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // allowed HTTP methods
+  credentials: true, // allow cookies or auth headers
+};
+
 /**
  * --------------------------
  * Middleware Configuration
  * --------------------------
  */
 app.use(express.json()); // Parse JSON request bodies
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
 
 /**
  * --------------------------

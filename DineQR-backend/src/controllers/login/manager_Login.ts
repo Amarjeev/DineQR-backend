@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import manager_profileModel from "../../models/manager/manager_profile.model";
+import manager_profileModel from "../../models/manager/mgr_ProfileSchemaModel";
 
 const loginManager = Router();
 
