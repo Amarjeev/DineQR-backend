@@ -17,8 +17,9 @@ import cors, { CorsOptions } from 'cors';
 import connectDB from "./config/database";
 
 // Routes
-import signupManager from "./controllers/signup/manager_Signup";
-import loginManager from "./controllers/login/manager_Login";
+import emailCheckRouter from "./controllers/checkEmail/check_Email";
+import signupManagerRouter from "./controllers/signup/mgr_Signup";
+import loginManagerRouter from "./controllers/login/mgr_Login";
 
 // Load environment variables from .env
 dotenv.config();
@@ -51,8 +52,9 @@ app.use(cors(corsOptions));
  * API Routes
  * --------------------------
  */
-app.use(signupManager); // Manager signup routes
-app.use(loginManager); // Manager login routes
+app.use(signupManagerRouter); // Manager signup routes
+app.use(emailCheckRouter); // email exist db checking routes
+app.use(loginManagerRouter); // Manager login routes
 
 /**
  * --------------------------
