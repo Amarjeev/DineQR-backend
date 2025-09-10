@@ -16,7 +16,7 @@ emailCheckRouter.post(
   async (req: Request, res: Response): Promise<void> => {
     try {
       const { email } = req.body;
-console.log('working email checking router')
+
       // ================================
       // Validate email presence
       // ================================

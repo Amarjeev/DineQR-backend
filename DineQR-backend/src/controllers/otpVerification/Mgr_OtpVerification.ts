@@ -1,25 +1,126 @@
 import { Router, Request, Response } from "express";
-import { sendEmail } from "../../services/emailService";
+import { redis } from "../../config/redis";
+import { sendEmail } from "../../services/sendEmail";
+import mgr_LoginOtpUI from "../../emailTemplates/mgr_LoginOtpUI";
 
 const Mgr_OtpVerificationRouter = Router();
 
+Mgr_OtpVerificationRouter.post(
+  "/api/v1/auth/manager/verify-otp",
+  async (req: Request, res: Response) => {
+    try {
+      const { email, otp } = req.body;
 
-Mgr_OtpVerificationRouter.post('/api/v1/auth/manager/verify-otp', async (_req: Request, res: Response) => {
-    // res.send('ffffffffffffffffffffffffffffffff')
-    
-  try {
-    await sendEmail({
-      toEmail: 'amarjeevm@gmail.com',
-      subject: 'Test Email',
-      htmlContent: '<h1>Hello from Brevo!</h1>',
-    });
-    res.status(200).json({ message: 'Email sent successfully' });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to send email' });
+      // ================================
+      // 1. Validate request body
+      // ================================
+      if (!email || !otp) {
+        return res.status(422).json({
+          success: false,
+          message: "Email and OTP are required",
+        });
+      }
+
+      // ================================
+      // 2. Get OTP from Redis
+      // ================================
+      const savedOtp = await redis.get(`Mgr_otp:${email}`);
+
+      if (!savedOtp) {
+        return res.status(400).json({
+          success: false,
+          message: "OTP expired or invalid",
+        });
+      }
+
+      // ================================
+      // 3. Compare OTP
+      // ================================
+      if (String(savedOtp) !== String(otp)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid OTP",
+        });
+      }
+
+      // ================================
+      // 4. OTP verified successfully
+      // ================================
+      await redis.del(`Mgr_otp:${email}`);
+      return res.status(200).json({
+        success: true,
+        message: "OTP verified successfully",
+      });
+    } catch (error) {
+      console.error("❌ OTP verification error:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Server error, please try again later",
+      });
+    }
   }
+);
 
-})
+/**
+ * Manager Resend OTP Route
+ * -------------------------
+ * @route   POST /api/v1/auth/manager/Resend-otp
+ * @desc    Resend OTP to manager email
+ * @access  Public
+ */
+Mgr_OtpVerificationRouter.post(
+  "/api/v1/auth/manager/Resend-otp",
+  async (req: Request, res: Response)=> {
+    try {
+      const { email } = req.body;
 
+      // ================================
+      // 1. Validate request body
+      // ================================
+      if (!email) {
+        return res.status(422).json({
+          success: false,
+          message: "Email is required",
+        });
+      }
 
+      // ================================
+      // 2. Generate OTP and email content
+      // ================================
+      const { Otp, html } = mgr_LoginOtpUI(email);
+
+      // ================================
+      // 3. Store OTP in Redis with 3-minute expiry
+      // ================================
+      await redis.set(`Mgr_otp:${email}`, Otp, { ex: 180 });
+
+      // ================================
+      // 4. Send OTP email to manager
+      // ================================
+      await sendEmail({
+        toEmail: email,
+        subject: "DineQR Manager OTP",
+        htmlContent: html,
+      });
+
+      // ================================
+      // 5. Respond with success
+      // ================================
+      return res.status(200).json({
+        success: true,
+        message: "OTP resent successfully",
+      });
+    } catch (error) {
+      // ================================
+      // 6. Error handling
+      // ================================
+      console.error("❌ Resend OTP error:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Server error, please try again later",
+      });
+    }
+  }
+);
 
 export default Mgr_OtpVerificationRouter;

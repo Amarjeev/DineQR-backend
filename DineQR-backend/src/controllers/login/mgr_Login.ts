@@ -2,6 +2,9 @@ import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import manager_profileModel from "../../models/manager/mgr_ProfileSchemaModel";
 import { redis } from "../../config/redis";
+import { sendEmail } from "../../services/sendEmail";
+import mgr_LoginOtpUI from "../../emailTemplates/mgr_LoginOtpUI";
+
 
 const loginManagerRouter = Router();
 
@@ -74,9 +77,24 @@ loginManagerRouter.post(
         });
         return;
       }
+     
+      // ================================
+      // 4. Generate OTP and send email
+      // ================================
+      const { Otp, html } = mgr_LoginOtpUI(email);
+
+      // Store OTP in Redis with 3-minute expiry
+      await redis.set(`Mgr_otp:${email}`, Otp, { ex: 180 });
+
+      // Send OTP email to manager
+      await sendEmail({
+        toEmail: email,
+        subject: "DineQR Manager OTP",
+        htmlContent: html,
+      });
 
       // ================================
-      // 4. Login successful
+      // 5. Login successful
       // ================================
       res.status(200).json({
         success: true,
@@ -84,7 +102,7 @@ loginManagerRouter.post(
       });
     } catch (error) {
       // ================================
-      // 5. Error handling
+      // 6. Error handling
       // ================================
       console.error("❌ Login error:", error);
       res.status(500).json({
