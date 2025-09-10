@@ -34,7 +34,7 @@ const PORT: number = Number(process.env.PORT) || 5000;
 // ✅ CORS options
 const corsOptions: CorsOptions = {
   origin: ["http://localhost:5173", "https://dineqr-website.vercel.app"], // allowed frontends
-  methods: ["GET", "POST", "PUT", "DELETE"], // allowed HTTP methods
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // allowed HTTP methods
   credentials: true, // allow cookies or auth headers
 };
 
@@ -47,6 +47,8 @@ app.use(express.json()); // Parse JSON request bodies
 
 // Apply CORS middleware
 app.use(cors(corsOptions));
+
+
 
 /**
  * --------------------------
