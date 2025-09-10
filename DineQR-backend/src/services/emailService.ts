@@ -30,7 +30,7 @@ export const sendEmail = async ({ toEmail, subject, htmlContent }: SendEmailOpti
 
   try {
     const response = await client.sendTransacEmail(emailData);
-    console.log('Email sent:', response);
+    console.log('Email sent:');
     return response;
   } catch (error :any) {
    console.error('Error sending email:', error.response?.body || error.message);
