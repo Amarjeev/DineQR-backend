@@ -27,6 +27,6 @@
     "noUnusedParameters": true,
     "skipLibCheck": true
   },
-  "include": ["src", "src/app.ts"],
+  "include": ["src/**/*.ts", "src/types.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
