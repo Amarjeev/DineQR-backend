@@ -5,7 +5,6 @@ import { redis } from "../../config/redis";
 import { sendEmail } from "../../services/sendEmail";
 import mgr_LoginOtpUI from "../../emailTemplates/mgr_LoginOtpUI";
 
-
 const loginManagerRouter = Router();
 
 /**
@@ -60,7 +59,9 @@ loginManagerRouter.post(
           });
           return;
         }
-        await redis.set(`manager:data:${email}`, JSON.stringify(manager), { ex: 1500 });
+        await redis.set(`manager:data:${email}`, JSON.stringify(manager), {
+          ex: 1500,
+        });
       }
 
       // ================================
@@ -78,7 +79,7 @@ loginManagerRouter.post(
         });
         return;
       }
-     
+
       // ================================
       // 4. Generate OTP and send email
       // ================================
@@ -87,19 +88,19 @@ loginManagerRouter.post(
       // Store OTP in Redis with 3-minute expiry
       await redis.set(`Mgr_otp:${email}`, Otp, { ex: 180 });
 
-      // Send OTP email to manager
-      await sendEmail({
-        toEmail: email,
-        subject: "DineQR Manager OTP",
-        htmlContent: html,
-      });
-
       // ================================
       // 5. Login successful
       // ================================
       res.status(200).json({
         success: true,
         message: "Login successful",
+      });
+
+      // Send OTP email to manager
+      await sendEmail({
+        toEmail: email,
+        subject: "DineQR Manager OTP",
+        htmlContent: html,
       });
     } catch (error) {
       // ================================
