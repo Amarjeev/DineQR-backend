@@ -73,7 +73,7 @@ Mgr_OtpVerificationRouter.post(
       // Set the JWT token in an HTTP-only cookie for secure browser storage
       res.cookie("manager_Token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: true,
         sameSite: "strict",
         maxAge: 2 * 24 * 60 * 60 * 1000, // Cookie expires after 2 days
       });
