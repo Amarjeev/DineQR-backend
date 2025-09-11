@@ -30,7 +30,7 @@ emailCheckRouter.post(
       // ================================
       const existingManager = await mgr_ProfileSchemaModel
         .findOne({ email, isDeleted: false }) // Only check non-deleted accounts
-        .select("email password role")
+        .select("email password rolee")
         .lean();
 
       if (existingManager) {
