@@ -1,9 +1,13 @@
+import dotenv from "dotenv";
 import { Router, Request, Response } from "express";
 import { redis } from "../../config/redis";
 import { sendEmail } from "../../services/sendEmail";
 import mgr_LoginOtpUI from "../../emailTemplates/mgr_LoginOtpUI";
+import { generateToken } from "../../utils/generate_jwtToken";
 
 const Mgr_OtpVerificationRouter = Router();
+
+dotenv.config();
 
 Mgr_OtpVerificationRouter.post(
   "/api/v1/auth/manager/verify-otp",
@@ -42,14 +46,48 @@ Mgr_OtpVerificationRouter.post(
           message: "Invalid OTP",
         });
       }
+      // ================================
+      // 4. Generate JWT token
+      // ================================
+
+      // Define the shape of the manager data stored in Redis
+      interface redisData {
+        _id: string; // Manager unique ID
+        email: string; // Manager email
+        role: string; // Manager role
+      }
+
+      // Retrieve the manager data from Redis
+      const userDataString = await redis.get(`manager:data:${email}`);
+
+      // Typecast the retrieved string to the Redis data structure
+      const userData = userDataString as redisData;
+
+      // Generate a JWT token using the manager's ID, email, and role
+      const token = generateToken({
+        id: userData._id,
+        email: userData.email,
+        role: userData.role,
+      });
+
+      // Set the JWT token in an HTTP-only cookie for secure browser storage
+      res.cookie("manager_Token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 2 * 24 * 60 * 60 * 1000, // Cookie expires after 2 days
+      });
 
       // ================================
-      // 4. OTP verified successfully
+      // 5. OTP verified successfully
       // ================================
       await redis.del(`Mgr_otp:${email}`);
+      await redis.del(`manager:data:${email}`);
+
       return res.status(200).json({
         success: true,
         message: "OTP verified successfully",
+        token,
       });
     } catch (error) {
       console.error("❌ OTP verification error:", error);
@@ -70,7 +108,7 @@ Mgr_OtpVerificationRouter.post(
  */
 Mgr_OtpVerificationRouter.post(
   "/api/v1/auth/manager/Resend-otp",
-  async (req: Request, res: Response)=> {
+  async (req: Request, res: Response) => {
     try {
       const { email } = req.body;
 

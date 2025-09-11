@@ -12,6 +12,8 @@
 import dotenv from "dotenv";
 import express, { Application } from "express";
 import cors, { CorsOptions } from "cors";
+import cookieParser from "cookie-parser";
+
 
 // Database connection
 import connectDB from "./config/database";
@@ -48,6 +50,9 @@ app.use(express.json()); // Parse JSON request bodies
 
 // Apply CORS middleware
 app.use(cors(corsOptions));
+
+// Middleware to parse cookies
+app.use(cookieParser());
 
 /**
  * --------------------------

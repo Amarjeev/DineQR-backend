@@ -42,7 +42,7 @@ loginManagerRouter.post(
       // ================================
       // 2. Check if user exists in Redis cache
       // ================================
-      const userDataString = await redis.get(email);
+      const userDataString = await redis.get(`manager:data:${email}`);
 
       let manager;
       if (!userDataString) {
@@ -60,6 +60,7 @@ loginManagerRouter.post(
           });
           return;
         }
+        await redis.set(`manager:data:${email}`, JSON.stringify(manager), { ex: 1500 });
       }
 
       // ================================

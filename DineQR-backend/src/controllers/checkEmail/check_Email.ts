@@ -30,11 +30,11 @@ emailCheckRouter.post(
       // ================================
       const existingManager = await mgr_ProfileSchemaModel
         .findOne({ email, isDeleted: false }) // Only check non-deleted accounts
-        .select("email password")
+        .select("email password role")
         .lean();
 
       if (existingManager) {
-        await redis.set(email, JSON.stringify(existingManager), { ex: 600 }); //data collect in login router
+        await redis.set(`manager:data:${email}`, JSON.stringify(existingManager), { ex: 1500 }); //data collect in login router
         // Email exists
         res.status(200).json({
           exists: true,
