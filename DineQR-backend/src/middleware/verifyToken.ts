@@ -7,7 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
 
 // Extend Request type to include user property
 export interface AuthRequest extends Request {
-  user?: JwtPayload | string;
+  cookies: { [key: string]: string };
 }
 
 /**
