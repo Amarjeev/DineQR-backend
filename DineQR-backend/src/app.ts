@@ -85,7 +85,7 @@ const startServer = async (): Promise<void> => {
       console.log(`🚀 Server running at port ${PORT}`);
     });
   } catch (error) {
-    console.error("❌ MongoDB connection failed:", error);
+    console.error("Server failed to start:", error);
     process.exit(1); // Exit process if DB connection fails
   }
 };
