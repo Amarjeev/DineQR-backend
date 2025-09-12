@@ -86,7 +86,7 @@ const startServer = async (): Promise<void> => {
     });
   } catch (error) {
     console.error("Server failed to start:", error);
-    process.exit(1); // Exit process if DB connection fails
+    process.exitCode = 1 // Exit process if DB connection fails
   }
 };
 
