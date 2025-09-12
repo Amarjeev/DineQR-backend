@@ -17,7 +17,7 @@ export interface AuthRequest extends Request {
  * @param roleName - string, e.g., "manager",
  */
 export const verifyToken = (roleName: "manager" | "staff") => {
-  return (req: AuthRequest, res: Response, next: NextFunction): void => {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
       const token = req.cookies[`${roleName}_Token`];
 
@@ -31,16 +31,16 @@ export const verifyToken = (roleName: "manager" | "staff") => {
 
       // Check user role
       if (decoded.role !== roleName) {
-        res.status(403).json({ message: "Unauthorized role" });
-        return;
+        return res.status(403).json({ message: "Unauthorized role" });
       }
 
       if (roleName === "manager") req.manager = decoded;
       // else if (roleName === "staff") req.staff = decoded;
 
       next();
+      return;
     } catch (error) {
-      res
+      return res
         .status(500)
         .json({ message: "Server error occurred. Please try again later." });
     }
