@@ -38,7 +38,6 @@ export const verifyToken = (roleName: "manager" | "staff") => {
       // else if (roleName === "staff") req.staff = decoded;
 
       next();
-      return;
     } catch (error) {
       return res
         .status(500)
