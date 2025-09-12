@@ -8,13 +8,15 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
 // Extend Request type to include user property
 export interface AuthRequest extends Request {
   cookies: { [key: string]: string };
+  manager?: JwtPayload;
+  staff?: JwtPayload;
 }
 
 /**
  * verifyTokenRole - returns middleware to verify JWT and user role
  * @param roleName - string, e.g., "manager",
  */
-export const verifyToken = (roleName: string) => {
+export const verifyToken = (roleName: "manager" | "staff") => {
   return (req: AuthRequest, res: Response, next: NextFunction): void => {
     try {
       const token = req.cookies[`${roleName}_Token`];
@@ -33,10 +35,14 @@ export const verifyToken = (roleName: string) => {
         return;
       }
 
-      (req as any)[roleName] = decoded;
+      if (roleName === "manager") req.manager = decoded;
+      // else if (roleName === "staff") req.staff = decoded;
+
       next();
     } catch (error) {
-      res.status(500).json({ message: "Server error occurred. Please try again later." });
+      res
+        .status(500)
+        .json({ message: "Server error occurred. Please try again later." });
     }
   };
 };
