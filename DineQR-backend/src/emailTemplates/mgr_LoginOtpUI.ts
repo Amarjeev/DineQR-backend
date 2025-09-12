@@ -7,7 +7,7 @@ type EmailTemplate = {
 
 function mgr_LoginOtpUI(email: string): EmailTemplate {
   const timestamp = new Date().toLocaleString();
-  const Otp = generateOtp();
+  const Otp = generateOtp(4);
 
   return {
     Otp,

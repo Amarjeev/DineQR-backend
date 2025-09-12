@@ -1,4 +1,4 @@
-import { generateSixDigitOtp } from "../utils/otpGenerator";
+import { generateOtp } from "../utils/otpGenerator";
 
 type EmailTemplate = {
   html: string;
@@ -7,7 +7,7 @@ type EmailTemplate = {
 
 function mgr_passwordResetUI(email: string): EmailTemplate {
   const timestamp = new Date().toLocaleString();
-  const Otp = generateSixDigitOtp();
+  const Otp = generateOtp(6);
 
   return {
     Otp,
