@@ -23,6 +23,9 @@ import emailCheckRouter from "./controllers/checkEmail/check_Email";
 import signupManagerRouter from "./controllers/signup/mgr_Signup";
 import loginManagerRouter from "./controllers/login/mgr_Login";
 import Mgr_OtpVerificationRouter from "./controllers/otpVerification/Mgr_OtpVerification";
+import mgr_checkEmail_ResetpwdRouter from "./controllers/forgotPassword/mgr_checkEmail_Resetpwd";
+import mgr_newPassword_ResetpwdRouter from "./controllers/forgotPassword/mgr_newPassword_Resetpwd";
+import mgr_verifyOtp_ResetpwdRouter from "./controllers/forgotPassword/mgr_verifyOtp_Resetpwd";
 
 // Load environment variables from .env
 dotenv.config();
@@ -64,6 +67,9 @@ app.use(emailCheckRouter); // email exist db checking routes
 app.use(loginManagerRouter); // Manager login routes
 app.use(Mgr_OtpVerificationRouter); // Manager otp verification routes
 
+app.use(mgr_checkEmail_ResetpwdRouter);
+app.use(mgr_newPassword_ResetpwdRouter);
+app.use(mgr_verifyOtp_ResetpwdRouter);
 /**
  * --------------------------
  * Start Server
