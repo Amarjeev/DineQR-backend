@@ -2,10 +2,11 @@
  * ================================================
  * EduSpark Backend - Entry Point
  * -----------------------------------------------
- * 1. Loads environment variables
- * 2. Connects to MongoDB
- * 3. Starts Express server
- * 4. Registers global middlewares & routes
+ * Well-structured entry point for the backend:
+ * - Loads environment variables
+ * - Connects to MongoDB
+ * - Starts Express server
+ * - Registers global middlewares & routes
  * ================================================
  */
 
@@ -14,14 +15,13 @@ import express, { Application } from "express";
 import cors, { CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
-import { sanitizePathMiddleware } from "./middleware/sanitizePath";
-import path from "path";
-import fs from "fs";
+import { securityHeaders } from "./middleware/securityHeaders";
+import fileManagerRoutes from "./middleware/fileRoutes";
 
 // Database connection
 import connectDB from "./config/database";
 
-// Routes
+// Route imports
 import emailCheckRouter from "./controllers/checkEmail/check_Email";
 import signupManagerRouter from "./controllers/signup/mgr_Signup";
 import loginManagerRouter from "./controllers/login/mgr_Login";
@@ -33,9 +33,10 @@ import mgr_verifyOtp_ResetpwdRouter from "./controllers/forgotPassword/mgr_verif
 // Load environment variables from .env
 dotenv.config();
 
-// Create an Express application
+// Create Express app instance
 const app: Application = express();
 
+// Extend Express Request type to include safeFilePath
 declare global {
   namespace Express {
     interface Request {
@@ -44,98 +45,45 @@ declare global {
   }
 }
 
-const UPLOADS_DIR = path.join(__dirname, "uploads");
-if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+// ✅ File handling routes middleware
+app.use('/', fileManagerRoutes);
 
-
-app.get("/download", sanitizePathMiddleware(UPLOADS_DIR, "query", "file"), (req, res) => {
-  res.sendFile(req.safeFilePath!);
-});
-
-app.post("/upload", sanitizePathMiddleware(UPLOADS_DIR, "body", "filename"), (req, res) => {
-  res.json({ safePath: req.safeFilePath });
-});
-// Define server port (fallback to 5000 if not defined in .env)
+// Define server port with fallback
 const PORT: number = Number(process.env.PORT) || 5000;
 
-// ✅ CORS options
+// ✅ CORS configuration for allowed frontends
 const corsOptions: CorsOptions = {
-  origin: ["http://localhost:5173", "https://dine-qr-website.vercel.app"], // allowed frontends
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // allowed HTTP methods
+  origin: ["http://localhost:5173", "https://dine-qr-website.vercel.app"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type"],
-  credentials: true, // allow cookies or auth headers
+  credentials: true, // Enable cookies/auth headers
 };
 
 /**
  * --------------------------
- * Middleware Configuration
+ * Middleware Setup
  * --------------------------
  */
-app.use(express.json()); // Parse JSON request bodies
+app.use(express.json()); // Parse JSON requests
+app.use(cors(corsOptions)); // Enable CORS
+app.use(cookieParser()); // Parse cookies
+app.use(helmet.hidePoweredBy()); // Hide 'X-Powered-By' header for security
 
-// Apply CORS middleware
-app.use(cors(corsOptions));
-
-// Middleware to parse cookies
-app.use(cookieParser());
-
-app.use(helmet.hidePoweredBy());
-
-// const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
-
-app.use(function(_req, res, next) {
+// Prevent framing (clickjacking protection)
+app.use(function (_req, res, next) {
   res.setHeader('X-Frame-Options', 'sameorigin');
   next();
 });
 
-app.use(
-  helmet.contentSecurityPolicy({
-    useDefaults: true, // start with Helmet’s defaults
-    directives: {
-      defaultSrc: ["'self'"], // fallback for all resources
-      scriptSrc: [
-        "'self'",
-        "'unsafe-inline'", // ⚠️ only if you need inline scripts (try to remove later)
-        "https://cdn.jsdelivr.net",
-        "https://apis.google.com",
-      ],
-      styleSrc: [
-        "'self'",
-        "'unsafe-inline'", // needed for Tailwind/React inline styles
-        "https://fonts.googleapis.com",
-      ],
-      imgSrc: [
-        "'self'",
-        "data:", // allow base64 inline images (logos, previews)
-        "https:",
-      ],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      connectSrc: [
-        "'self'",
-        "http://localhost:5000", // your API (dev)
-        "http://localhost:5173", // your React frontend (dev)
-        "https://dine-qr-website.vercel.app", // your deployed frontend
-        "https://api.com", // any external APIs you call
-      ],
-      frameAncestors: ["'none'"], // disallow embedding in iframes
-      objectSrc: ["'none'"], // block Flash, etc.
-      upgradeInsecureRequests: [], // auto-upgrade http → https
-    },
-  })
-);
+// Apply custom security headers middleware
+app.use(securityHeaders);
 
-// Use frameguard middleware to prevent clickjacking
+// Helmet frameguard for additional clickjacking protection
 app.use(
   helmet.frameguard({
-    action: "deny", // blocks all framing attempts (X-Frame-Options: DENY)
+    action: "deny", // Deny all framing attempts
   })
 );
-
-
-
-
-
-
 
 /**
  * --------------------------
@@ -143,19 +91,19 @@ app.use(
  * --------------------------
  */
 app.use(signupManagerRouter); // Manager signup routes
-app.use(emailCheckRouter); // email exist db checking routes
+app.use(emailCheckRouter); // Email existence check routes
 app.use(loginManagerRouter); // Manager login routes
-app.use(Mgr_OtpVerificationRouter); // Manager otp verification routes
+app.use(Mgr_OtpVerificationRouter); // OTP verification routes
 
-app.use(mgr_checkEmail_ResetpwdRouter);
-app.use(mgr_newPassword_ResetpwdRouter);
-app.use(mgr_verifyOtp_ResetpwdRouter);
+app.use(mgr_checkEmail_ResetpwdRouter); // Forgot password email check
+app.use(mgr_newPassword_ResetpwdRouter); // Set new password
+app.use(mgr_verifyOtp_ResetpwdRouter); // OTP verification for password reset
+
 /**
  * --------------------------
  * Start Server
  * --------------------------
- * 1. Connect to MongoDB
- * 2. Start Express server only after DB connection succeeds
+ * Connects to MongoDB and starts Express server
  */
 const startServer = async (): Promise<void> => {
   try {
@@ -170,4 +118,5 @@ const startServer = async (): Promise<void> => {
   }
 };
 
+// Launch server
 startServer();
