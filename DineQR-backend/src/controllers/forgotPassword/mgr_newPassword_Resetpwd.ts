@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import managerProfileModel from "../../models/manager/mgr_ProfileSchemaModel";
 import bcrypt from "bcryptjs";
 
-const mgr_newPassword_ResetpwdRouter = Router();
+const mgr_newPassword_Resetpwd_Router = Router();
 
 /**
  * @route   POST /api/v1/forgot-password/create-newpassword
@@ -29,7 +29,7 @@ const mgr_newPassword_ResetpwdRouter = Router();
  * 404 -> { success: false, message: "Account not found" }
  * 500 -> { success: false, message: "Internal server error" }
  */
-mgr_newPassword_ResetpwdRouter.post(
+mgr_newPassword_Resetpwd_Router.post(
   "/api/v1/forgot-password/create-newpassword",
   async (req: Request, res: Response) => {
     try {
@@ -109,4 +109,4 @@ mgr_newPassword_ResetpwdRouter.post(
   }
 );
 
-export default mgr_newPassword_ResetpwdRouter;
+export default mgr_newPassword_Resetpwd_Router;

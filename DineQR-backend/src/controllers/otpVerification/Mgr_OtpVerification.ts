@@ -5,11 +5,11 @@ import { sendEmail } from "../../services/sendEmail";
 import mgr_LoginOtpUI from "../../emailTemplates/mgr_LoginOtpUI";
 import { generateToken } from "../../utils/generate_jwtToken";
 
-const Mgr_OtpVerificationRouter = Router();
+const Mgr_OtpVerification_Router = Router();
 
 dotenv.config();
 
-Mgr_OtpVerificationRouter.post(
+Mgr_OtpVerification_Router.post(
   "/api/v1/auth/manager/verify-otp",
   async (req: Request, res: Response) => {
     try {
@@ -106,7 +106,7 @@ Mgr_OtpVerificationRouter.post(
  * @desc    Resend OTP to manager email
  * @access  Public
  */
-Mgr_OtpVerificationRouter.post(
+Mgr_OtpVerification_Router.post(
   "/api/v1/auth/manager/Resend-otp",
   async (req: Request, res: Response) => {
     try {
@@ -161,4 +161,4 @@ Mgr_OtpVerificationRouter.post(
   }
 );
 
-export default Mgr_OtpVerificationRouter;
+export default Mgr_OtpVerification_Router;

@@ -5,7 +5,7 @@ import { redis } from "../../config/redis";
 import { sendEmail } from "../../services/sendEmail";
 import mgr_LoginOtpUI from "../../emailTemplates/mgr_LoginOtpUI";
 
-const loginManagerRouter = Router();
+const mgr_Login_Router = Router();
 
 /**
  * Manager Login Route
@@ -14,7 +14,7 @@ const loginManagerRouter = Router();
  * @desc    Authenticate a manager using email and password
  * @access  Public
  */
-loginManagerRouter.post(
+mgr_Login_Router.post(
   "/api/v1/auth/login/manager",
   async (req: Request, res: Response): Promise<void> => {
     try {
@@ -115,4 +115,4 @@ loginManagerRouter.post(
   }
 );
 
-export default loginManagerRouter;
+export default mgr_Login_Router;

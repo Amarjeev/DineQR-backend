@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { redis } from "../../config/redis";
 
-const mgr_verifyOtp_ResetpwdRouter = Router();
+const mgr_verifyOtp_Resetpwd_Router = Router();
 
 /**
  * @route   POST /api/v1/forgot-password/verify-otp
@@ -20,7 +20,7 @@ const mgr_verifyOtp_ResetpwdRouter = Router();
  * 404 -> { success: false, message: "OTP expired or not found" }
  * 500 -> { success: false, message: "Internal server error" }
  */
-mgr_verifyOtp_ResetpwdRouter.post(
+mgr_verifyOtp_Resetpwd_Router.post(
   "/api/v1/forgot-password/verify-otp",
   async (req: Request, res: Response) => {
     try {
@@ -62,4 +62,4 @@ mgr_verifyOtp_ResetpwdRouter.post(
   }
 );
 
-export default mgr_verifyOtp_ResetpwdRouter;
+export default mgr_verifyOtp_Resetpwd_Router;

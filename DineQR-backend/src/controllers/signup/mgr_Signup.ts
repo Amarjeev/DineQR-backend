@@ -7,7 +7,7 @@ import { mgr_SignupValidation_Schema } from "./SignupValidation/mgr_SignupValida
 // Router Initialization
 // ================================
 // Create a new Router instance for handling manager signup routes
-const signupManagerRouter = Router();
+const mgr_Signup_Router = Router();
 
 /**
  * Manager Signup Route
@@ -16,7 +16,7 @@ const signupManagerRouter = Router();
  * @desc    Register a new manager
  * @access  Public
  */
-signupManagerRouter.post(
+mgr_Signup_Router.post(
   "/api/v1/auth/signup/manager",
   async (req: Request, res: Response): Promise<void> => {
     try {
@@ -98,4 +98,4 @@ signupManagerRouter.post(
   }
 );
 
-export default signupManagerRouter;
+export default mgr_Signup_Router;

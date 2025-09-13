@@ -23,12 +23,12 @@ import connectDB from "./config/database";
 
 // Route imports
 import emailCheckRouter from "./controllers/checkEmail/check_Email";
-import signupManagerRouter from "./controllers/signup/mgr_Signup";
-import loginManagerRouter from "./controllers/login/mgr_Login";
-import Mgr_OtpVerificationRouter from "./controllers/otpVerification/Mgr_OtpVerification";
-import mgr_checkEmail_ResetpwdRouter from "./controllers/forgotPassword/mgr_checkEmail_Resetpwd";
-import mgr_newPassword_ResetpwdRouter from "./controllers/forgotPassword/mgr_newPassword_Resetpwd";
-import mgr_verifyOtp_ResetpwdRouter from "./controllers/forgotPassword/mgr_verifyOtp_Resetpwd";
+import mgr_Signup_Router from "./controllers/signup/mgr_Signup";
+import mgr_Login_Router from "./controllers/login/mgr_Login";
+import Mgr_OtpVerification_Router from "./controllers/otpVerification/Mgr_OtpVerification";
+import mgr_checkEmail_Resetpwd_Router from "./controllers/forgotPassword/mgr_checkEmail_Resetpwd";
+import mgr_newPassword_Resetpwd_Router from "./controllers/forgotPassword/mgr_newPassword_Resetpwd";
+import mgr_verifyOtp_Resetpwd_Router from "./controllers/forgotPassword/mgr_verifyOtp_Resetpwd";
 
 // Load environment variables from .env
 dotenv.config();
@@ -46,7 +46,7 @@ declare global {
 }
 
 // ✅ File handling routes middleware
-app.use('/', fileManagerRoutes);
+app.use("/", fileManagerRoutes);
 
 // Define server port with fallback
 const PORT: number = Number(process.env.PORT) || 5000;
@@ -67,13 +67,7 @@ const corsOptions: CorsOptions = {
 app.use(express.json()); // Parse JSON requests
 app.use(cors(corsOptions)); // Enable CORS
 app.use(cookieParser()); // Parse cookies
-app.use(helmet.hidePoweredBy()); // Hide 'X-Powered-By' header for security
-
-// Prevent framing (clickjacking protection)
-app.use(function (_req, res, next) {
-  res.setHeader('X-Frame-Options', 'sameorigin');
-  next();
-});
+app.use(helmet());
 
 // Apply custom security headers middleware
 app.use(securityHeaders);
@@ -90,14 +84,14 @@ app.use(
  * API Routes
  * --------------------------
  */
-app.use(signupManagerRouter); // Manager signup routes
+app.use(mgr_Signup_Router); // Manager signup routes
 app.use(emailCheckRouter); // Email existence check routes
-app.use(loginManagerRouter); // Manager login routes
-app.use(Mgr_OtpVerificationRouter); // OTP verification routes
+app.use(mgr_Login_Router); // Manager login routes
+app.use(Mgr_OtpVerification_Router); // OTP verification routes
 
-app.use(mgr_checkEmail_ResetpwdRouter); // Forgot password email check
-app.use(mgr_newPassword_ResetpwdRouter); // Set new password
-app.use(mgr_verifyOtp_ResetpwdRouter); // OTP verification for password reset
+app.use(mgr_checkEmail_Resetpwd_Router); // Forgot password email check
+app.use(mgr_newPassword_Resetpwd_Router); // Set new password
+app.use(mgr_verifyOtp_Resetpwd_Router); // OTP verification for password reset
 
 /**
  * --------------------------

@@ -4,7 +4,7 @@ import { redis } from "../../config/redis";
 import { sendEmail } from "../../services/sendEmail";
 import mgrForgotPasswordTemplate from "../../emailTemplates/mgr_forgotPasswordUI";
 
-const mgr_checkEmail_ResetpwdRouter = Router();
+const mgr_checkEmail_Resetpwd_Router = Router();
 
 /**
  * @route   POST /api/v1/forgot-password/check-email
@@ -31,7 +31,7 @@ const mgr_checkEmail_ResetpwdRouter = Router();
  * 404 -> { success: false, message: "Invalid account found" }
  * 500 -> { success: false, message: "Server error. Please try again later." }
  */
-mgr_checkEmail_ResetpwdRouter.post(
+mgr_checkEmail_Resetpwd_Router.post(
   "/api/v1/forgot-password/check-email",
   async (req: Request, res: Response) => {
     try {
@@ -119,4 +119,4 @@ mgr_checkEmail_ResetpwdRouter.post(
   }
 );
 
-export default mgr_checkEmail_ResetpwdRouter;
+export default mgr_checkEmail_Resetpwd_Router;
