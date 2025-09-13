@@ -15,7 +15,6 @@ import cors, { CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 
-
 // Database connection
 import connectDB from "./config/database";
 
@@ -63,13 +62,39 @@ app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
+      frameAncestors: ["'self'"],
       scriptSrc: ["'self'", "https://cdn.com"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "https://images.com"],
-      connectSrc: ["'self'", "https://api.com"]
+      connectSrc: ["'self'", "https://api.com"],
+      fontSrc: ["'self'"],
+      frameSrc: ["'self'"],
+      mediaSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      manifestSrc: ["'self'"],
+      workerSrc: ["'self'"],
+      childSrc: ["'self'"],
     },
   })
 );
+
+// ✅ Block path traversal attempts
+app.use((req, res, next) => {
+  if (req.url.includes("/.")) {
+    res.status(400).send("❌ Path traversal blocked");
+    return;
+  }
+  next();
+});
+
+// ✅ Deny direct access to .env file
+app.use((req, res, next) => {
+  if (req.url.includes(".env")) {
+    res.status(403).send("❌ Access denied");
+    return;
+  }
+  next();
+});
 
 /**
  * --------------------------
@@ -100,7 +125,7 @@ const startServer = async (): Promise<void> => {
     });
   } catch (error) {
     console.error("Server failed to start:", error);
-    process.exitCode = 1 // Exit process if DB connection fails
+    process.exitCode = 1; // Exit process if DB connection fails
   }
 };
 
