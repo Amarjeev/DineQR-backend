@@ -13,6 +13,7 @@ import dotenv from "dotenv";
 import express, { Application } from "express";
 import cors, { CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 
 
 // Database connection
@@ -56,6 +57,19 @@ app.use(cors(corsOptions));
 
 // Middleware to parse cookies
 app.use(cookieParser());
+
+// --------------- Add CSP here ---------------
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://cdn.com"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "https://images.com"],
+      connectSrc: ["'self'", "https://api.com"]
+    },
+  })
+);
 
 /**
  * --------------------------
