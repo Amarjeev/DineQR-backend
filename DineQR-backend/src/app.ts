@@ -14,6 +14,9 @@ import express, { Application } from "express";
 import cors, { CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
+import { sanitizePathMiddleware } from "./middleware/sanitizePath";
+import path from "path";
+import fs from "fs";
 
 // Database connection
 import connectDB from "./config/database";
@@ -33,6 +36,25 @@ dotenv.config();
 // Create an Express application
 const app: Application = express();
 
+declare global {
+  namespace Express {
+    interface Request {
+      safeFilePath?: string;
+    }
+  }
+}
+
+const UPLOADS_DIR = path.join(__dirname, "uploads");
+if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+
+
+app.get("/download", sanitizePathMiddleware(UPLOADS_DIR, "query", "file"), (req, res) => {
+  res.sendFile(req.safeFilePath!);
+});
+
+app.post("/upload", sanitizePathMiddleware(UPLOADS_DIR, "body", "filename"), (req, res) => {
+  res.json({ safePath: req.safeFilePath });
+});
 // Define server port (fallback to 5000 if not defined in .env)
 const PORT: number = Number(process.env.PORT) || 5000;
 
@@ -57,22 +79,47 @@ app.use(cors(corsOptions));
 // Middleware to parse cookies
 app.use(cookieParser());
 
-/// --------------- Add CSP here ---------------
+app.use(helmet.hidePoweredBy());
+
+// const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
+
+app.use(function(_req, res, next) {
+  res.setHeader('X-Frame-Options', 'sameorigin');
+  next();
+});
+
 app.use(
   helmet.contentSecurityPolicy({
+    useDefaults: true, // start with Helmet’s defaults
     directives: {
-      defaultSrc: ["'self'"],             // fallback for everything
-      scriptSrc: ["'self'", "https://cdn.com"], // allowed scripts
-      styleSrc: ["'self'", "'unsafe-inline'"],  // allowed styles
-      imgSrc: ["'self'", "https://images.com"], // allowed images
-      connectSrc: ["'self'", "https://api.com"], // XHR/fetch connections
-      fontSrc: ["'self'"],                // allowed fonts
-      frameAncestors: ["'self'"],         // embedding restrictions
-      objectSrc: ["'none'"],              // block Flash/plugins
-      workerSrc: ["'self'"],              // web workers
-      frameSrc: ["'self'"],               // if using iframes
-      mediaSrc: ["'self'"],               // audio/video
-      manifestSrc: ["'self'"]             // web manifest
+      defaultSrc: ["'self'"], // fallback for all resources
+      scriptSrc: [
+        "'self'",
+        "'unsafe-inline'", // ⚠️ only if you need inline scripts (try to remove later)
+        "https://cdn.jsdelivr.net",
+        "https://apis.google.com",
+      ],
+      styleSrc: [
+        "'self'",
+        "'unsafe-inline'", // needed for Tailwind/React inline styles
+        "https://fonts.googleapis.com",
+      ],
+      imgSrc: [
+        "'self'",
+        "data:", // allow base64 inline images (logos, previews)
+        "https:",
+      ],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      connectSrc: [
+        "'self'",
+        "http://localhost:5000", // your API (dev)
+        "http://localhost:5173", // your React frontend (dev)
+        "https://dine-qr-website.vercel.app", // your deployed frontend
+        "https://api.com", // any external APIs you call
+      ],
+      frameAncestors: ["'none'"], // disallow embedding in iframes
+      objectSrc: ["'none'"], // block Flash, etc.
+      upgradeInsecureRequests: [], // auto-upgrade http → https
     },
   })
 );
@@ -80,28 +127,15 @@ app.use(
 // Use frameguard middleware to prevent clickjacking
 app.use(
   helmet.frameguard({
-    action: "deny" // blocks all framing attempts (X-Frame-Options: DENY)
+    action: "deny", // blocks all framing attempts (X-Frame-Options: DENY)
   })
 );
 
 
-// ✅ Block path traversal attempts
-app.use((req, res, next) => {
-  if (req.url.includes("/.")) {
-    res.status(400).send("❌ Path traversal blocked");
-    return;
-  }
-  next();
-});
 
-// ✅ Deny direct access to .env file
-app.use((req, res, next) => {
-  if (req.url.includes(".env")) {
-    res.status(403).send("❌ Access denied");
-    return;
-  }
-  next();
-});
+
+
+
 
 /**
  * --------------------------
