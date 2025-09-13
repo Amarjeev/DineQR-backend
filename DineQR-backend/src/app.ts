@@ -57,26 +57,33 @@ app.use(cors(corsOptions));
 // Middleware to parse cookies
 app.use(cookieParser());
 
-// --------------- Add CSP here ---------------
+/// --------------- Add CSP here ---------------
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
-      defaultSrc: ["'self'"],
-      frameAncestors: ["'self'"],
-      scriptSrc: ["'self'", "https://cdn.com"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "https://images.com"],
-      connectSrc: ["'self'", "https://api.com"],
-      fontSrc: ["'self'"],
-      frameSrc: ["'self'"],
-      mediaSrc: ["'self'"],
-      objectSrc: ["'none'"],
-      manifestSrc: ["'self'"],
-      workerSrc: ["'self'"],
-      childSrc: ["'self'"],
+      defaultSrc: ["'self'"],             // fallback for everything
+      scriptSrc: ["'self'", "https://cdn.com"], // allowed scripts
+      styleSrc: ["'self'", "'unsafe-inline'"],  // allowed styles
+      imgSrc: ["'self'", "https://images.com"], // allowed images
+      connectSrc: ["'self'", "https://api.com"], // XHR/fetch connections
+      fontSrc: ["'self'"],                // allowed fonts
+      frameAncestors: ["'self'"],         // embedding restrictions
+      objectSrc: ["'none'"],              // block Flash/plugins
+      workerSrc: ["'self'"],              // web workers
+      frameSrc: ["'self'"],               // if using iframes
+      mediaSrc: ["'self'"],               // audio/video
+      manifestSrc: ["'self'"]             // web manifest
     },
   })
 );
+
+// Use frameguard middleware to prevent clickjacking
+app.use(
+  helmet.frameguard({
+    action: "deny" // blocks all framing attempts (X-Frame-Options: DENY)
+  })
+);
+
 
 // ✅ Block path traversal attempts
 app.use((req, res, next) => {
