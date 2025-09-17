@@ -1,6 +1,9 @@
 import jwt, { SignOptions } from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
-const JWT_SECRET = "your_secret_key"; // directly assign secret
+const JWT_SECRET = process.env.JWT_SECRET as string;
+
 // directly assign expire time as string
 const JWT_EXPIRES_IN: SignOptions["expiresIn"] = "2d";
 

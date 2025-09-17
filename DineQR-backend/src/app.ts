@@ -15,8 +15,8 @@ import express, { Application } from "express";
 import cors, { CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
-import { securityHeaders } from "./middleware/securityHeaders";
-import fileManagerRoutes from "./middleware/fileRoutes";
+import { securityHeaders } from "./middleware/WebsiteSecurity/securityHeaders";
+import fileManagerRoutes from "./middleware/WebsiteSecurity/fileRoutes";
 
 // Database connection
 import connectDB from "./config/database";
@@ -29,6 +29,7 @@ import Mgr_OtpVerification_Router from "./controllers/otpVerification/Mgr_OtpVer
 import mgr_checkEmail_Resetpwd_Router from "./controllers/forgotPassword/mgr_checkEmail_Resetpwd";
 import mgr_newPassword_Resetpwd_Router from "./controllers/forgotPassword/mgr_newPassword_Resetpwd";
 import mgr_verifyOtp_Resetpwd_Router from "./controllers/forgotPassword/mgr_verifyOtp_Resetpwd";
+import mgr_Menu_AddItem_Roter from "./manager/Menu/mgr_Menu_AddItem";
 
 // Load environment variables from .env
 dotenv.config();
@@ -92,6 +93,7 @@ app.use(Mgr_OtpVerification_Router); // OTP verification routes
 app.use(mgr_checkEmail_Resetpwd_Router); // Forgot password email check
 app.use(mgr_newPassword_Resetpwd_Router); // Set new password
 app.use(mgr_verifyOtp_Resetpwd_Router); // OTP verification for password reset
+app.use(mgr_Menu_AddItem_Roter); //Menu item adding items
 
 /**
  * --------------------------

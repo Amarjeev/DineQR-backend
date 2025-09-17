@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import dotenv from "dotenv";
-dotenv.config();
+  import dotenv from "dotenv";
+  dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET as string;
+  const JWT_SECRET = process.env.JWT_SECRET as string;
 
 // Extend Request type to include user property
 export interface AuthRequest extends Request {
@@ -17,21 +17,29 @@ export interface AuthRequest extends Request {
  * @param roleName - string, e.g., "manager",
  */
 export const verifyToken = (roleName: "manager" | "staff") => {
-  return (req: AuthRequest, res: Response, next: NextFunction) => {
+  return (req: AuthRequest, res: Response, next: NextFunction): void => {
     try {
       const token = req.cookies[`${roleName}_Token`];
 
       if (!token) {
-        if (roleName === "manager") return res.redirect("/");
-        return res.redirect("/");
+        // Send structured JSON response instead of redirect
+        res.status(401).json({
+          success: false,
+          errorType: "INVALID_TOKEN",
+          message:
+            roleName === "manager"
+              ? "Manager token is invalid. Please login again."
+              : "Unauthorized access. Please login again.",
+        });
+        return;
       }
-
       // Verify JWT
       const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
 
       // Check user role
       if (decoded.role !== roleName) {
-        return res.status(403).json({ message: "Unauthorized role" });
+        res.status(403).json({ message: "Unauthorized role" });
+        return;
       }
 
       if (roleName === "manager") req.manager = decoded;
@@ -39,9 +47,10 @@ export const verifyToken = (roleName: "manager" | "staff") => {
 
       next();
     } catch (error) {
-      return res
+      res
         .status(500)
-        .json({ message: "Server error occurred. Please try again later." });
+        .json({ message: "Server error occurred. Please try again later." ,error});
+      return;
     }
   };
 };

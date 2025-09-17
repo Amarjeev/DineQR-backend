@@ -1,7 +1,7 @@
 import { Router } from "express";
 import path from "path";
 import fs from "fs";
-import { sanitizePathMiddleware } from "../middleware/sanitizePath";
+import { sanitizePathMiddleware } from "./sanitizePath";
 
 const fileManagerRoutes = Router();
 
