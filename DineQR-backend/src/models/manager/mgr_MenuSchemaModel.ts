@@ -15,7 +15,6 @@ export interface IMenuItem extends Document {
     full: string;
   };
   foodType: string; // veg / non-veg
-  dishTime: string; // breakfast / lunch / dinner
   foodCategory: string; // category list
   availability: string; // Available / Not Available
   isDeleted: boolean; // soft delete flag
@@ -26,8 +25,8 @@ export interface IMenuItem extends Document {
 // Mongoose schema
 const MenuItemSchema: Schema = new Schema<IMenuItem>(
   {
-    hotelKey: { type: String, required: true }, // Unique key representing the hotel
-    productName: { type: String, required: true },
+    hotelKey: { type: String, required: true, index: true }, // Unique key representing the hotel
+    productName: { type: String, required: true, trim: true },
     sizes: {
       quarter: { type: Boolean, default: false },
       half: { type: Boolean, default: false },
@@ -38,9 +37,8 @@ const MenuItemSchema: Schema = new Schema<IMenuItem>(
       half: { type: String, default: "" },
       full: { type: String, default: "" },
     },
-    foodType: { type: String, required: true },
-    dishTime: { type: String, required: true },
-    foodCategory: { type: String, required: true },
+    foodType: { type: String, required: true, lowercase: true, trim: true },
+    foodCategory: { type: String, required: true, lowercase: true, trim: true },
     availability: { type: String, default: "Available" },
     isDeleted: { type: Boolean, default: false }, // soft delete flag
     s3Url: { type: String }, // S3 URL of the main image

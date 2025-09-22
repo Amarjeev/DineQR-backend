@@ -1,37 +1,33 @@
-import dotenv from "dotenv";
 import nodemailer from "nodemailer";
-
+import dotenv from "dotenv";
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.sendgrid.net",
+  port: 587,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: "apikey", // literal "apikey"
+    pass: process.env.SENDGRID_API_KEY, // your SendGrid API key
   },
 });
-
-interface SendEmailOptions {
-  toEmail: string | string[];
-  subject: string;
-  htmlContent: string;
-}
 
 export const sendEmail = async ({
   toEmail,
   subject,
   htmlContent,
-}: SendEmailOptions): Promise<void> => {
+}: {
+  toEmail: string | string[];
+  subject: string;
+  htmlContent: string;
+}) => {
   try {
-    // const info =
-      await transporter.sendMail({
-      from: `"DineQR" <${process.env.EMAIL_USER}>`,
+    await transporter.sendMail({
+      from: `"AMAR" <${process.env.EMAIL_USER}>`,
       to: toEmail,
       subject,
       html: htmlContent,
     });
-
-    // console.log("✅ Email sent:", info.messageId);
+    // console.log("✅ Email sent successfully");
   } catch (error) {
     console.error("❌ Error sending email:", error);
     throw error;

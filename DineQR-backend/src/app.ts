@@ -17,6 +17,7 @@ import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import { securityHeaders } from "./middleware/WebsiteSecurity/securityHeaders";
 import fileManagerRoutes from "./middleware/WebsiteSecurity/fileRoutes";
+import compression from "compression";
 
 // Database connection
 import connectDB from "./config/database";
@@ -29,7 +30,11 @@ import Mgr_OtpVerification_Router from "./controllers/otpVerification/Mgr_OtpVer
 import mgr_checkEmail_Resetpwd_Router from "./controllers/forgotPassword/mgr_checkEmail_Resetpwd";
 import mgr_newPassword_Resetpwd_Router from "./controllers/forgotPassword/mgr_newPassword_Resetpwd";
 import mgr_verifyOtp_Resetpwd_Router from "./controllers/forgotPassword/mgr_verifyOtp_Resetpwd";
-import mgr_Menu_AddItem_Roter from "./manager/Menu/mgr_Menu_AddItem";
+import mgr_Menu_AddItem_Roter from "./manager/Menu/AddMenuItemse/mgr_Menu_AddItem";
+import mgr_get_MenuByCategory_Router from "./manager/Menu/EditMenuItemse/mgr_get_MenuByCategory";
+import mgr_get_MenuEdit_Router from "./manager/Menu/EditMenuItemse/mgr_get_MenuEdit_Item";
+import mgr_update_EditMenuItem_Router from "./manager/Menu/EditMenuItemse/mgr_update_EditMenuItem";
+import mgr_delete_EditMenuItem from "./manager/Menu/EditMenuItemse/mgr_Delete_EditMenuItem";
 
 // Load environment variables from .env
 dotenv.config();
@@ -70,6 +75,14 @@ app.use(cors(corsOptions)); // Enable CORS
 app.use(cookieParser()); // Parse cookies
 app.use(helmet());
 
+// ✅ Apply compression middleware
+app.use(
+  compression({
+    level: 6, // 0-9 (default: system decides)
+    threshold: 1024, // Only compress responses > 1KB
+  })
+);
+
 // Apply custom security headers middleware
 app.use(securityHeaders);
 
@@ -94,6 +107,10 @@ app.use(mgr_checkEmail_Resetpwd_Router); // Forgot password email check
 app.use(mgr_newPassword_Resetpwd_Router); // Set new password
 app.use(mgr_verifyOtp_Resetpwd_Router); // OTP verification for password reset
 app.use(mgr_Menu_AddItem_Roter); //Menu item adding items
+app.use(mgr_get_MenuByCategory_Router); //Menu item List items fetching
+app.use(mgr_get_MenuEdit_Router); //Menu edit items
+app.use(mgr_update_EditMenuItem_Router);
+app.use(mgr_delete_EditMenuItem);
 
 /**
  * --------------------------

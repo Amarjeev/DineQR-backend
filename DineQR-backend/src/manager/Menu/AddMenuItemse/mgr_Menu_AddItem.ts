@@ -17,11 +17,11 @@ import multer from "multer";
 const storage = multer.memoryStorage(); // Use memory storage for multer (buffer for S3 upload)
 import { compress_ImageFC } from "./compress_Image";
 const upload = multer({ storage });
-import { uploadToS3 } from "../../utils/Upload_s3";
-import { AddItemSchema } from "./MenuValidation/mgr_MenuValidation";
-import Menu_Item from "../../models/manager/mgr_MenuSchemaModel";
-import { verifyToken } from "../../middleware/verifyToken/verifyToken";
-import { ManagerPayload } from "../../types/manager";
+import { uploadToS3 } from "../../../utils/Upload_s3";
+import { AddItemSchema } from "../MenuValidation/mgr_MenuValidation";
+import Menu_Item from "../../../models/manager/mgr_MenuSchemaModel";
+import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
+import { ManagerPayload } from "../../../types/manager";
 
 interface MulterRequest extends Express.Request {
   file?: Express.Multer.File | undefined;
@@ -39,6 +39,7 @@ mgr_Menu_AddItem_Roter.post(
     try {
       // Extract and parse incoming form data
       const data = req.body.foodItem;
+
       const { id } = req.manager as ManagerPayload;
 
       if (!data) {
