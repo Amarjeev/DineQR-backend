@@ -26,7 +26,7 @@ export interface IMenuItem extends Document {
 const MenuItemSchema: Schema = new Schema<IMenuItem>(
   {
     hotelKey: { type: String, required: true, index: true }, // Unique key representing the hotel
-    productName: { type: String, required: true, trim: true },
+    productName: { type: String, required: true, trim: true ,index: true},
     sizes: {
       quarter: { type: Boolean, default: false },
       half: { type: Boolean, default: false },

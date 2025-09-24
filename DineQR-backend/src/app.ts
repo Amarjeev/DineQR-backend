@@ -34,7 +34,12 @@ import mgr_Menu_AddItem_Roter from "./manager/Menu/AddMenuItemse/mgr_Menu_AddIte
 import mgr_get_MenuByCategory_Router from "./manager/Menu/EditMenuItemse/mgr_get_MenuByCategory";
 import mgr_get_MenuEdit_Router from "./manager/Menu/EditMenuItemse/mgr_get_MenuEdit_Item";
 import mgr_update_EditMenuItem_Router from "./manager/Menu/EditMenuItemse/mgr_update_EditMenuItem";
-import mgr_delete_EditMenuItem from "./manager/Menu/EditMenuItemse/mgr_Delete_EditMenuItem";
+import mgr_delete_EditMenuItem from "./manager/Menu/EditMenuItemse/mgr_delete_EditMenuItem";
+import mgr_Create_Table_Router from "./manager/Tables/createTable/mgr_Create_Table";
+import mgr_get_TableList_Router from "./manager/Tables/EditTables/mgr_get_TableList";
+import mgr_edit_Table_Router from "./manager/Tables/EditTables/mgr_edit_Table";
+import mgr_delete_Table_Router from "./manager/Tables/EditTables/mgr_delete_Table";
+import mgr_search_TableList_Router from "./manager/Tables/EditTables/mgr_search_TableList";
 
 // Load environment variables from .env
 dotenv.config();
@@ -60,7 +65,7 @@ const PORT: number = Number(process.env.PORT) || 5000;
 // ✅ CORS configuration for allowed frontends
 const corsOptions: CorsOptions = {
   origin: ["http://localhost:5173", "https://dine-qr-website.vercel.app"],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type"],
   credentials: true, // Enable cookies/auth headers
 };
@@ -111,6 +116,11 @@ app.use(mgr_get_MenuByCategory_Router); //Menu item List items fetching
 app.use(mgr_get_MenuEdit_Router); //Menu edit items
 app.use(mgr_update_EditMenuItem_Router);
 app.use(mgr_delete_EditMenuItem);
+app.use(mgr_Create_Table_Router);
+app.use(mgr_get_TableList_Router);
+app.use(mgr_edit_Table_Router);
+app.use(mgr_delete_Table_Router);
+app.use(mgr_search_TableList_Router);
 
 /**
  * --------------------------

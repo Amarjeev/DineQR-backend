@@ -5,7 +5,7 @@ dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 // directly assign expire time as string
-const JWT_EXPIRES_IN: SignOptions["expiresIn"] = "2d";
+const JWT_EXPIRES_IN: SignOptions["expiresIn"] = "10d";
 
 export interface JwtPayload {
   id: string;
