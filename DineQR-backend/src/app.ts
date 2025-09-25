@@ -40,6 +40,10 @@ import mgr_get_TableList_Router from "./manager/Tables/EditTables/mgr_get_TableL
 import mgr_edit_Table_Router from "./manager/Tables/EditTables/mgr_edit_Table";
 import mgr_delete_Table_Router from "./manager/Tables/EditTables/mgr_delete_Table";
 import mgr_search_TableList_Router from "./manager/Tables/EditTables/mgr_search_TableList";
+import mgr_Create_Bill_Router from "./manager/Billing/CreateBill/mgr_Create_Bill";
+import mgr_Get_Bill_Router from "./manager/Billing/EditBill/mgr_Get_Bill";
+import mgr_Edit_Bill_Router from "./manager/Billing/EditBill/mgr_Edit_Bill";
+import mgr_Delete_Bill_Router from "./manager/Billing/EditBill/mgr_Delete_Bill";
 
 // Load environment variables from .env
 dotenv.config();
@@ -121,6 +125,10 @@ app.use(mgr_get_TableList_Router);
 app.use(mgr_edit_Table_Router);
 app.use(mgr_delete_Table_Router);
 app.use(mgr_search_TableList_Router);
+app.use(mgr_Create_Bill_Router);
+app.use(mgr_Get_Bill_Router);
+app.use(mgr_Edit_Bill_Router);
+app.use(mgr_Delete_Bill_Router);
 
 /**
  * --------------------------
