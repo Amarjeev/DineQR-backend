@@ -1,8 +1,7 @@
 import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import mgr_ProfileSchemaModel from "../../models/manager/mgr_ProfileSchemaModel";
 import { mgr_SignupValidation_Schema } from "./SignupValidation/mgr_SignupValidation";
-
+import ManagerProfileSchema from "../../models/manager/mgr_ProfileSchemaModel";
 // ================================
 // Router Initialization
 // ================================
@@ -49,7 +48,7 @@ mgr_Signup_Router.post(
       // ================================
       // Check if manager with this email already exists
       // ================================
-      const existingManager = await mgr_ProfileSchemaModel
+      const existingManager = await ManagerProfileSchema
         .findOne({ email, isDeleted: false }) // Only check active managers
         .select("email") // Only select email to reduce DB load
         .lean(); // Convert to plain JS object for faster read
@@ -71,7 +70,7 @@ mgr_Signup_Router.post(
       // ================================
       // Create and save new manager document
       // ================================
-      const newManager = new mgr_ProfileSchemaModel({
+      const newManager = new ManagerProfileSchema({
         name,
         email,
         mobileNumber,

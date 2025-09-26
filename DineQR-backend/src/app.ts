@@ -44,7 +44,10 @@ import mgr_Create_Bill_Router from "./manager/Billing/CreateBill/mgr_Create_Bill
 import mgr_Get_Bill_Router from "./manager/Billing/EditBill/mgr_Get_Bill";
 import mgr_Edit_Bill_Router from "./manager/Billing/EditBill/mgr_Edit_Bill";
 import mgr_Delete_Bill_Router from "./manager/Billing/EditBill/mgr_Delete_Bill";
-
+import mgr_get_ManagerProfile_Router from "./manager/settings/profile/mgr_get_profile";
+import mgr_edit_ManagerProfile_Router from "./manager/settings/profile/mgr_edit_profile";
+import mgr_upload_Hotelinfo_Router from "./manager/settings/hotelInfo/mgr_upload_Hotelinfo";
+import mgr_get_Hotelinfo_Router from "./manager/settings/hotelInfo/mgr_get_Hotelinfo";
 // Load environment variables from .env
 dotenv.config();
 
@@ -129,6 +132,12 @@ app.use(mgr_Create_Bill_Router);
 app.use(mgr_Get_Bill_Router);
 app.use(mgr_Edit_Bill_Router);
 app.use(mgr_Delete_Bill_Router);
+app.use(mgr_get_ManagerProfile_Router);
+app.use(mgr_edit_ManagerProfile_Router);
+app.use(mgr_upload_Hotelinfo_Router);
+app.use(mgr_get_Hotelinfo_Router);
+
+
 
 /**
  * --------------------------
