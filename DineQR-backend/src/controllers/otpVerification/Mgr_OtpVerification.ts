@@ -75,7 +75,7 @@ Mgr_OtpVerification_Router.post(
         httpOnly: true,
         secure: true,
         sameSite: "strict",
-        maxAge: 2 * 24 * 60 * 60 * 1000, // Cookie expires after 2 days
+         maxAge: 5 * 24 * 60 * 60 * 1000,
       });
 
       // ================================
