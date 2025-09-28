@@ -2,10 +2,11 @@ import { Router, Response } from "express";
 import { ManagerRequest } from "../../../types/manager";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import HotelInfoSchema from "../../../models/manager/mgr_HotelInfoSchemaModel";
+import { redis } from "../../../config/redis";
 
 const mgr_get_Hotelinfo_Router = Router();
 
-mgr_get_Hotelinfo_Router.post(
+mgr_get_Hotelinfo_Router.get(
   "/api/v1/manager/get/Hotelinfo",
   verifyToken("manager"),
   async (req: ManagerRequest, res: Response) => {
@@ -19,8 +20,25 @@ mgr_get_Hotelinfo_Router.post(
         return;
       }
 
+      const redisKey = `mgr_HotelInfo:${hotelKey}`;
+
+      // 1️⃣ Check Redis cache first
+      const cachedData = await redis.get(redisKey);
+      if (cachedData) {
+        res.status(200).json({
+          success: true,
+          data: cachedData,
+        });
+        return;
+      }
+
       // Find hotel info by hotelKey
-      const hotelInfo = await HotelInfoSchema.findOne({ hotelKey }).lean().select('-createdAt -updatedAt');
+      const hotelInfo = await HotelInfoSchema.findOne({ hotelKey })
+        .lean()
+        .select("-createdAt -updatedAt -hotelKey -_id");
+
+      // 3️⃣ Store in Redis for future requests (expire in 1 hour)
+      await redis.set(redisKey, JSON.stringify(hotelInfo), { ex: 3600 });
 
       // ✅ If not found, return null instead of error
       res.status(200).json({

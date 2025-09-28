@@ -19,6 +19,7 @@ const ManagerProfileSchemaModel: Schema = new Schema({
     unique: true,
     index: true,
     trim: true,
+    lowercase: true,
   },
   mobileNumber: { type: String, required: true, index: true, trim: true },
   password: { type: String, required: true },

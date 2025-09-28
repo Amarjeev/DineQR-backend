@@ -1,6 +1,6 @@
 import { Router, Response } from "express";
 import { ManagerRequest } from "../../../types/manager";
-// import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
+import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import ManagerProfileSchema from "../../../models/manager/mgr_ProfileSchemaModel";
 import { redis } from "../../../config/redis";
 
@@ -8,13 +8,12 @@ const mgr_Otpverify_deleteAccount_Router = Router();
 
 mgr_Otpverify_deleteAccount_Router.post(
   "/api/v1/manager/OtpVerify/delete/account",
-  //   verifyToken("manager"),
+  verifyToken("manager"),
   async (req: ManagerRequest, res: Response) => {
     try {
       const { otp } = req.body;
 
-      //   const hotelKey = req.manager?.id;
-      const hotelKey = "68c016f89540bdb6226598f2";
+      const hotelKey = req.manager?.id;
 
       if (!hotelKey) {
         res
@@ -37,12 +36,12 @@ mgr_Otpverify_deleteAccount_Router.post(
 
       if (!savedOtp) {
         res
-          .status(400)
+          .status(401)
           .json({ success: false, message: "OTP expired or not found" });
         return;
       }
 
-      if (otp !== savedOtp) {
+      if (Number(otp) !== Number(savedOtp)) {
         res.status(401).json({ success: false, message: "Invalid OTP" });
         return;
       }

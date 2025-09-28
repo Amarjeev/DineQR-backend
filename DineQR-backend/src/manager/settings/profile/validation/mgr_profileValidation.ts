@@ -5,7 +5,7 @@ export const mgr_Profile_Validation_Middleware = (
   res: Response,
   next: NextFunction
 ) => {
-  const { name, email, mobileNumber, password, rePassword } = req.body;
+  const { name, email, mobileNumber, password, rePassword } = req?.body?.formData;
 
   // Name validation
   if (

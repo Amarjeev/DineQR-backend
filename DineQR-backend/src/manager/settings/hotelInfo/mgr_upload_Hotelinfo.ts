@@ -3,6 +3,7 @@ import { ManagerRequest } from "../../../types/manager";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import HotelInfoSchema from "../../../models/manager/mgr_HotelInfoSchemaModel";
 import { mgr_HotelInfo_Validation_Middleware } from "./validation/mgr_HotelInfoValidation";
+import { redis } from "../../../config/redis";
 
 const mgr_upload_Hotelinfo_Router = Router();
 
@@ -20,7 +21,9 @@ mgr_upload_Hotelinfo_Router.post(
           .json({ success: false, message: "Manager ID not provided" });
       }
 
-      const hotelData = { ...req.body, hotelKey };
+      const redisKey = `mgr_HotelInfo:${hotelKey}`;
+
+      const hotelData = { ...req?.body?.formData, hotelKey };
 
       // ✅ Check if record already exists
       const existing = await HotelInfoSchema.findOne({ hotelKey });
@@ -29,6 +32,8 @@ mgr_upload_Hotelinfo_Router.post(
         // Update fields
         existing.set(hotelData);
         await existing.save();
+
+        await redis.del(redisKey);
 
         return res.status(200).json({
           success: true,

@@ -13,7 +13,7 @@ export interface IRestaurant extends Document {
 
 const RestaurantSchema: Schema = new Schema(
   {
-    name: { type: String, require: true }, // Restaurant name
+    name: { type: String, require: true ,  lowercase: true,}, // Restaurant name
     hotelKey: { type: String, required: true, index: true },
     contactNumber: { type: String, required: true }, // Contact Number
     email: { type: String, required: true }, // Email ID

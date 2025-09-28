@@ -1,6 +1,6 @@
 import { Router, Response } from "express";
 import { ManagerRequest } from "../../../types/manager";
-// import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
+import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import ManagerProfileSchema from "../../../models/manager/mgr_ProfileSchemaModel";
 import bcrypt from "bcryptjs";
 
@@ -12,11 +12,10 @@ const mgr_Request_deleteAccount_Router = Router();
 
 mgr_Request_deleteAccount_Router.post(
   "/api/v1/manager/request/delete/account",
-  // verifyToken("manager"),
+  verifyToken("manager"),
   async (req: ManagerRequest, res: Response) => {
     try {
-      // const hotelKey = req.manager?.id;
-      const hotelKey = "68c016f89540bdb6226598f2";
+      const hotelKey = req.manager?.id;
 
       if (!hotelKey) {
         return res

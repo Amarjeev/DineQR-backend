@@ -51,7 +51,11 @@ import mgr_get_Hotelinfo_Router from "./manager/settings/hotelInfo/mgr_get_Hotel
 import mgr_Logout_Router from "./manager/settings/account/mgr_Logout";
 import mgr_Request_deleteAccount_Router from "./manager/settings/account/mgr_Request_deleteAccount";
 import mgr_Otpverify_deleteAccount_Router from "./manager/settings/account/mgr_Otpverify_deleteAccount";
-
+import mgr_Create_staff_account_Router from "./manager/settings/staffAccount/mgr_Create_staff_account";
+import mgr_reset_staff_password_Router from "./manager/settings/staffAccount/mgr_reset_staff_Password";
+import mgr_Get_staff_account_Router from "./manager/settings/staffAccount/mgr_Get_staff_account";
+import mgr_check_pwd_staff_delAc_Router from "./manager/settings/staffAccount/deleteStaffAccount/mgr_check_pwd_staff_delAc";
+import mgr_verify_otp_staff_delAc_Router from "./manager/settings/staffAccount/deleteStaffAccount/mgr_verify_otp_staff_delAc";
 
 // Load environment variables from .env
 dotenv.config();
@@ -144,9 +148,14 @@ app.use(mgr_get_Hotelinfo_Router);
 app.use(mgr_Logout_Router);
 app.use(mgr_Request_deleteAccount_Router);
 app.use(mgr_Otpverify_deleteAccount_Router);
+app.use(mgr_Create_staff_account_Router);
+app.use(mgr_reset_staff_password_Router);
+app.use(mgr_Get_staff_account_Router);
+app.use(mgr_check_pwd_staff_delAc_Router);
+app.use(mgr_verify_otp_staff_delAc_Router);
 
 
-
+ 
 /**
  * --------------------------
  * Start Server

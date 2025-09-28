@@ -13,7 +13,7 @@ export const mgr_HotelInfo_Validation_Middleware = (
     closingTime,
     website,
     address,
-  } = req.body;
+  } = req?.body?.formData;
 
   // Name check
   if (!name || name.length < 3 || name.length > 80) {
@@ -33,7 +33,7 @@ export const mgr_HotelInfo_Validation_Middleware = (
     return;
   }
 
-  // ✅ Indian mobile number check (10 digits, starts with 6–9)
+  // ✅ Indian mobile number check
   if (!/^[6-9]\d{9}$/.test(contactNumber)) {
     res.status(400).json({
       success: false,
@@ -52,7 +52,6 @@ export const mgr_HotelInfo_Validation_Middleware = (
     return;
   }
 
-  // ✅ Max length check (e.g., 100 characters)
   if (email.length > 100) {
     res.status(400).json({
       success: false,
@@ -60,7 +59,8 @@ export const mgr_HotelInfo_Validation_Middleware = (
     });
     return;
   }
-  // Regex to match "h:00 AM/PM" or "hh:00 AM/PM"
+
+  // Time regex for "h:00 AM/PM"
   const timeRegex = /^(1[0-2]|0?[1-9]):00 (AM|PM)$/;
 
   // Opening & Closing Hours validation
@@ -88,9 +88,28 @@ export const mgr_HotelInfo_Validation_Middleware = (
     return;
   }
 
+  const convertTo24Hour = (time: string) => {
+    const [hourStr, period] = time.split(/:00 | /);
+    let hour = parseInt(hourStr || "0", 10);
+    if (isNaN(hour)) hour = 0;
+    if (period === "PM" && hour !== 12) hour += 12;
+    if (period === "AM" && hour === 12) hour = 0;
+    return hour;
+  };
+
+  const openHour = convertTo24Hour(openingTime);
+  const closeHour = convertTo24Hour(closingTime);
+
+  if (openHour >= closeHour) {
+    res.status(400).json({
+      success: false,
+      message: "Opening time must be earlier than closing time.",
+    });
+    return;
+  }
+
   // Website / Social Links (optional)
   if (website) {
-    // Max length check
     if (website.length > 2000) {
       res.status(400).json({
         success: false,
@@ -99,7 +118,6 @@ export const mgr_HotelInfo_Validation_Middleware = (
       return;
     }
 
-    // Format check
     if (!/^(https?:\/\/)?([\w\d-]+\.)+\w{2,}(\/.+)?$/.test(website)) {
       res.status(400).json({
         success: false,
