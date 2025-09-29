@@ -57,6 +57,11 @@ import mgr_Get_staff_account_Router from "./manager/settings/staffAccount/mgr_Ge
 import mgr_check_pwd_staff_delAc_Router from "./manager/settings/staffAccount/deleteStaffAccount/mgr_check_pwd_staff_delAc";
 import mgr_verify_otp_staff_delAc_Router from "./manager/settings/staffAccount/deleteStaffAccount/mgr_verify_otp_staff_delAc";
 
+//Quic Order
+import get_category_food_list_Router from "./QuickOrder/get_category_food_list";
+
+
+
 // Load environment variables from .env
 dotenv.config();
 
@@ -153,6 +158,7 @@ app.use(mgr_reset_staff_password_Router);
 app.use(mgr_Get_staff_account_Router);
 app.use(mgr_check_pwd_staff_delAc_Router);
 app.use(mgr_verify_otp_staff_delAc_Router);
+app.use(get_category_food_list_Router);
 
 
  

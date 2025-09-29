@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-  import dotenv from "dotenv";
-  dotenv.config();
+import dotenv from "dotenv";
+dotenv.config();
 
-  const JWT_SECRET = process.env.JWT_SECRET as string;
+const JWT_SECRET = process.env.JWT_SECRET as string;
 
 // Extend Request type to include user property
 export interface AuthRequest extends Request {
@@ -16,10 +16,13 @@ export interface AuthRequest extends Request {
  * verifyTokenRole - returns middleware to verify JWT and user role
  * @param roleName - string, e.g., "manager",
  */
-export const verifyToken = (roleName: "manager" | "staff") => {
+export const verifyToken = (roleName: "manager" | "staff" | '') => {
   return (req: AuthRequest, res: Response, next: NextFunction): void => {
     try {
-      const token = req.cookies[`${roleName}_Token`];
+      const effectiveRole = (roleName || req?.params?.role || "").toLowerCase();
+
+      // const token = req.cookies[`${roleName}_Token`];
+      const token = req.cookies[`${effectiveRole}_Token`];
 
       if (!token) {
         // Send structured JSON response instead of redirect
@@ -37,19 +40,22 @@ export const verifyToken = (roleName: "manager" | "staff") => {
       const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
 
       // Check user role
-      if (decoded.role !== roleName) {
+      if (decoded.role !== effectiveRole) {
         res.status(403).json({ message: "Unauthorized role" });
         return;
       }
 
-      if (roleName === "manager") req.manager = decoded;
+      if (effectiveRole === "manager") req.manager = decoded;
       // else if (roleName === "staff") req.staff = decoded;
 
       next();
     } catch (error) {
       res
         .status(500)
-        .json({ message: "Server error occurred. Please try again later." ,error});
+        .json({
+          message: "Server error occurred. Please try again later.",
+          error,
+        });
       return;
     }
   };
