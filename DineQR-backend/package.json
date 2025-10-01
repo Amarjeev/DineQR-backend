@@ -31,6 +31,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@sendgrid/mail": "^8.1.6",
     "@sendinblue/client": "^3.3.1",
     "@upstash/redis": "^1.35.3",
     "aws-sdk": "^2.1692.0",
