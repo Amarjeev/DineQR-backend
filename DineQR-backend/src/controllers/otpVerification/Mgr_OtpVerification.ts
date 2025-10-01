@@ -65,8 +65,9 @@ Mgr_OtpVerification_Router.post(
 
       // Generate a JWT token using the manager's ID, email, and role
       const token = generateToken({
-        id: userData._id,
+        hotelKey: userData._id,
         email: userData.email,
+        userId: userData._id,
         role: userData.role,
       });
 
@@ -75,7 +76,7 @@ Mgr_OtpVerification_Router.post(
         httpOnly: true,
         secure: true,
         sameSite: "strict",
-         maxAge: 5 * 24 * 60 * 60 * 1000,
+        maxAge: 5 * 24 * 60 * 60 * 1000,
       });
 
       // ================================
@@ -87,7 +88,6 @@ Mgr_OtpVerification_Router.post(
       return res.status(200).json({
         success: true,
         message: "OTP verified successfully",
-        token,
       });
     } catch (error) {
       console.error("❌ OTP verification error:", error);

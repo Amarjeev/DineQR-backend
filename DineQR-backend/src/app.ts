@@ -59,8 +59,8 @@ import mgr_verify_otp_staff_delAc_Router from "./manager/settings/staffAccount/d
 
 //Quic Order
 import get_category_food_list_Router from "./QuickOrder/get_category_food_list";
-
-
+import get_food_byId_Router from "./QuickOrder/get_food_byID";
+import get_user_Id_Router from "./controllers/getUserID/get_user_Id";
 
 // Load environment variables from .env
 dotenv.config();
@@ -159,9 +159,10 @@ app.use(mgr_Get_staff_account_Router);
 app.use(mgr_check_pwd_staff_delAc_Router);
 app.use(mgr_verify_otp_staff_delAc_Router);
 app.use(get_category_food_list_Router);
+app.use(get_food_byId_Router);
+app.use(get_user_Id_Router);
 
 
- 
 /**
  * --------------------------
  * Start Server

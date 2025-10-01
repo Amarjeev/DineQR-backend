@@ -1,13 +1,14 @@
+import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
-import { ManagerRequest } from "../../../types/manager";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
+
 
 const mgr_Logout_Router = Router();
 
 mgr_Logout_Router.post(
   "/api/v1/manager/logout",
   verifyToken("manager"),
-  async (_req: ManagerRequest, res: Response) => {
+  async (_req: MultiUserRequest, res: Response) => {
     try {
       // Clear the cookie
       res.clearCookie("manager_Token", {

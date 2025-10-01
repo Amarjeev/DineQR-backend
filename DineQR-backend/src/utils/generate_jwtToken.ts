@@ -8,8 +8,9 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
 const JWT_EXPIRES_IN: SignOptions["expiresIn"] = "10d";
 
 export interface JwtPayload {
-  id: string;
+  hotelKey: string;
   email: string;
+  userId: string;
   role: string;
 }
 

@@ -1,17 +1,18 @@
+import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
-import { ManagerRequest } from "../../../types/manager";
 import ManagerProfileSchema from "../../../models/manager/mgr_ProfileSchemaModel";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { redis } from "../../../config/redis";
+
 
 const mgr_get_ManagerProfile_Router = Router();
 
 mgr_get_ManagerProfile_Router.get(
   "/api/v1/manager/get/profile",
   verifyToken('manager'),
-  async (req: ManagerRequest, res: Response) => {
+  async (req: MultiUserRequest, res: Response) => {
     try {
-        const hotelKey = req.manager?.id;
+        const hotelKey = req.manager?.hotelKey;
 
       if (!hotelKey) {
         return res.status(400).json({ message: "Manager ID not provided" });

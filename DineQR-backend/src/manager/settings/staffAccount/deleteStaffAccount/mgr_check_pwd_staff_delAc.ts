@@ -1,5 +1,5 @@
+import { MultiUserRequest } from './../../../../types/user';
 import { Router, Response } from "express";
-import { ManagerRequest } from "../../../../types/manager";
 import { verifyToken } from "../../../../middleware/verifyToken/verifyToken";
 import ManagerProfileSchema from "../../../../models/manager/mgr_ProfileSchemaModel";
 import StaffProfileSchema from "../../../../models/manager/mgr_Staff_ProfileSchemaModel";
@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import { redis } from "../../../../config/redis";
 import { sendEmail } from "../../../../services/sendEmail";
 import mgr_DeleteStaffAccountOtpUI from "../../../../emailTemplates/mgr_DeleteStaffAccountOtpUI";
+
 
 const mgr_check_pwd_staff_delAc_Router = Router();
 
@@ -18,9 +19,9 @@ const mgr_check_pwd_staff_delAc_Router = Router();
 mgr_check_pwd_staff_delAc_Router.post(
   "/api/v1/manager/check-password/delete/staff-account",
   verifyToken("manager"),
-  async (req: ManagerRequest, res: Response) => {
+  async (req: MultiUserRequest, res: Response) => {
     try {
-      const hotelKey = req.manager?.id;
+      const hotelKey = req.manager?.hotelKey;
 
       // Check if manager ID exists
       if (!hotelKey) {

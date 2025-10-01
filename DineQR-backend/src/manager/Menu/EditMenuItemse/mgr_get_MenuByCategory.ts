@@ -17,7 +17,7 @@ import { Router, Response } from "express";
 import Menu_Item from "../../../models/manager/mgr_MenuSchemaModel";
 import { foodCategories } from "../../../controllers/CategoriesList/FoodCategory";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
-import { ManagerRequest } from "../../../types/manager";
+import { MultiUserRequest } from './../../../types/user';
 import { redis } from "../../../config/redis";
 
 const mgr_get_MenuByCategory_Router = Router();
@@ -26,9 +26,9 @@ const mgr_get_MenuByCategory_Router = Router();
 mgr_get_MenuByCategory_Router.get(
   "/api/v1/manager/menu-list/:foodCategory",
   verifyToken("manager"),
-  async (req: ManagerRequest, res: Response) => {
+  async (req: MultiUserRequest, res: Response) => {
     try {
-      const hotelKey = req.manager?.id;
+      const hotelKey = req.manager?.hotelKey;
 
       if (!hotelKey) {
         res.status(401).json({ error: "Unauthorized: Manager not found" });

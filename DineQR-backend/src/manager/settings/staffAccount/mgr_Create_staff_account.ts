@@ -1,9 +1,10 @@
+import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
-import { ManagerRequest } from "../../../types/manager";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import bcrypt from "bcryptjs";
 import StaffProfileSchema from "../../../models/manager/mgr_Staff_ProfileSchemaModel";
 import { mgr_Staff_profileValidation } from "./validation/mgr_Staff_profileValidation";
+
 
 const mgr_Create_staff_account_Router = Router();
 
@@ -11,12 +12,12 @@ mgr_Create_staff_account_Router.post(
   "/api/v1/manager/create/staff/account",
   verifyToken("manager"),
   mgr_Staff_profileValidation,
-  async (req: ManagerRequest, res: Response) => {
+  async (req: MultiUserRequest, res: Response) => {
     try {
       const { staffId, password, name } = req?.body?.formData;
 
       // Use real manager ID from token if available
-      const hotelKey = req.manager?.id;
+      const hotelKey = req.manager?.hotelKey;
 
       if (!hotelKey) {
         res

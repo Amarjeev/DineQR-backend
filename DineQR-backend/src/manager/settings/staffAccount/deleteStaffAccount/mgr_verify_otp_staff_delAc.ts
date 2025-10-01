@@ -1,8 +1,9 @@
+import { MultiUserRequest } from './../../../../types/user';
 import { Router, Response } from "express";
-import { ManagerRequest } from "../../../../types/manager";
 import { verifyToken } from "../../../../middleware/verifyToken/verifyToken";
 import StaffProfileSchema from "../../../../models/manager/mgr_Staff_ProfileSchemaModel";
 import ManagerProfileSchema from "../../../../models/manager/mgr_ProfileSchemaModel";
+
 import { redis } from "../../../../config/redis";
 
 const mgr_verify_otp_staff_delAc_Router = Router();
@@ -13,13 +14,13 @@ const mgr_verify_otp_staff_delAc_Router = Router();
 mgr_verify_otp_staff_delAc_Router.post(
   "/api/v1/manager/OtpVerify/delete/staff-account",
   verifyToken("manager"), // Ensure the requester is a verified manager
-  async (req: ManagerRequest, res: Response) => {
+  async (req: MultiUserRequest, res: Response) => {
     try {
       // ==============================
       // Extract OTP and staffId from request body
       // ==============================
       const { otp, staffId } = req?.body?.formData;
-      const hotelKey = req.manager?.id; // Manager ID from verified token
+      const hotelKey = req.manager?.hotelKey; // Manager ID from verified token
 
       // ==============================
       // Validate required fields

@@ -1,8 +1,9 @@
+import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
-import { ManagerRequest } from "../../../types/manager";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import ManagerProfileSchema from "../../../models/manager/mgr_ProfileSchemaModel";
 import bcrypt from "bcryptjs";
+
 
 import { redis } from "../../../config/redis";
 import { sendEmail } from "../../../services/sendEmail";
@@ -13,9 +14,9 @@ const mgr_Request_deleteAccount_Router = Router();
 mgr_Request_deleteAccount_Router.post(
   "/api/v1/manager/request/delete/account",
   verifyToken("manager"),
-  async (req: ManagerRequest, res: Response) => {
+  async (req: MultiUserRequest, res: Response) => {
     try {
-      const hotelKey = req.manager?.id;
+      const hotelKey = req.manager?.hotelKey;
 
       if (!hotelKey) {
         return res

@@ -1,5 +1,5 @@
+import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
-import { ManagerRequest } from "../../../types/manager";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import ManagerProfileSchema from "../../../models/manager/mgr_ProfileSchemaModel";
 import { redis } from "../../../config/redis";
@@ -9,11 +9,11 @@ const mgr_Otpverify_deleteAccount_Router = Router();
 mgr_Otpverify_deleteAccount_Router.post(
   "/api/v1/manager/OtpVerify/delete/account",
   verifyToken("manager"),
-  async (req: ManagerRequest, res: Response) => {
+  async (req: MultiUserRequest, res: Response) => {
     try {
       const { otp } = req.body;
 
-      const hotelKey = req.manager?.id;
+      const hotelKey = req.manager?.hotelKey;
 
       if (!hotelKey) {
         res

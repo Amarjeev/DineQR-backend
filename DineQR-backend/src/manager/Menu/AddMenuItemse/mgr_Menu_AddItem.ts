@@ -21,12 +21,12 @@ import { uploadToS3 } from "../../../utils/Upload_s3";
 import { AddItemSchema } from "../MenuValidation/mgr_MenuValidation";
 import Menu_Item from "../../../models/manager/mgr_MenuSchemaModel";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
-import { ManagerPayload } from "../../../types/manager";
+import { MultiUserRequest } from "./../../../types/user";
 
 interface MulterRequest extends Express.Request {
   file?: Express.Multer.File | undefined;
   body: any;
-  manager?: ManagerPayload;
+  manager?: MultiUserRequest["manager"];
 }
 
 const mgr_Menu_AddItem_Roter = Router();
@@ -40,7 +40,15 @@ mgr_Menu_AddItem_Roter.post(
       // Extract and parse incoming form data
       const data = req.body.foodItem;
 
-      const { id } = req.manager as ManagerPayload;
+      // Validate manager exists
+      if (!req.manager) {
+        return res.status(403).json({
+          message: "Manager data not found in request.",
+          success: false,
+        });
+      }
+
+      const { userId } = req.manager;
 
       if (!data) {
         return res.status(400).json({
@@ -100,7 +108,7 @@ mgr_Menu_AddItem_Roter.post(
 
       // Create new Menu Item document
       const itemData = new Menu_Item({
-        hotelKey: id,
+        hotelKey: userId,
         productName: item.productName,
         sizes: item.sizes,
         prices: item.prices,

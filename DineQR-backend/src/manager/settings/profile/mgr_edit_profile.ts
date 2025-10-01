@@ -1,10 +1,11 @@
+import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
-import { ManagerRequest } from "../../../types/manager";
 import ManagerProfileSchema from "../../../models/manager/mgr_ProfileSchemaModel";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { mgr_Profile_Validation_Middleware } from "./validation/mgr_profileValidation";
 import bcrypt from "bcryptjs";
 import { redis } from "../../../config/redis";
+
 
 const mgr_edit_ManagerProfile_Router = Router();
 
@@ -12,10 +13,10 @@ mgr_edit_ManagerProfile_Router.post(
   "/api/v1/manager/edit/profile",
   verifyToken("manager"),
   mgr_Profile_Validation_Middleware,
-  async (req: ManagerRequest, res: Response) => {
+  async (req: MultiUserRequest, res: Response) => {
     try {
       // Use real manager ID from token if available
-      const hotelKey = req.manager?.id;
+      const hotelKey = req.manager?.hotelKey;
 
       if (!hotelKey) {
         return res.status(400).json({ message: "Manager ID not provided" });

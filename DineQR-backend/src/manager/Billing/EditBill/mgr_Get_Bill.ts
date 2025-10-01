@@ -1,16 +1,17 @@
+import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
 import billSchema from "../../../models/manager/mgr_BillSchemaModel";
-import { ManagerRequest } from "../../../types/manager";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { redis } from "../../../config/redis";
+
 
 const mgr_Get_Bill_Router = Router();
 
 mgr_Get_Bill_Router.get(
   "/api/v1/manager/create/bill",
   verifyToken("manager"),
-  async (req: ManagerRequest, res: Response) => {
-    const hotelKey = req.manager?.id;
+  async (req: MultiUserRequest, res: Response) => {
+    const hotelKey = req.manager?.hotelKey;
 
     if (!hotelKey) {
       return res

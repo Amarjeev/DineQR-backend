@@ -1,10 +1,11 @@
+import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
-import { ManagerRequest } from "../../../types/manager";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import bcrypt from "bcryptjs";
 import StaffProfileSchema from "../../../models/manager/mgr_Staff_ProfileSchemaModel";
 import { mgr_Staff_profileValidation } from "./validation/mgr_Staff_profileValidation";
 import { redis } from "../../../config/redis";
+
 
 const mgr_reset_staff_password_Router = Router();
 
@@ -12,11 +13,11 @@ mgr_reset_staff_password_Router.post(
   "/api/v1/manager/reset-staff-password",
   verifyToken("manager"),
   mgr_Staff_profileValidation,
-  async (req: ManagerRequest, res: Response) => {
+  async (req: MultiUserRequest, res: Response) => {
     try {
       const { staffId, password, name, skipPassword } = req?.body?.formData;
 
-      const hotelKey = req.manager?.id;
+      const hotelKey = req.manager?.hotelKey;
 
       const redisKey = `mgr_StaffAccount_list:${hotelKey}`;
 

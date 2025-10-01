@@ -1,9 +1,8 @@
 import { Router, Response } from "express";
-// import { foodCategories } from "../controllers/CategoriesList/FoodCategory";
 import { verifyToken } from "../middleware/verifyToken/verifyToken";
 import { redis } from "../config/redis";
 import Menu_Item from "../models/manager/mgr_MenuSchemaModel";
-import { MultiUserRequest } from "../types/manager";
+import { MultiUserRequest } from "../types/user";
 
 const get_category_food_list_Router = Router();
 
@@ -36,7 +35,7 @@ get_category_food_list_Router.get(
       }
 
       // Get hotelKey from the request based on the role
-      const hotelKey = req[role as keyof MultiUserRequest]?.id;
+      const hotelKey = req[role as keyof MultiUserRequest]?.hotelKey;
 
       // Return error if hotelKey not found (unauthorized access)
       if (!hotelKey) {

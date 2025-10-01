@@ -1,18 +1,19 @@
+import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
 import billSchema from "../../../models/manager/mgr_BillSchemaModel";
-import { ManagerRequest } from "../../../types/manager";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { redis } from "../../../config/redis";
 import { diff } from "deep-diff";
+
 
 const mgr_Edit_Bill_Router = Router();
 
 mgr_Edit_Bill_Router.patch(
   "/api/v1/manager/edit/bill",
   verifyToken("manager"),
-  async (req: ManagerRequest, res: Response) => {
+  async (req: MultiUserRequest, res: Response) => {
     try {
-      const hotelKey = req.manager?.id;
+      const hotelKey = req.manager?.hotelKey;
       const formData = req.body;
       const redisKey = `bill:${hotelKey}`;
 

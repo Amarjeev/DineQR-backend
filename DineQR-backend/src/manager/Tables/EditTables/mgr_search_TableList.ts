@@ -1,16 +1,17 @@
+import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
 import tableSchema from "../../../models/manager/mgr_TableSchemaModel";
-import { ManagerRequest } from "../../../types/manager";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
+
 
 const mgr_search_TableList_Router = Router();
 
 mgr_search_TableList_Router.get(
   "/api/v1/manager/search/tableList",
   verifyToken("manager"),
-  async (req: ManagerRequest, res: Response) => {
+  async (req: MultiUserRequest, res: Response) => {
     try {
-      const hotelKey = req.manager?.id;
+      const hotelKey = req.manager?.hotelKey;
 
       // Access tableName from query params and convert to uppercase
       const rawTableName = req.query.tableName as string;

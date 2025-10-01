@@ -1,8 +1,8 @@
 import { Router, Response } from "express";
 import billSchema from "../../../models/manager/mgr_BillSchemaModel";
-import { ManagerRequest } from "../../../types/manager";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { validateBillData } from "../ValidationBill/validationBill";
+import { MultiUserRequest } from "../../../types/user";
 
 const mgr_Create_Bill_Router = Router();
 
@@ -10,9 +10,9 @@ mgr_Create_Bill_Router.post(
   "/api/v1/manager/create/bill",
   verifyToken("manager"),
   validateBillData,
-  async (req: ManagerRequest, res: Response) => {
+  async (req: MultiUserRequest, res: Response) => {
     try {
-      const hotelKey = req.manager?.id;
+      const hotelKey = req.manager?.hotelKey;
       if (!hotelKey) {
         return res
           .status(400)

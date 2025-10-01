@@ -1,18 +1,19 @@
+import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
-import { ManagerRequest } from "../../../types/manager";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import StaffProfileSchema from "../../../models/manager/mgr_Staff_ProfileSchemaModel";
 import { redis } from "../../../config/redis";
+
 
 const mgr_Get_staff_account_Router = Router();
 
 mgr_Get_staff_account_Router.get(
   "/api/v1/manager/get/staff/accounts",
   verifyToken("manager"),
-  async (req: ManagerRequest, res: Response) => {
+  async (req: MultiUserRequest, res: Response) => {
     try {
       // Use real manager ID from token if available
-      const hotelKey = req.manager?.id;
+      const hotelKey = req.manager?.hotelKey;
 
       if (!hotelKey) {
         return res

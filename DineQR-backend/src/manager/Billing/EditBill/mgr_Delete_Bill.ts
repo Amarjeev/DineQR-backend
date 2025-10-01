@@ -1,16 +1,16 @@
 import { Router, Response } from "express";
 import billSchema from "../../../models/manager/mgr_BillSchemaModel";
-import { ManagerRequest } from "../../../types/manager";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { redis } from "../../../config/redis";
+import { MultiUserRequest } from "../../../types/user";
 
 const mgr_Delete_Bill_Router = Router();
 
 mgr_Delete_Bill_Router.post(
   "/api/v1/manager/delete/bill",
   verifyToken("manager"),
-  async (req: ManagerRequest, res: Response) => {
-    const hotelKey = req.manager?.id;
+  async (req: MultiUserRequest, res: Response) => {
+    const hotelKey = req.manager?.hotelKey;
     const redisKey = `bill:${hotelKey}`;
 
     try {

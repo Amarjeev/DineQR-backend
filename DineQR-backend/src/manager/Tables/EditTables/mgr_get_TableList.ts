@@ -1,17 +1,18 @@
+import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
 import tableSchema from "../../../models/manager/mgr_TableSchemaModel";
-import { ManagerRequest } from "../../../types/manager";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { redis } from "../../../config/redis";
+
 
 const mgr_get_TableList_Router = Router();
 
 mgr_get_TableList_Router.get(
   "/api/v1/manager/get/tableList",
   verifyToken("manager"),
-  async (req: ManagerRequest, res: Response) => {
+  async (req: MultiUserRequest, res: Response) => {
     try {
-      const hotelKey = req.manager?.id;
+      const hotelKey = req.manager?.hotelKey;
 
       // ✅ Extract pagination from query params (default: page 1, limit: 20)
       const page = parseInt(req.query.page as string) || 1;

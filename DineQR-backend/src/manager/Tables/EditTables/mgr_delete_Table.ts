@@ -1,9 +1,10 @@
 // Import required modules
 import { Router, Response } from "express";
 import tableSchema from "../../../models/manager/mgr_TableSchemaModel";
-import { ManagerRequest } from "../../../types/manager";
+import { MultiUserRequest } from './../../../types/user';
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { redis } from "../../../config/redis";
+
 
 // Create a new router instance
 const mgr_delete_Table_Router = Router();
@@ -12,9 +13,9 @@ const mgr_delete_Table_Router = Router();
 mgr_delete_Table_Router.post(
   "/api/v1/manager/delete/table",
   verifyToken("manager"), // ✅ Middleware to verify manager token
-  async (req: ManagerRequest, res: Response) => {
+  async (req: MultiUserRequest, res: Response) => {
     try {
-      const hotelKey = req.manager?.id;
+      const hotelKey = req.manager?.hotelKey;
       const { itemId, PageNumber } = req.body;
 
       // ✅ Validate request
