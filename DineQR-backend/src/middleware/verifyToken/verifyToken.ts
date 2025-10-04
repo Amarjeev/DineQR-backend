@@ -16,12 +16,11 @@ export interface AuthRequest extends Request {
  * verifyTokenRole - returns middleware to verify JWT and user role
  * @param roleName - string, e.g., "manager",
  */
-export const verifyToken = (roleName: "manager" | "staff" | '') => {
+export const verifyToken = (roleName: "manager" | "staff" | "") => {
   return (req: AuthRequest, res: Response, next: NextFunction): void => {
     try {
       const effectiveRole = (roleName || req?.params?.role || "").toLowerCase();
 
-      // const token = req.cookies[`${roleName}_Token`];
       const token = req.cookies[`${effectiveRole}_Token`];
 
       if (!token) {
@@ -29,10 +28,7 @@ export const verifyToken = (roleName: "manager" | "staff" | '') => {
         res.status(401).json({
           success: false,
           errorType: "INVALID_TOKEN",
-          message:
-            roleName === "manager"
-              ? "Manager token is invalid. Please login again."
-              : "Unauthorized access. Please login again.",
+          message: "Unauthorized access. Please login again.",
         });
         return;
       }
@@ -46,16 +42,14 @@ export const verifyToken = (roleName: "manager" | "staff" | '') => {
       }
 
       if (effectiveRole === "manager") req.manager = decoded;
-      // else if (roleName === "staff") req.staff = decoded;
+      if (effectiveRole === "staff") req.staff = decoded;
 
       next();
     } catch (error) {
-      res
-        .status(500)
-        .json({
-          message: "Server error occurred. Please try again later.",
-          error,
-        });
+      res.status(500).json({
+        message: "Server error occurred. Please try again later.",
+        error,
+      });
       return;
     }
   };

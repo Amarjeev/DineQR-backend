@@ -41,7 +41,7 @@ get_category_food_list_Router.get(
       if (!hotelKey) {
         return res.status(401).json({
           success: false,
-          message: "Unauthorized: manager not found",
+          message: "Unauthorized",
         });
       }
 

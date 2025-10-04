@@ -1,14 +1,22 @@
 import { Request } from "express";
 
-export interface UserPayload {
+export interface ManagerPayload {
   hotelKey: string;
   email: string;
   userId: string;
+  name: string;
+  role: string;
+}
+
+export interface StaffPayload {
+  hotelKey: string;
+  userId: string;
+  name: string;
   role: string;
 }
 
 // ✅ Request type allowing multiple managers and staff
 export interface MultiUserRequest extends Request {
-  manager?: UserPayload;
-  staff?: UserPayload;
+  manager?: ManagerPayload;
+  staff?: StaffPayload;
 }

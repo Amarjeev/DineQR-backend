@@ -9,9 +9,10 @@ const JWT_EXPIRES_IN: SignOptions["expiresIn"] = "10d";
 
 export interface JwtPayload {
   hotelKey: string;
-  email: string;
+  email?: string;
   userId: string;
-  role: string;
+  name?: string;
+  role?: string;
 }
 
 export const generateToken = (payload: JwtPayload): string => {

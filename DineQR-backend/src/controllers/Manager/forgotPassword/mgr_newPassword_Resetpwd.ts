@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import managerProfileModel from "../../models/manager/mgr_ProfileSchemaModel";
+import managerProfileModel from "../../../models/manager/mgr_ProfileSchemaModel";
 import bcrypt from "bcryptjs";
 
 const mgr_newPassword_Resetpwd_Router = Router();

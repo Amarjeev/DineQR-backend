@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { redis } from "../../config/redis";
+import { redis } from "../../../config/redis";
 
 const mgr_verifyOtp_Resetpwd_Router = Router();
 

@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import { mgr_SignupValidation_Schema } from "./SignupValidation/mgr_SignupValidation";
-import ManagerProfileSchema from "../../models/manager/mgr_ProfileSchemaModel";
+import ManagerProfileSchema from "../../../models/manager/mgr_ProfileSchemaModel";
 // ================================
 // Router Initialization
 // ================================

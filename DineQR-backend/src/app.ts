@@ -23,13 +23,13 @@ import compression from "compression";
 import connectDB from "./config/database";
 
 // Route imports
-import emailCheckRouter from "./controllers/checkEmail/check_Email";
-import mgr_Signup_Router from "./controllers/signup/mgr_Signup";
-import mgr_Login_Router from "./controllers/login/mgr_Login";
-import Mgr_OtpVerification_Router from "./controllers/otpVerification/Mgr_OtpVerification";
-import mgr_checkEmail_Resetpwd_Router from "./controllers/forgotPassword/mgr_checkEmail_Resetpwd";
-import mgr_newPassword_Resetpwd_Router from "./controllers/forgotPassword/mgr_newPassword_Resetpwd";
-import mgr_verifyOtp_Resetpwd_Router from "./controllers/forgotPassword/mgr_verifyOtp_Resetpwd";
+import emailCheckRouter from "./controllers/Manager/checkEmail/check_Email";
+import mgr_Signup_Router from "./controllers/Manager/signup/mgr_Signup";
+import mgr_Login_Router from "./controllers/Manager/login/mgr_Login";
+import Mgr_OtpVerification_Router from "./controllers/Manager/otpVerification/Mgr_OtpVerification";
+import mgr_checkEmail_Resetpwd_Router from "./controllers/Manager/forgotPassword/mgr_checkEmail_Resetpwd";
+import mgr_newPassword_Resetpwd_Router from "./controllers/Manager/forgotPassword/mgr_newPassword_Resetpwd";
+import mgr_verifyOtp_Resetpwd_Router from "./controllers/Manager/forgotPassword/mgr_verifyOtp_Resetpwd";
 import mgr_Menu_AddItem_Roter from "./manager/Menu/AddMenuItemse/mgr_Menu_AddItem";
 import mgr_get_MenuByCategory_Router from "./manager/Menu/EditMenuItemse/mgr_get_MenuByCategory";
 import mgr_get_MenuEdit_Router from "./manager/Menu/EditMenuItemse/mgr_get_MenuEdit_Item";
@@ -57,10 +57,21 @@ import mgr_Get_staff_account_Router from "./manager/settings/staffAccount/mgr_Ge
 import mgr_check_pwd_staff_delAc_Router from "./manager/settings/staffAccount/deleteStaffAccount/mgr_check_pwd_staff_delAc";
 import mgr_verify_otp_staff_delAc_Router from "./manager/settings/staffAccount/deleteStaffAccount/mgr_verify_otp_staff_delAc";
 
+
+//common
+
+//Staff
+import staff_Login_Router from "./controllers/Staff/login/staff_Login";
+
+
+
+
 //Quic Order
 import get_category_food_list_Router from "./QuickOrder/get_category_food_list";
 import get_food_byId_Router from "./QuickOrder/get_food_byID";
 import get_user_Id_Router from "./controllers/getUserID/get_user_Id";
+import get_Table_List_Router from "./controllers/GetTableList/get_Table_List";
+import post_Confirm_Orders_Router from "./QuickOrder/post_Confirm_Orders";
 
 // Load environment variables from .env
 dotenv.config();
@@ -161,6 +172,10 @@ app.use(mgr_verify_otp_staff_delAc_Router);
 app.use(get_category_food_list_Router);
 app.use(get_food_byId_Router);
 app.use(get_user_Id_Router);
+app.use(staff_Login_Router);
+app.use(get_Table_List_Router);
+app.use(post_Confirm_Orders_Router);
+
 
 
 /**

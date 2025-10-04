@@ -1,9 +1,9 @@
 import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import manager_profileModel from "../../models/manager/mgr_ProfileSchemaModel";
-import { redis } from "../../config/redis";
-import { sendEmail } from "../../services/sendEmail";
-import mgr_LoginOtpUI from "../../emailTemplates/mgr_LoginOtpUI";
+import manager_profileModel from "../../../models/manager/mgr_ProfileSchemaModel";
+import { redis } from "../../../config/redis";
+import { sendEmail } from "../../../services/sendEmail";
+import mgr_LoginOtpUI from "../../../emailTemplates/mgr_LoginOtpUI";
 
 const mgr_Login_Router = Router();
 

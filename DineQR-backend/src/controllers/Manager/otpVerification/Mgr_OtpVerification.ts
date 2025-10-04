@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
 import { Router, Request, Response } from "express";
-import { redis } from "../../config/redis";
-import { sendEmail } from "../../services/sendEmail";
-import mgr_LoginOtpUI from "../../emailTemplates/mgr_LoginOtpUI";
-import { generateToken } from "../../utils/generate_jwtToken";
+import { redis } from "../../../config/redis";
+import { sendEmail } from "../../../services/sendEmail";
+import mgr_LoginOtpUI from "../../../emailTemplates/mgr_LoginOtpUI";
+import { generateToken } from "../../../utils/generate_jwtToken";
 
 const Mgr_OtpVerification_Router = Router();
 
@@ -70,6 +70,13 @@ Mgr_OtpVerification_Router.post(
         userId: userData._id,
         role: userData.role,
       });
+
+      if (!token) {
+        return res.status(500).json({
+          success: false,
+          message: "Server error: Could not generate authentication token",
+        });
+      }
 
       // Set the JWT token in an HTTP-only cookie for secure browser storage
       res.cookie("manager_Token", token, {

@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express";
-import managerProfileModel from "../../models/manager/mgr_ProfileSchemaModel";
-import { redis } from "../../config/redis";
-import { sendEmail } from "../../services/sendEmail";
-import mgrForgotPasswordTemplate from "../../emailTemplates/mgr_forgotPasswordUI";
+import managerProfileModel from "../../../models/manager/mgr_ProfileSchemaModel";
+import { redis } from "../../../config/redis";
+import { sendEmail } from "../../../services/sendEmail";
+import mgrForgotPasswordTemplate from "../../../emailTemplates/mgr_forgotPasswordUI";
 
 const mgr_checkEmail_Resetpwd_Router = Router();
 

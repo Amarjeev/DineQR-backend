@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
-import { redis } from "../../config/redis";
-import mgr_ProfileSchemaModel from "../../models/manager/mgr_ProfileSchemaModel";
+import { redis } from "../../../config/redis";
+import mgr_ProfileSchemaModel from "../../../models/manager/mgr_ProfileSchemaModel";
 
 const emailCheckRouter = Router();
 
