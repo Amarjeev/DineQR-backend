@@ -96,7 +96,7 @@ const PORT: number = Number(process.env.PORT) || 5000;
 
 // ✅ CORS configuration for allowed frontends
 const corsOptions: CorsOptions = {
-  origin: ["http://localhost:5173", "https://dine-qr-website.vercel.app"],
+  origin: ["http://localhost:5173","http://localhost:5174", "https://dine-qr-website.vercel.app"],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type"],
   credentials: true, // Enable cookies/auth headers
