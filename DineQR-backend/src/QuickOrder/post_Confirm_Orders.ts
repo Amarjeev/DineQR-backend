@@ -3,6 +3,7 @@ import { verifyToken } from "../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../types/user";
 import OrderSchemaModel from "../models/orders/order_SchemaModel";
 import { Server as SocketIOServer } from "socket.io";
+import { generateOrderId } from "./generateOrderId";
 
 const post_Confirm_Orders_Router = Router();
 
@@ -29,18 +30,23 @@ post_Confirm_Orders_Router.post(
 
       // Get hotelKey from request (added by verifyToken middleware)
       const hotelKey = req[role as keyof MultiUserRequest]?.hotelKey;
+      const userType = req[role as keyof MultiUserRequest]?.role;
+      // Generate user-friendly order ID
+      const orderId = generateOrderId();
 
-      if (!hotelKey) {
+      if (!hotelKey || !userType || !orderId) {
         return res.status(401).json({
           success: false,
-          message: "Unauthorized - hotelKey missing",
+          message: "Unauthorized - hotelKey or userRole or orderId missing",
         });
       }
 
       // Create new order
       const newOrder = new OrderSchemaModel({
         ...orderData,
-        hotelKey, // Add hotelKey from token
+        hotelKey,
+        orderedBy: userType,
+        orderId,
         orderAccepted: false, // default
         orderCancelled: false, // default
         isDeleted: false, // default

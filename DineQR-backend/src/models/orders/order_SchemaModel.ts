@@ -24,6 +24,8 @@ export interface IItem {
  */
 export interface IOrder extends Document {
   hotelKey: string;
+  orderId: string;
+  orderedBy: "manager" | "staff";
   mobileNumber: string;
   orderType: "dining" | "parcel";
   tableNumber?: string;
@@ -46,7 +48,7 @@ const PortionSchema = new Schema<IPortion>(
     quantity: { type: Number, required: true, min: 1 },
     subtotal: { type: Number, required: true, min: 0 },
   },
-  { _id: false } // no extra _id for each portion
+  { _id: false }
 );
 
 /**
@@ -67,6 +69,12 @@ const ItemSchema = new Schema<IItem>(
 const OrderSchema = new Schema<IOrder>(
   {
     hotelKey: { type: String, required: true, index: true },
+    orderId: { type: String, required: true, unique: true, index: true },
+    orderedBy: {
+      type: String,
+      enum: ["manager", "staff"],
+      required: true,
+    },
     mobileNumber: { type: String, required: true, match: /^[0-9]{10}$/ },
     orderType: { type: String, enum: ["dining", "parcel"], required: true },
     tableNumber: {

@@ -1,7 +1,6 @@
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { Server as HttpServer } from "http";
-
-const HOTEL_KEY = "68c016f89540bdb6226598f2";
+import OrderSchemaModel from "../models/orders/order_SchemaModel";
 
 export const initSocket = (httpServer: HttpServer) => {
   const io = new SocketIOServer(httpServer, {
@@ -16,14 +15,32 @@ export const initSocket = (httpServer: HttpServer) => {
   });
 
   io.on("connection", (socket: Socket) => {
-    console.log("🟢 Client connected:", socket.id);
+    console.log(`🟢 Client connected: ${socket.id}`);
 
-    // Automatically join the hotel room
-    socket.join(HOTEL_KEY);
-    console.log(`Client ${socket.id} joined hotel room ${HOTEL_KEY}`);
+    // Listen for joinRoom event
+    socket.on("joinRoom", async (hotelKey: string) => {
+      // 1️⃣ Save hotelKey and join room
+      socket.join(hotelKey);
+      console.log(`Client ${socket.id} joined hotel room ${hotelKey}`);
+
+      // 2️⃣ Fetch orders for this hotel
+      try {
+        const orderData = await OrderSchemaModel.find({
+          hotelKey,
+          orderAccepted: false,
+          orderCancelled: false,
+        }).lean();
+
+        // 3️⃣ Send initial orders to this client only
+        socket.emit("initialOrders", orderData);
+        console.log(`Sent ${orderData.length} orders to client ${socket.id}`);
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+      }
+    });
 
     socket.on("disconnect", () => {
-      console.log("🔴 Client disconnected:", socket.id);
+      console.log(`🔴 Client disconnected: ${socket.id}`);
     });
   });
 
