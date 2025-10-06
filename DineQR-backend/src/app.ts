@@ -18,6 +18,8 @@ import helmet from "helmet";
 import { securityHeaders } from "./middleware/WebsiteSecurity/securityHeaders";
 import fileManagerRoutes from "./middleware/WebsiteSecurity/fileRoutes";
 import compression from "compression";
+import { initSocket } from "./config/socket";
+import { createServer } from "http";
 
 // Database connection
 import connectDB from "./config/database";
@@ -57,14 +59,10 @@ import mgr_Get_staff_account_Router from "./manager/settings/staffAccount/mgr_Ge
 import mgr_check_pwd_staff_delAc_Router from "./manager/settings/staffAccount/deleteStaffAccount/mgr_check_pwd_staff_delAc";
 import mgr_verify_otp_staff_delAc_Router from "./manager/settings/staffAccount/deleteStaffAccount/mgr_verify_otp_staff_delAc";
 
-
 //common
 
 //Staff
 import staff_Login_Router from "./controllers/Staff/login/staff_Login";
-
-
-
 
 //Quic Order
 import get_category_food_list_Router from "./QuickOrder/get_category_food_list";
@@ -96,7 +94,11 @@ const PORT: number = Number(process.env.PORT) || 5000;
 
 // ✅ CORS configuration for allowed frontends
 const corsOptions: CorsOptions = {
-  origin: ["http://localhost:5173","http://localhost:5174", "https://dine-qr-website.vercel.app"],
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "https://dine-qr-website.vercel.app",
+  ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type"],
   credentials: true, // Enable cookies/auth headers
@@ -176,8 +178,6 @@ app.use(staff_Login_Router);
 app.use(get_Table_List_Router);
 app.use(post_Confirm_Orders_Router);
 
-
-
 /**
  * --------------------------
  * Start Server
@@ -188,8 +188,16 @@ const startServer = async (): Promise<void> => {
   try {
     await connectDB(); // Initialize MongoDB connection
 
-    app.listen(PORT, "0.0.0.0", () => {
-      console.log(`🚀 Server running at port ${PORT}`);
+    const httpServer = createServer(app);
+
+    // ✅ Initialize Socket.IO from separate file
+    const io = initSocket(httpServer);
+
+    // ✅ Make io accessible to routes
+    app.set("io", io);
+
+    httpServer.listen(PORT, "0.0.0.0", () => {
+      console.log(`🚀 Server running with WebSocket at port ${PORT}`);
     });
   } catch (error) {
     console.error("Server failed to start:", error);

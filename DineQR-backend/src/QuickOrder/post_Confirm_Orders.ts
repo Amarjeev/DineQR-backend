@@ -1,8 +1,8 @@
-// post_Confirm_Orders_Router.ts
 import { Router, Response } from "express";
 import { verifyToken } from "../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../types/user";
 import OrderSchemaModel from "../models/orders/order_SchemaModel";
+import { Server as SocketIOServer } from "socket.io";
 
 const post_Confirm_Orders_Router = Router();
 
@@ -48,6 +48,17 @@ post_Confirm_Orders_Router.post(
 
       // Save order to database
       await newOrder.save();
+      // 2️⃣ Get the Socket.IO instance from Express app
+      const io = req.app.get("io") as SocketIOServer;
+
+      // 🔔 Send the new order to all connected clients
+      // NOTE: This currently sends to **everyone**, not just the staff of this hotel
+      io.emit("newOrder", newOrder);
+
+      // 💡 If you want to send only to staff of this hotel:
+      // io.to(hotelKey).emit("newOrder", newOrder);
+      // - `hotelKey` is the unique room for this hotel
+      // - Only clients who joined this room will get the event
 
       return res.status(201).json({
         success: true,

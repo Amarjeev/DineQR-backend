@@ -14,7 +14,7 @@ export interface IPortion {
  * Item Type
  */
 export interface IItem {
-  _id?: string;       // optional: MongoDB ObjectId or external id
+  _id?: string; // optional: MongoDB ObjectId or external id
   name: string;
   portions: IPortion[]; // supports multiple portions
 }
@@ -30,6 +30,7 @@ export interface IOrder extends Document {
   items: IItem[];
   orderAccepted: boolean;
   orderCancelled: boolean;
+  paymentStatus: boolean;
   isDeleted: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -77,10 +78,14 @@ const OrderSchema = new Schema<IOrder>(
     items: {
       type: [ItemSchema],
       required: true,
-      validate: [(val: IItem[]) => val.length > 0, "Order must have at least 1 item"],
+      validate: [
+        (val: IItem[]) => val.length > 0,
+        "Order must have at least 1 item",
+      ],
     },
     orderAccepted: { type: Boolean, default: false },
     orderCancelled: { type: Boolean, default: false },
+    paymentStatus: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }
