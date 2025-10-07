@@ -45,7 +45,7 @@ const PortionSchema = new Schema<IPortion>(
   {
     portion: { type: String, required: true },
     price: { type: Number, required: true, min: 0 },
-    quantity: { type: Number, required: true, min: 1 },
+    quantity: { type: Number, required: true, min: 1, max: 500 },
     subtotal: { type: Number, required: true, min: 0 },
   },
   { _id: false }

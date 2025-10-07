@@ -2,7 +2,13 @@ import { Server as SocketIOServer, Socket } from "socket.io";
 import { Server as HttpServer } from "http";
 import OrderSchemaModel from "../models/orders/order_SchemaModel";
 
+/**
+ * Initializes a Socket.IO server for real-time order updates
+ * @param httpServer - HTTP server instance to attach Socket.IO
+ * @returns Socket.IO server instance
+ */
 export const initSocket = (httpServer: HttpServer) => {
+  // ✅ Create Socket.IO server and configure CORS
   const io = new SocketIOServer(httpServer, {
     cors: {
       origin: [
@@ -14,14 +20,16 @@ export const initSocket = (httpServer: HttpServer) => {
     },
   });
 
+  // 🔹 Handle client connections
   io.on("connection", (socket: Socket) => {
     console.log(`🟢 Client connected: ${socket.id}`);
 
-    // Listen for joinRoom event
+    // ================================
+    // 🔹 Join hotel-specific room
+    // ================================
     socket.on("joinRoom", async (hotelKey: string) => {
       // 1️⃣ Save hotelKey and join room
       socket.join(hotelKey);
-      console.log(`Client ${socket.id} joined hotel room ${hotelKey}`);
 
       // 2️⃣ Fetch orders for this hotel
       try {
@@ -29,16 +37,18 @@ export const initSocket = (httpServer: HttpServer) => {
           hotelKey,
           orderAccepted: false,
           orderCancelled: false,
+          isDeleted: false,
         }).lean();
 
-        // 3️⃣ Send initial orders to this client only
+        // 3️⃣ Send initial orders to **this client only**
         socket.emit("initialOrders", orderData);
-        console.log(`Sent ${orderData.length} orders to client ${socket.id}`);
+
       } catch (err) {
-        console.error("Error fetching orders:", err);
+        console.error("❌ Error fetching orders:", err);
       }
     });
 
+    // 🔹 Handle client disconnect
     socket.on("disconnect", () => {
       console.log(`🔴 Client disconnected: ${socket.id}`);
     });

@@ -69,7 +69,9 @@ import get_category_food_list_Router from "./QuickOrder/get_category_food_list";
 import get_food_byId_Router from "./QuickOrder/get_food_byID";
 import get_user_Id_Router from "./controllers/getUserID/get_user_Id";
 import get_Table_List_Router from "./controllers/GetTableList/get_Table_List";
-import post_Confirm_Orders_Router from "./QuickOrder/post_Confirm_Orders";
+import post_Confirm_Cart_Orders_Router from "./QuickOrder/post_Confirm_Cart_Orders";
+import put_Edit_Orders_Router from "./QuickOrder/put_Edit_Orders";
+import del_Remove_Order_Items_Router from "./QuickOrder/del_Remove_Order_Items";
 
 // Load environment variables from .env
 dotenv.config();
@@ -176,7 +178,10 @@ app.use(get_food_byId_Router);
 app.use(get_user_Id_Router);
 app.use(staff_Login_Router);
 app.use(get_Table_List_Router);
-app.use(post_Confirm_Orders_Router);
+app.use(post_Confirm_Cart_Orders_Router);
+app.use(put_Edit_Orders_Router);
+app.use(del_Remove_Order_Items_Router);
+
 
 /**
  * --------------------------
