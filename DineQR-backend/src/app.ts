@@ -73,6 +73,7 @@ import post_Confirm_Cart_Orders_Router from "./QuickOrder/post_Confirm_Cart_Orde
 import put_Edit_Orders_Router from "./QuickOrder/put_Edit_Orders";
 import del_Remove_Order_Items_Router from "./QuickOrder/del_Remove_Order_Items";
 import post_Reject_Order_Router from "./QuickOrder/post_Reject_Order";
+import post_confirm_Order_Router from "./QuickOrder/post_confirm_Order";
 
 //testing
 import sendOtp_Router from "./mobileOTPCHECKING/otpTest";
@@ -187,6 +188,8 @@ app.use(post_Confirm_Cart_Orders_Router);
 app.use(put_Edit_Orders_Router);
 app.use(del_Remove_Order_Items_Router);
 app.use(post_Reject_Order_Router);
+app.use(post_confirm_Order_Router);
+
 app.use(sendOtp_Router);
 
 

@@ -3,16 +3,16 @@ import { verifyToken } from "../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../types/user";
 import OrderSchemaModel from "../models/orders/order_SchemaModel";
 
-const post_Reject_Order_Router = Router();
+const post_confirm_Order_Router = Router();
 
 /**
  * 🔹 Reject an order by ID
- * Endpoint: POST /api/v1/:role/reject-Order
+ * Endpoint: POST /api/v1/:role/confirm-Order
  * Body: { orderId: string }
  * Middleware: verifyToken (authenticates user and adds role-specific data)
  */
-post_Reject_Order_Router.post(
-  "/api/v1/:role/orders/reject-Order",
+post_confirm_Order_Router.post(
+  "/api/v1/:role/orders/confirm-Order",
   verifyToken(""), // Token verification middleware
   async (req: MultiUserRequest, res: Response) => {
     try {
@@ -47,14 +47,15 @@ post_Reject_Order_Router.post(
         orderId,
         isDeleted: false,
         orderCancelled: false,
-      }).select('orderCancelled');
+        orderAccepted: false
+      }).select('orderAccepted');
 
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
       }
 
       // 🔹 Update order status to cancelled
-      order.orderCancelled = true;
+      order.orderAccepted = true;
       await order.save();
 
       // 🔹 Return success response
@@ -69,4 +70,4 @@ post_Reject_Order_Router.post(
   }
 );
 
-export default post_Reject_Order_Router;
+export default post_confirm_Order_Router;
