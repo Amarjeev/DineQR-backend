@@ -68,8 +68,6 @@ post_Confirm_Cart_Orders_Router.post(
       // 🔔 Emit the new order to all clients (can be restricted to hotel staff only)
       io.emit("newOrder", newOrder);
 
-      // 💡 Optional: Emit only to staff of this hotel
-      // io.to(hotelKey).emit("newOrder", newOrder);
 
       // 🔹 Respond with success
       return res.status(201).json({
