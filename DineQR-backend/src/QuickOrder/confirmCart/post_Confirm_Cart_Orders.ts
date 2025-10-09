@@ -1,7 +1,7 @@
 import { Router, Response } from "express";
-import { verifyToken } from "../middleware/verifyToken/verifyToken";
-import { MultiUserRequest } from "../types/user";
-import OrderSchemaModel from "../models/orders/order_SchemaModel";
+import { verifyToken } from "../../middleware/verifyToken/verifyToken";
+import { MultiUserRequest } from "../../types/user";
+import OrderSchemaModel from "../../models/orders/order_SchemaModel";
 import { Server as SocketIOServer } from "socket.io";
 import { generateOrderId } from "./generateOrderId";
 

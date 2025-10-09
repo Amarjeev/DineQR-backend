@@ -18,11 +18,12 @@ import helmet from "helmet";
 import { securityHeaders } from "./middleware/WebsiteSecurity/securityHeaders";
 import fileManagerRoutes from "./middleware/WebsiteSecurity/fileRoutes";
 import compression from "compression";
-import { initSocket } from "./config/socket";
+import { initSocket } from "./config/socket/socket";
+
 import { createServer } from "http";
 
 // Database connection
-import connectDB from "./config/database";
+import connectDB from "./config/mongoDb";
 
 // Route imports
 import emailCheckRouter from "./controllers/Manager/checkEmail/check_Email";
@@ -65,15 +66,22 @@ import mgr_verify_otp_staff_delAc_Router from "./manager/settings/staffAccount/d
 import staff_Login_Router from "./controllers/Staff/login/staff_Login";
 
 //Quic Order
-import get_category_food_list_Router from "./QuickOrder/get_category_food_list";
-import get_food_byId_Router from "./QuickOrder/get_food_byID";
+
+//cart
+import get_category_food_list_Router from "./QuickOrder/confirmCart/get_category_food_list";
+import get_food_byId_Router from "./QuickOrder/confirmCart/get_food_byID";
 import get_user_Id_Router from "./controllers/getUserID/get_user_Id";
 import get_Table_List_Router from "./controllers/GetTableList/get_Table_List";
-import post_Confirm_Cart_Orders_Router from "./QuickOrder/post_Confirm_Cart_Orders";
-import put_Edit_Orders_Router from "./QuickOrder/put_Edit_Orders";
-import del_Remove_Order_Items_Router from "./QuickOrder/del_Remove_Order_Items";
-import post_Reject_Order_Router from "./QuickOrder/post_Reject_Order";
-import post_confirm_Order_Router from "./QuickOrder/post_confirm_Order";
+import post_Confirm_Cart_Orders_Router from "./QuickOrder/confirmCart//post_Confirm_Cart_Orders";
+
+//OrderTable
+import put_Edit_Orders_Router from "./QuickOrder/ordersTable/put_Edit_Orders";
+import del_Remove_Order_Items_Router from "./QuickOrder/ordersTable/del_Remove_Order_Items";
+import post_Reject_Order_Router from "./QuickOrder/ordersTable/post_Reject_Order";
+import post_confirm_Order_Router from "./QuickOrder/ordersTable/post_confirm_Order";
+
+
+
 
 //testing
 import sendOtp_Router from "./mobileOTPCHECKING/otpTest";

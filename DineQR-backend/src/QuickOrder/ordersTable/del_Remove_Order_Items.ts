@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
-import OrderSchemaModel from "../models/orders/order_SchemaModel";
-import { verifyToken } from "../middleware/verifyToken/verifyToken";
+import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import { verifyToken } from "../../middleware/verifyToken/verifyToken";
+
 
 // ================================
 // ✅ Express Router: Delete Order Item

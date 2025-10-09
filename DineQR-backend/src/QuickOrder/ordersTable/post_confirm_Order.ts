@@ -1,7 +1,8 @@
 import { Router, Response } from "express";
-import { verifyToken } from "../middleware/verifyToken/verifyToken";
-import { MultiUserRequest } from "../types/user";
-import OrderSchemaModel from "../models/orders/order_SchemaModel";
+import { verifyToken } from "../../middleware/verifyToken/verifyToken";
+import { MultiUserRequest } from "../../types/user";
+import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import { Server as SocketIOServer } from "socket.io";
 
 const post_confirm_Order_Router = Router();
 
@@ -47,8 +48,8 @@ post_confirm_Order_Router.post(
         orderId,
         isDeleted: false,
         orderCancelled: false,
-        orderAccepted: false
-      }).select('orderAccepted');
+        orderAccepted: false,
+      }).select("orderAccepted");
 
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
@@ -57,6 +58,12 @@ post_confirm_Order_Router.post(
       // 🔹 Update order status to cancelled
       order.orderAccepted = true;
       await order.save();
+
+      // 🔹 Get Socket.IO instance from Express app
+      const io = req.app.get("io") as SocketIOServer;
+
+      // 🔔 Emit the new order to all clients (can be restricted to hotel staff only)
+      io.emit("confirmOrders", order);
 
       // 🔹 Return success response
       return res
