@@ -20,6 +20,31 @@ export interface IItem {
 }
 
 /**
+ * Enum for Kitchen Cancellation Reasons
+ */
+export enum KitchenCancelationReason {
+  OUT_OF_INGREDIENTS = "Out of ingredients",
+  KITCHEN_OVERLOADED = "Kitchen overloaded",
+  ITEM_NOT_AVAILABLE = "Item not available",
+  TECHNICAL_ISSUE = "Technical issue",
+  CUSTOMER_REQUEST = "Customer request",
+  QUALITY_CONCERNS = "Quality concerns",
+  OTHER_REASON = "Other reason",
+}
+
+/**
+ * Enum for Guest Cancellation Reasons
+ */
+export enum GuestCancelationReason {
+  CHANGED_MIND = "Changed my mind",
+  ORDER_DELAYED = "Order taking too long",
+  WRONG_ORDER_PLACED = "Placed the wrong order",
+  PRICE_ISSUE = "Price issue or too expensive",
+  FOUND_BETTER_OPTION = "Found a better option",
+  OTHER_REASON = "Other reason",
+}
+
+/**
  * Order Type
  */
 export interface IOrder extends Document {
@@ -30,10 +55,20 @@ export interface IOrder extends Document {
   orderType: "dining" | "parcel";
   tableNumber?: string;
   items: IItem[];
-  orderAccepted: boolean;
+
+  // 🔹 Guest cancellation
   orderCancelled: boolean;
+  orderCancelationReason?: GuestCancelationReason;
+
+  // 🔹 Kitchen cancellation
+  kitchOrderCancelation: boolean;
+  kitchOrdercancelationReason?: KitchenCancelationReason;
+
+  // 🔹 Order status
+  orderAccepted: boolean;
   paymentStatus: boolean;
   isDeleted: boolean;
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -68,6 +103,7 @@ const ItemSchema = new Schema<IItem>(
  */
 const OrderSchema = new Schema<IOrder>(
   {
+    // 🔸 Basic order info
     hotelKey: { type: String, required: true, index: true },
     orderId: { type: String, required: true, unique: true, index: true },
     orderedBy: {
@@ -83,6 +119,8 @@ const OrderSchema = new Schema<IOrder>(
         return this.orderType === "dining";
       },
     },
+
+    // 🔸 Order items
     items: {
       type: [ItemSchema],
       required: true,
@@ -91,8 +129,24 @@ const OrderSchema = new Schema<IOrder>(
         "Order must have at least 1 item",
       ],
     },
-    orderAccepted: { type: Boolean, default: false },
+
+    // 🔹 Guest cancellation
     orderCancelled: { type: Boolean, default: false },
+    orderCancelationReason: {
+      type: String,
+      enum: [...Object.values(GuestCancelationReason), ""],
+      default: "",
+    },
+    // 🔹 Kitchen cancellation
+    kitchOrderCancelation: { type: Boolean, default: false },
+    kitchOrdercancelationReason: {
+      type: String,
+      enum: [...Object.values(KitchenCancelationReason), ""],
+      default: "",
+    },
+
+    // 🔹 Status and flags
+    orderAccepted: { type: Boolean, default: false },
     paymentStatus: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
   },

@@ -19,6 +19,7 @@ export default function registerSocketEvents(_io: Server, socket: Socket) {
         hotelKey,
         orderAccepted: false,
         orderCancelled: false,
+        kitchOrderCancelation:false,
         isDeleted: false,
       }).lean();
 
@@ -39,6 +40,7 @@ export default function registerSocketEvents(_io: Server, socket: Socket) {
         hotelKey,
         orderAccepted: true,
         orderCancelled: false,
+        kitchOrderCancelation:false,
         isDeleted: false,
       }).lean();
 

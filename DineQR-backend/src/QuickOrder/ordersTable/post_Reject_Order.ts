@@ -5,6 +5,16 @@ import OrderSchemaModel from "../../models/orders/order_SchemaModel";
 
 const post_Reject_Order_Router = Router();
 
+const KitchenCancelationReasonsArray = [
+  "Out of ingredients",
+  "Kitchen overloaded",
+  "Item not available",
+  "Technical issue",
+  "Customer request",
+  "Quality concerns",
+  "Other reason",
+];
+
 /**
  * 🔹 Reject an order by ID
  * Endpoint: POST /api/v1/:role/reject-Order
@@ -16,7 +26,7 @@ post_Reject_Order_Router.post(
   verifyToken(""), // Token verification middleware
   async (req: MultiUserRequest, res: Response) => {
     try {
-      const { orderId } = req.body; // Extract orderId from request body
+      const { orderId, rejectionReason } = req.body; // Extract orderId from request body
       const role = req.params.role?.toLowerCase().trim() || ""; // Extract role from URL parameter
       // 🔹 Validate role
       if (!["manager", "staff", "guest"].includes(role)) {
@@ -37,8 +47,18 @@ post_Reject_Order_Router.post(
       }
 
       // 🔹 Validate orderId
-      if (!orderId) {
-        return res.status(400).json({ message: "Order ID is required" });
+      if (!orderId && !rejectionReason) {
+        return res
+          .status(400)
+          .json({ message: "Order ID and rejection reason are required" });
+      }
+
+      // 🔹 Validate rejectionReason against allowed reasons
+      if (!KitchenCancelationReasonsArray.includes(rejectionReason)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid rejection reason.",
+        });
       }
 
       // 🔹 Find the order in the database using hotelKey and orderId
@@ -47,20 +67,20 @@ post_Reject_Order_Router.post(
         orderId,
         isDeleted: false,
         orderCancelled: false,
-      }).select('orderCancelled');
+        kitchOrderCancelation: false,
+      }).select("kitchOrderCancelation kitchOrdercancelationReason");
 
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
       }
 
       // 🔹 Update order status to cancelled
-      order.orderCancelled = true;
+      order.kitchOrderCancelation = true;
+      order.kitchOrdercancelationReason = rejectionReason;
       await order.save();
 
       // 🔹 Return success response
-      return res
-        .status(200)
-        .json({ message: "Order rejected successfully", order });
+      return res.status(200).json({ message: "Order rejected successfully" });
     } catch (error) {
       console.error(error);
       // 🔹 Return server error in case of exception
