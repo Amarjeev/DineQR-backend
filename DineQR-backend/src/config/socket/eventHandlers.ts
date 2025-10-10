@@ -19,7 +19,8 @@ export default function registerSocketEvents(_io: Server, socket: Socket) {
         hotelKey,
         orderAccepted: false,
         orderCancelled: false,
-        kitchOrderCancelation:false,
+        kitchOrderCancelation: false,
+        orderDelivered: false,
         isDeleted: false,
       }).lean();
 
@@ -29,7 +30,7 @@ export default function registerSocketEvents(_io: Server, socket: Socket) {
     }
   });
 
-// ****************************************************************************
+  // ****************************************************************************
 
   socket.on("joinHotelConfirmedOrdersChannel", async (hotelKey: string) => {
     socket.join(hotelKey);
@@ -40,7 +41,8 @@ export default function registerSocketEvents(_io: Server, socket: Socket) {
         hotelKey,
         orderAccepted: true,
         orderCancelled: false,
-        kitchOrderCancelation:false,
+        kitchOrderCancelation: false,
+        orderDelivered: false,
         isDeleted: false,
       }).lean();
 
@@ -48,7 +50,5 @@ export default function registerSocketEvents(_io: Server, socket: Socket) {
     } catch (err) {
       console.error("❌ Error fetching confirmOrders:", err);
     }
-  });;
-
-
+  });
 }

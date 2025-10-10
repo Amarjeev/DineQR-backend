@@ -66,6 +66,7 @@ export interface IOrder extends Document {
 
   // 🔹 Order status
   orderAccepted: boolean;
+  orderDelivered: boolean;
   paymentStatus: boolean;
   isDeleted: boolean;
 
@@ -147,6 +148,7 @@ const OrderSchema = new Schema<IOrder>(
 
     // 🔹 Status and flags
     orderAccepted: { type: Boolean, default: false },
+    orderDelivered: { type: Boolean, default: false },
     paymentStatus: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
   },

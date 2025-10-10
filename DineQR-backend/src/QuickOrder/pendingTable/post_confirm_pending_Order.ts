@@ -2,9 +2,9 @@ import { Router, Response } from "express";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
 import OrderSchemaModel from "../../models/orders/order_SchemaModel";
-import { Server as SocketIOServer } from "socket.io";
+// import { Server as SocketIOServer } from "socket.io";
 
-const post_confirm_Order_Router = Router();
+const post_confirm_pending_Order = Router();
 
 /**
  * 🔹 Reject an order by ID
@@ -12,8 +12,8 @@ const post_confirm_Order_Router = Router();
  * Body: { orderId: string }
  * Middleware: verifyToken (authenticates user and adds role-specific data)
  */
-post_confirm_Order_Router.post(
-  "/api/v1/:role/orders/confirm-Order",
+post_confirm_pending_Order.post(
+  "/api/v1/:role/orders/confirm/pending-Order",
   verifyToken(""), // Token verification middleware
   async (req: MultiUserRequest, res: Response) => {
     try {
@@ -48,27 +48,28 @@ post_confirm_Order_Router.post(
         orderId,
         isDeleted: false,
         orderCancelled: false,
-        orderAccepted: false
-      }).select("orderAccepted");
+        orderAccepted: true,
+        orderDelivered:false
+      }).select("orderDelivered");
 
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
       }
 
       // 🔹 Update order status to cancelled
-      order.orderAccepted = true;
+      order.orderDelivered = true;
       await order.save();
 
       // 🔹 Get Socket.IO instance from Express app
-      const io = req.app.get("io") as SocketIOServer;
+      // const io = req.app.get("io") as SocketIOServer;
 
-      // 🔔 Emit the new order to all clients (can be restricted to hotel staff only)
-      io.emit("confirmOrders", order);
+      // // 🔔 Emit the new order to all clients (can be restricted to hotel staff only)
+      // io.emit("confirmOrders", order);
 
       // 🔹 Return success response
       return res
         .status(200)
-        .json({ message: "Order rejected successfully" });
+        .json({ message: "Pending Order accepted successfully" });
     } catch (error) {
       console.error(error);
       // 🔹 Return server error in case of exception
@@ -77,4 +78,4 @@ post_confirm_Order_Router.post(
   }
 );
 
-export default post_confirm_Order_Router;
+export default post_confirm_pending_Order;

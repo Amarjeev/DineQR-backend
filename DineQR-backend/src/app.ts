@@ -80,6 +80,9 @@ import del_Remove_Order_Items_Router from "./QuickOrder/ordersTable/del_Remove_O
 import post_Reject_Order_Router from "./QuickOrder/ordersTable/post_Reject_Order";
 import post_confirm_Order_Router from "./QuickOrder/ordersTable/post_confirm_Order";
 
+//pendingTable
+import post_confirm_pending_Order from "./QuickOrder/pendingTable/post_confirm_pending_Order";
+
 
 
 
@@ -197,6 +200,9 @@ app.use(put_Edit_Orders_Router);
 app.use(del_Remove_Order_Items_Router);
 app.use(post_Reject_Order_Router);
 app.use(post_confirm_Order_Router);
+app.use(post_confirm_pending_Order);
+
+
 
 app.use(sendOtp_Router);
 
