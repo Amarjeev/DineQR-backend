@@ -2,6 +2,8 @@ import { Router, Response } from "express";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
 import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import { sendOrderNotification } from "../emailServices/orderNotificationService";
+import { type OrderData } from "../emailServices/orderNotificationService";
 // import { Server as SocketIOServer } from "socket.io";
 
 const post_confirm_pending_Order = Router();
@@ -49,8 +51,8 @@ post_confirm_pending_Order.post(
         isDeleted: false,
         orderCancelled: false,
         orderAccepted: true,
-        orderDelivered:false
-      }).select("orderDelivered");
+        orderDelivered: false,
+      }).select("orderDelivered email items orderId tableNumber");
 
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
@@ -59,6 +61,8 @@ post_confirm_pending_Order.post(
       // 🔹 Update order status to cancelled
       order.orderDelivered = true;
       await order.save();
+      // 🔹 Return success response
+      res.status(200).json({ message: "Pending Order accepted successfully" });
 
       // 🔹 Get Socket.IO instance from Express app
       // const io = req.app.get("io") as SocketIOServer;
@@ -66,10 +70,12 @@ post_confirm_pending_Order.post(
       // // 🔔 Emit the new order to all clients (can be restricted to hotel staff only)
       // io.emit("confirmOrders", order);
 
-      // 🔹 Return success response
-      return res
-        .status(200)
-        .json({ message: "Pending Order accepted successfully" });
+
+      if (order?.email) {
+           await sendOrderNotification(hotelKey,order as OrderData,'deliverd')
+      }
+
+      return
     } catch (error) {
       console.error(error);
       // 🔹 Return server error in case of exception

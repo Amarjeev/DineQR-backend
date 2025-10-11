@@ -2,8 +2,10 @@ import { sendEmail } from "../../services/sendEmail";
 import orderApprovedUI from "../../emailTemplates/order_ApprovedUI";
 import orderCanceledUI from "../../emailTemplates/order_CanceledUI";
 import HotelInfoSchema from "../../models/manager/mgr_HotelInfoSchemaModel";
+import orderDeliveredUI from "../../emailTemplates/order_DeliverdUI";
 import { redis } from "../../config/redis";
 import { calculate_Order_Total } from "../../utils/calculateTotal";
+import billSchema from "../../models/manager/mgr_BillSchemaModel";
 
 export interface IHotelInfo {
   name: string;
@@ -18,6 +20,7 @@ export interface OrderData {
   createdAt: Date;
   items: any[];
   hotelKey: string;
+  tableNumber?: number | string;
 }
 
 /**
@@ -26,7 +29,7 @@ export interface OrderData {
 export const sendOrderNotification = async (
   hotelKey: string,
   orderData: OrderData,
-  status: "confirm" | "cancel",
+  status: "confirm" | "cancel" | "deliverd",
   cancellationReason?: string
 ): Promise<void> => {
   try {
@@ -90,6 +93,28 @@ export const sendOrderNotification = async (
         orderData.createdAt,
         new Date()
       );
+    } else if (status === "deliverd") {
+      const BillInfo = await billSchema
+        .findOne({ hotelKey, deleted: false })
+        .select("gstNumber contactNumber");
+
+      // Check if BillInfo exists and has the required fields
+      const gstNumber = BillInfo?.gstNumber || "";
+      const billContactNumber = BillInfo?.contactNumber || contactNumber;
+
+      emailTemplate = orderDeliveredUI(
+        orderData.email,
+        hotelName,
+        hotelAddress,
+        billContactNumber, // Use bill contact number or fallback to hotel contact number
+        gstNumber, // GST number from bill schema
+        orderData.orderId,
+        orderData.tableNumber?.toString() || "Parcel",
+        orderData.items,
+        totalAmount,
+        orderData.createdAt,
+        new Date()
+      );
     }
 
     // --------------------------
@@ -100,7 +125,9 @@ export const sendOrderNotification = async (
       subject:
         status === "confirm"
           ? `✅ Order Approved - ${hotelName}`
-          : `❌ Order Cancelled - ${hotelName}`,
+          : status === "cancel"
+          ? `❌ Order Cancelled - ${hotelName}`
+          : `🎉 Order Delivered - ${hotelName}`,
       htmlContent: emailTemplate?.html || "",
     });
 
