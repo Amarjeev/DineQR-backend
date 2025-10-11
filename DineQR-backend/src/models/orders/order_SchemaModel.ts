@@ -54,6 +54,7 @@ export interface IOrder extends Document {
   mobileNumber: string;
   orderType: "dining" | "parcel";
   tableNumber?: string;
+  email?: string;
   items: IItem[];
 
   // 🔹 Guest cancellation
@@ -112,7 +113,20 @@ const OrderSchema = new Schema<IOrder>(
       enum: ["manager", "staff"],
       required: true,
     },
-    mobileNumber: { type: String, required: true, match: /^[0-9]{10}$/ },
+    mobileNumber: {
+      type: String,
+      required: true,
+      match: /^[0-9]{10}$/,
+      index: true,
+    },
+    email: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      index: true,
+      maxlength: 254,
+      match: [/^\S+@\S+\.\S+$/, "Please enter a valid email address"],
+    },
     orderType: { type: String, enum: ["dining", "parcel"], required: true },
     tableNumber: {
       type: String,

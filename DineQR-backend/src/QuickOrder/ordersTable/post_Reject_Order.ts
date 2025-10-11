@@ -2,6 +2,8 @@ import { Router, Response } from "express";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
 import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import { sendOrderNotification } from "../emailServices/orderNotificationService";
+import { type OrderData } from "../emailServices/orderNotificationService";
 
 const post_Reject_Order_Router = Router();
 
@@ -68,7 +70,9 @@ post_Reject_Order_Router.post(
         isDeleted: false,
         orderCancelled: false,
         kitchOrderCancelation: false,
-      }).select("kitchOrderCancelation kitchOrdercancelationReason");
+      }).select(
+        "kitchOrderCancelation kitchOrdercancelationReason email createdAt items orderId"
+      );
 
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
@@ -80,7 +84,18 @@ post_Reject_Order_Router.post(
       await order.save();
 
       // 🔹 Return success response
-      return res.status(200).json({ message: "Order rejected successfully" });
+      res.status(200).json({ message: "Order rejected successfully" });
+
+      if (order?.email) {
+        await sendOrderNotification(
+          hotelKey,
+          order as OrderData,
+          "cancel",
+          rejectionReason
+        );
+      }
+
+      return;
     } catch (error) {
       console.error(error);
       // 🔹 Return server error in case of exception

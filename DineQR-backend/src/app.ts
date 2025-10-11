@@ -86,9 +86,6 @@ import post_confirm_pending_Order from "./QuickOrder/pendingTable/post_confirm_p
 
 
 
-//testing
-import sendOtp_Router from "./mobileOTPCHECKING/otpTest";
-
 
 // Load environment variables from .env
 dotenv.config();
@@ -203,8 +200,6 @@ app.use(post_confirm_Order_Router);
 app.use(post_confirm_pending_Order);
 
 
-
-app.use(sendOtp_Router);
 
 
 

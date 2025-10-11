@@ -3,23 +3,31 @@ import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
 import OrderSchemaModel from "../../models/orders/order_SchemaModel";
 import { Server as SocketIOServer } from "socket.io";
+import { sendOrderNotification } from "../emailServices/orderNotificationService";
+import { type OrderData } from "../emailServices/orderNotificationService";
 
+// ==========================
+// 🔹 Router Initialization
+// ==========================
 const post_confirm_Order_Router = Router();
 
-/**
- * 🔹 Reject an order by ID
- * Endpoint: POST /api/v1/:role/confirm-Order
- * Body: { orderId: string }
- * Middleware: verifyToken (authenticates user and adds role-specific data)
- */
+// ==========================
+// 🔹 POST Endpoint: Confirm Order
+// ==========================
 post_confirm_Order_Router.post(
   "/api/v1/:role/orders/confirm-Order",
-  verifyToken(""), // Token verification middleware
+  verifyToken(""), // Middleware to verify token
   async (req: MultiUserRequest, res: Response) => {
     try {
-      const { orderId } = req.body; // Extract orderId from request body
-      const role = req.params.role?.toLowerCase().trim() || ""; // Extract role from URL parameter
-      // 🔹 Validate role
+      // ==========================
+      // 🔹 Extract Request Data
+      // ==========================
+      const { orderId } = req.body;
+      const role = req.params.role?.toLowerCase().trim() || "";
+
+      // ==========================
+      // 🔹 Role Validation
+      // ==========================
       if (!["manager", "staff", "guest"].includes(role)) {
         return res.status(400).json({
           success: false,
@@ -27,51 +35,53 @@ post_confirm_Order_Router.post(
         });
       }
 
-      // 🔹 Extract hotelKey from the request object (added by verifyToken)
       const hotelKey = req[role as keyof MultiUserRequest]?.hotelKey;
-
-      // 🔹 Check if hotelKey exists
       if (!hotelKey) {
         return res
           .status(400)
-          .json({ success: false, error: "Hotel key missing" });
+          .json({ success: false, message: "Hotel key missing" });
       }
 
-      // 🔹 Validate orderId
-      if (!orderId) {
-        return res.status(400).json({ message: "Order ID is required" });
-      }
-
-      // 🔹 Find the order in the database using hotelKey and orderId
+      // ==========================
+      // 🔹 Fetch Order from Database
+      // ==========================
       const order = await OrderSchemaModel.findOne({
         hotelKey,
         orderId,
         isDeleted: false,
         orderCancelled: false,
-        orderAccepted: false
-      }).select("orderAccepted");
+        orderAccepted: false,
+      });
 
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
       }
 
-      // 🔹 Update order status to cancelled
+      // ==========================
+      // 🔹 Update Order Status
+      // ==========================
       order.orderAccepted = true;
       await order.save();
 
-      // 🔹 Get Socket.IO instance from Express app
+      // ==========================
+      // 🔹 Emit Order via Socket.IO
+      // ==========================
       const io = req.app.get("io") as SocketIOServer;
-
-      // 🔔 Emit the new order to all clients (can be restricted to hotel staff only)
       io.emit("confirmOrders", order);
 
-      // 🔹 Return success response
-      return res
-        .status(200)
-        .json({ message: "Order rejected successfully" });
+      res.status(200).json({ message: "Order approved successfully" });
+
+      if (order?.email) {
+        await sendOrderNotification(hotelKey, order as OrderData, "confirm");
+      }
+
+      return;
     } catch (error) {
       console.error(error);
-      // 🔹 Return server error in case of exception
+
+      // ==========================
+      // 🔹 Error Handling
+      // ==========================
       return res.status(500).json({ message: "Server error" });
     }
   }
