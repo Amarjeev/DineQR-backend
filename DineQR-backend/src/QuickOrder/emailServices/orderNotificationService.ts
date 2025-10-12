@@ -128,7 +128,7 @@ export const sendOrderNotification = async (
           : status === "cancel"
           ? `❌ Order Cancelled - ${hotelName}`
           : `🎉 Order Delivered - ${hotelName}`,
-      htmlContent: emailTemplate?.html || "",
+      htmlContent: (await emailTemplate)?.html || "",
     });
 
     console.log(

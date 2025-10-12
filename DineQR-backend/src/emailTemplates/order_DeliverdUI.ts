@@ -22,7 +22,7 @@ function orderDeliveredUI(
     ? deliveredDate.toLocaleString()
     : new Date().toLocaleString();
 
-  // ✅ Calculate total item count
+  // Total item count
   const totalItems = items.reduce((total, item) => {
     return (
       total +
@@ -42,239 +42,198 @@ function orderDeliveredUI(
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Order Delivered - ${hotelName}</title>
       <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
         body {
           margin: 0;
           padding: 0;
-          background: #f3f4f6;
-          font-family: 'Inter', sans-serif;
-          color: #1f2937;
+          background: #f5f5f5;
+          font-family: Arial, sans-serif;
+          color: #333;
+          line-height: 1.4;
         }
-        .
-        .
-        .
-        
+
         .container {
           max-width: 600px;
-          margin: 20px auto;
-          background: #fff;
-          border-radius: 12px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+          margin: 0 auto;
+          background: #ffffff;
+          border-radius: 8px;
           overflow: hidden;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .header {
-          background: linear-gradient(135deg, #10b981, #059669);
+          background: #2d5be3;
           color: white;
+          padding: 20px;
           text-align: center;
-          padding: 35px 20px;
         }
 
-        .logo {
-          font-size: 22px;
-          font-weight: 700;
-          margin-bottom: 6px;
+        .header h1 {
+          margin: 0 0 6px 0;
+          font-size: 20px;
         }
 
-        .title {
-          font-size: 24px;
-          font-weight: 600;
-          margin-bottom: 4px;
-        }
-
-        .subtitle {
-          font-size: 15px;
+        .header p {
+          margin: 0;
           opacity: 0.9;
+          font-size: 13px;
         }
 
         .content {
-          padding: 30px 25px;
-        }
-
-        .greeting {
-          text-align: center;
-          margin-bottom: 25px;
-        }
-
-        .greeting h2 {
-          font-size: 18px;
-          margin-bottom: 6px;
-        }
-
-        .delivery-success {
-          background: #ecfdf5;
-          border: 1px solid #a7f3d0;
-          border-radius: 8px;
           padding: 20px;
-          text-align: center;
-          margin-bottom: 25px;
         }
 
-        .delivery-icon {
-          font-size: 36px;
+        .section {
+          margin-bottom: 15px;
+          padding: 12px;
+          border: 1px solid #e0e0e0;
+          border-radius: 6px;
+        }
+
+        /* Order Details Section */
+        .order-info h3 {
+          margin-top: 0;
+          font-size: 14px;
+          color: #2d5be3;
+          font-weight: bold;
+          border-bottom: 2px solid #2d5be3;
+          display: inline-block;
+          padding-bottom: 3px;
           margin-bottom: 10px;
         }
 
-        .delivery-text {
-          font-size: 16px;
-          color: #059669;
-          font-weight: 600;
-        }
-
-        .bill-section {
-          background: #f9fafb;
-          border: 1px solid #e5e7eb;
-          border-radius: 10px;
-          padding: 25px;
-          margin-bottom: 25px;
-        }
-
-        .bill-header {
-          text-align: center;
-          margin-bottom: 20px;
-          border-bottom: 2px solid #e5e7eb;
-          padding-bottom: 15px;
-        }
-
-        .hotel-name {
-          font-size: 20px;
-          font-weight: 700;
-        }
-
-        .bill-title {
-          font-size: 15px;
-          color: #6b7280;
-        }
-
-        .order-info {
-          display: grid;
-          gap: 12px;
-          margin-bottom: 20px;
-        }
-
         .info-row {
-          display: flex;
-          justify-content: space-between;
-          font-size: 14px;
-          border-bottom: 1px solid #f3f4f6;
-          padding-bottom: 6px;
+          margin-bottom: 8px;
+          font-size: 12px;
         }
 
         .info-label {
-          color: #6b7280;
-          font-weight: 500;
+          font-weight: 600;
+          color: #555;
+          display: block;
+          margin-bottom: 2px;
         }
 
-        .items-container {
+        .info-value {
+          font-weight: 500;
+          color: #111;
+        }
+
+        /* Scrollable table wrapper */
+        .table-wrapper {
           overflow-x: auto;
-          margin-bottom: 20px;
-          border: 1px solid #e5e7eb;
-          border-radius: 8px;
+          max-height: 220px;
+          overflow-y: auto;
+          border: 1px solid #e0e0e0;
+          border-radius: 6px;
+          -webkit-overflow-scrolling: touch; /* Smooth scroll mobile */
+          scroll-behavior: smooth;
         }
 
         .items-table {
           width: 100%;
           border-collapse: collapse;
-          font-size: 13px;
-        }
-
-        .items-table th {
-          background: #f3f4f6;
-          text-align: left;
-          padding: 10px;
-          color: #6b7280;
-          text-transform: uppercase;
+          min-width: 520px;
           font-size: 12px;
         }
 
-        .items-table td {
-          padding: 10px;
-          border-bottom: 1px solid #f3f4f6;
+        .items-table th {
+          background: #f1f3f7;
+          text-align: left;
+          padding: 8px;
+          border-bottom: 1px solid #e0e0e0;
+          color: #555;
+          text-transform: uppercase;
+          font-size: 11px;
         }
 
-        .item-name { font-weight: 600; color: #1f2937; }
+        .items-table td {
+          padding: 8px;
+          border-bottom: 1px solid #f0f0f0;
+        }
+
+        .items-table tr:nth-child(even) {
+          background: #fafafa;
+        }
 
         .total-section {
-          border-top: 2px solid #e5e7eb;
-          padding-top: 10px;
+          margin-top: 12px;
+          padding-top: 12px;
+          border-top: 2px solid #e0e0e0;
         }
 
         .total-row {
           display: flex;
           justify-content: space-between;
-          padding: 8px 0;
-          font-size: 14px;
+          margin-bottom: 6px;
+          font-size: 12px;
         }
 
         .grand-total {
-          font-weight: 700;
-          color: #059669;
-          font-size: 16px;
+          font-weight: bold;
+          font-size: 14px;
+          color: #2d5be3;
         }
 
-        .payment-cta {
-          text-align: center;
-          background: #1f2937;
+        .payment-section {
+          background: #2d5be3;
           color: white;
-          border-radius: 10px;
-          padding: 25px 20px;
-          margin-bottom: 25px;
+          text-align: center;
+          padding: 16px;
+          border-radius: 6px;
         }
 
         .payment-amount {
-          font-size: 28px;
-          color: #10b981;
-          font-weight: 700;
+          font-size: 20px;
+          font-weight: bold;
           margin: 8px 0;
         }
 
         .pay-button {
           display: inline-block;
-          background: #10b981;
-          color: white;
-          padding: 14px 30px;
-          border-radius: 6px;
+          background: #ffffff;
+          color: #2d5be3;
+          padding: 10px 24px;
+          border-radius: 4px;
           text-decoration: none;
-          font-weight: 600;
-          transition: background 0.3s;
+          font-weight: bold;
+          margin: 8px 0;
+          font-size: 12px;
         }
 
-        .pay-button:hover {
-          background: #059669;
-        }
-
-        .contact-section {
-          background: #eff6ff;
-          border: 1px solid #bfdbfe;
-          border-radius: 8px;
-          padding: 20px;
+        .contact-info {
           text-align: center;
-          font-size: 14px;
+          font-size: 12px;
+          color: #666;
+          padding: 12px;
+          background: #f8f9fa;
+          border-radius: 6px;
+          margin-top: 12px;
         }
 
         .footer {
           text-align: center;
-          padding: 20px;
-          font-size: 13px;
-          color: #6b7280;
-          background: #f9fafb;
-          border-top: 1px solid #e5e7eb;
+          padding: 14px;
+          font-size: 11px;
+          color: #999;
+          background: #f5f5f5;
         }
 
-        /* ✅ Responsive */
+        /* Responsive */
         @media (max-width: 600px) {
-          .content { padding: 20px; }
-          .header { padding: 25px 15px; }
-          .title { font-size: 20px; }
-          .items-table th, .items-table td { padding: 8px; font-size: 12px; }
-          .payment-amount { font-size: 24px; }
-          .pay-button { width: 100%; padding: 14px 0; }
-        }
-
-        @media (max-width: 400px) {
-          .title { font-size: 18px; }
-          .payment-amount { font-size: 20px; }
+          .content {
+            padding: 12px;
+          }
+          .header {
+            padding: 16px;
+          }
+          .header h1 {
+            font-size: 18px;
+          }
+          .items-table th,
+          .items-table td {
+            padding: 5px 3px;
+            font-size: 10px;
+          }
         }
       </style>
     </head>
@@ -282,44 +241,48 @@ function orderDeliveredUI(
     <body>
       <div class="container">
         <div class="header">
-          <div class="logo">DineQR</div>
-          <div class="title">Order Delivered Successfully 🎉</div>
-          <p class="subtitle">Your meal has been served. Here’s your detailed bill.</p>
+          <h1>Order Delivered</h1>
+          <p>Your meal has been served successfully</p>
         </div>
 
         <div class="content">
-          <div class="greeting">
-            <h2>Hello ${email},</h2>
+          <div class="section">
+            <p><strong>Hello ${email},</strong></p>
             <p>Your order has been delivered to your table. Enjoy your meal!</p>
           </div>
 
-          <div class="delivery-success">
-            <div class="delivery-icon">✅</div>
-            <div class="delivery-text">Order Delivered Successfully</div>
+          <!-- Order Details -->
+          <div class="section order-info">
+            <h3>Order Details</h3>
+            <div class="info-row">
+                <span class="info-label" style="border-bottom: 1px solid #2d5be3; padding-bottom: 2px; display: inline-block;">Order ID :</span>
+              <span class="info-value">${orderId}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label" style="border-bottom: 1px solid #2d5be3; padding-bottom: 2px; display: inline-block;">Table Number :</span>
+              <span class="info-value">${tableNumber}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label" style="border-bottom: 1px solid #2d5be3; padding-bottom: 2px; display: inline-block;">Order Date :</span>
+              <span class="info-value">${orderTimestamp}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label" style="border-bottom: 1px solid #2d5be3; padding-bottom: 2px; display: inline-block;">Delivered Date :</span>
+              <span class="info-value">${deliveredTimestamp}</span>
+            </div>
           </div>
 
-          <div class="bill-section">
-            <div class="bill-header">
-              <div class="hotel-name">${hotelName}</div>
-              <div class="bill-title">TAX INVOICE</div>
-            </div>
-
-            <div class="order-info">
-              <div class="info-row"><span class="info-label">Order ID</span> <span> ${orderId}</span></div>
-              <div class="info-row"><span class="info-label">Table</span> <span> ${tableNumber}</span></div>
-              <div class="info-row"><span class="info-label">Order Date</span> <span> ${orderTimestamp}</span></div>
-              <div class="info-row"><span class="info-label">Delivered</span> <span> ${deliveredTimestamp}</span></div>
-            </div>
-
-            <div class="items-container">
+          <!-- Scrollable Table -->
+          <div class="section">
+            <div class="table-wrapper">
               <table class="items-table">
                 <thead>
                   <tr>
-                    <th>Item </th>
-                    <th>Portion </th>
-                    <th>Qty </th>
-                    <th>Price </th>
-                    <th>Subtotal </th>
+                    <th>Item</th>
+                    <th>Portion</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -331,7 +294,7 @@ function orderDeliveredUI(
                       <tr>
                         ${
                           i === 0
-                            ? `<td rowspan="${item.portions.length}" class="item-name">${item.name}</td>`
+                            ? `<td rowspan="${item.portions.length}">${item.name}</td>`
                             : ""
                         }
                         <td>${portion.portion}</td>
@@ -349,26 +312,34 @@ function orderDeliveredUI(
             </div>
 
             <div class="total-section">
-              <div class="total-row"><span>Total Items</span><span> ${totalItems}</span></div>
-              <div class="total-row grand-total"><span>Grand Total</span><span> ₹${totalAmount.toFixed(
-                2
-              )}</span></div>
+              <div class="total-row">
+                <span>Total Items:</span>
+                <span style="margin-left: 2px;">${totalItems}</span>
+              </div>
+              <div class="total-row grand-total">
+                <span>Grand Total:</span>
+                <span style="margin-left: 2px;">₹${totalAmount.toFixed(
+                  2
+                )}</span>
+              </div>
               ${
                 gstNumber
-                  ? `<p style="text-align:center;margin-top:10px;color:#6b7280;font-size:12px;">GSTIN: ${gstNumber}</p>`
+                  ? `<div style="text-align:center;margin-top:6px;font-size:12px;color:#666;">GSTIN: ${gstNumber}</div>`
                   : ""
               }
             </div>
           </div>
 
-          <div class="payment-cta">
+          <!-- Payment -->
+          <div class="payment-section">
             <div>Ready to Pay?</div>
-            <div class="payment-amount"> ₹${totalAmount.toFixed(2)}</div>
-            <a href="https://yourpaymentlink.com/pay/${orderId}" class="pay-button">💳 Pay Now</a>
-            <p style="font-size:12px;opacity:0.8;margin-top:8px;">Secure SSL Payment</p>
+            <div class="payment-amount">₹${totalAmount.toFixed(2)}</div>
+            <a href="https://yourpaymentlink.com/pay/${orderId}" class="pay-button">Pay Now</a>
+            <div style="font-size:11px;opacity:0.85;">Secure SSL Payment</div>
           </div>
 
-          <div class="contact-section">
+          <!-- Contact Info -->
+          <div class="contact-info">
             <strong>${hotelName}</strong><br/>
             ${hotelAddress}<br/>
             📞 ${hotelContactNumber}
@@ -376,12 +347,12 @@ function orderDeliveredUI(
         </div>
 
         <div class="footer">
-          Thank you for dining with <strong>${hotelName}</strong>! We hope to see you again soon.
+          Thank you for dining with us! We hope to see you again soon.
         </div>
       </div>
     </body>
     </html>
-    `,
+  `,
   };
 }
 
