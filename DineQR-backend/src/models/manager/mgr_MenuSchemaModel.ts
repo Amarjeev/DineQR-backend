@@ -16,17 +16,18 @@ export interface IMenuItem extends Document {
   };
   foodType: string; // veg / non-veg
   foodCategory: string; // category list
-  availability: string; // Available / Not Available
+  availability: "Available" | "SoldOut" | "ComingSoon";
   isDeleted: boolean; // soft delete flag
   s3Url: { type: String }; // main image stored in S3
   blurHash: { type: String }; // lightweight placeholder
 }
 
+const validAvailability = ["Available", "SoldOut", "ComingSoon"] as const;
 // Mongoose schema
 const MenuItemSchema: Schema = new Schema<IMenuItem>(
   {
     hotelKey: { type: String, required: true, index: true }, // Unique key representing the hotel
-    productName: { type: String, required: true, trim: true ,index: true},
+    productName: { type: String, required: true, trim: true, index: true },
     sizes: {
       quarter: { type: Boolean, default: false },
       half: { type: Boolean, default: false },
@@ -39,7 +40,11 @@ const MenuItemSchema: Schema = new Schema<IMenuItem>(
     },
     foodType: { type: String, required: true, lowercase: true, trim: true },
     foodCategory: { type: String, required: true, lowercase: true, trim: true },
-    availability: { type: String, default: "Available" },
+    availability: {
+      type: String,
+      enum: validAvailability,
+      default: "Available",
+    },
     isDeleted: { type: Boolean, default: false }, // soft delete flag
     s3Url: { type: String }, // S3 URL of the main image
     blurHash: { type: String }, // BlurHash placeholder string
