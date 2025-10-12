@@ -84,8 +84,8 @@ import post_confirm_Order_Router from "./QuickOrder/ordersTable/post_confirm_Ord
 import post_confirm_pending_Order from "./QuickOrder/pendingTable/post_confirm_pending_Order";
 
 //stockTable
-import get_Stock_Menue_Items_Router from "./QuickOrder/stockTable/get_Stock_Table";
-
+import get_FetchMenuItems_Stock_Table_Router from "./QuickOrder/stockTable/get_FetchMenuItems_Stock_Table";
+import post_UpdateStatus_Stock_Table_Router from "./QuickOrder/stockTable/post_UpdateStatus_Stock_Table";
 
 
 
@@ -201,7 +201,8 @@ app.use(del_Remove_Order_Items_Router);
 app.use(post_Reject_Order_Router);
 app.use(post_confirm_Order_Router);
 app.use(post_confirm_pending_Order);
-app.use(get_Stock_Menue_Items_Router);
+app.use(get_FetchMenuItems_Stock_Table_Router);
+app.use(post_UpdateStatus_Stock_Table_Router);
 
 
 

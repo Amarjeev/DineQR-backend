@@ -3,14 +3,14 @@ import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
 import Menu_Item from "../../models/manager/mgr_MenuSchemaModel";
 
-const get_Stock_Menue_Items_Router = Router();
+const get_FetchMenuItems_Stock_Table_Router = Router();
 
 // ============================================================================
 // 🎯 GET Stock Menu Items (with pagination)
 // Route: /api/v1/:role/get/menue-itemse/:foodCategory/:availability
 // Query Params: page (default 1), limit (default 10)
 // ============================================================================
-get_Stock_Menue_Items_Router.get(
+get_FetchMenuItems_Stock_Table_Router.get(
   "/api/v1/:role/get/menue-itemse/:foodCategory/:availability",
   verifyToken(""),
   async (req: MultiUserRequest, res: Response) => {
@@ -79,4 +79,4 @@ get_Stock_Menue_Items_Router.get(
   }
 );
 
-export default get_Stock_Menue_Items_Router;
+export default get_FetchMenuItems_Stock_Table_Router;
