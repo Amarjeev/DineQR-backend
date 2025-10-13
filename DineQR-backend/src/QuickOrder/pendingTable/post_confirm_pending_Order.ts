@@ -4,6 +4,7 @@ import { MultiUserRequest } from "../../types/user";
 import OrderSchemaModel from "../../models/orders/order_SchemaModel";
 import { sendOrderNotification } from "../emailServices/orderNotificationService";
 import { type OrderData } from "../emailServices/orderNotificationService";
+import { create_Notification } from "../notification/post_create_Notification";
 // import { Server as SocketIOServer } from "socket.io";
 
 const post_confirm_pending_Order = Router();
@@ -31,12 +32,13 @@ post_confirm_pending_Order.post(
 
       // 🔹 Extract hotelKey from the request object (added by verifyToken)
       const hotelKey = req[role as keyof MultiUserRequest]?.hotelKey;
+      const userId = req[role as keyof MultiUserRequest]?.userId;
 
       // 🔹 Check if hotelKey exists
-      if (!hotelKey) {
+      if (!hotelKey || !userId) {
         return res
           .status(400)
-          .json({ success: false, error: "Hotel key missing" });
+          .json({ success: false, error: "Hotel key or userId missing" });
       }
 
       // 🔹 Validate orderId
@@ -52,7 +54,7 @@ post_confirm_pending_Order.post(
         orderCancelled: false,
         orderAccepted: true,
         orderDelivered: false,
-      }).select("orderDelivered email items orderId tableNumber");
+      }).select("orderDelivered email items orderId tableNumber orderId orderType");
 
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
@@ -70,12 +72,14 @@ post_confirm_pending_Order.post(
       // // 🔔 Emit the new order to all clients (can be restricted to hotel staff only)
       // io.emit("confirmOrders", order);
 
-
+      // 🔹 Send email notification if email exists
       if (order?.email) {
-           await sendOrderNotification(hotelKey,order as OrderData,'deliverd')
+        await sendOrderNotification(hotelKey, order as OrderData, "deliverd");
       }
+      // 🔹 Create notification for manager & staff
+      await create_Notification(hotelKey, order, "orderSuccess");
 
-      return
+      return;
     } catch (error) {
       console.error(error);
       // 🔹 Return server error in case of exception

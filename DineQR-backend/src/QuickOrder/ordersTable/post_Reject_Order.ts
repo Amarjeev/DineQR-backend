@@ -4,6 +4,7 @@ import { MultiUserRequest } from "../../types/user";
 import OrderSchemaModel from "../../models/orders/order_SchemaModel";
 import { sendOrderNotification } from "../emailServices/orderNotificationService";
 import { type OrderData } from "../emailServices/orderNotificationService";
+import { create_Notification } from "../notification/post_create_Notification";
 
 const post_Reject_Order_Router = Router();
 
@@ -71,7 +72,7 @@ post_Reject_Order_Router.post(
         orderCancelled: false,
         kitchOrderCancelation: false,
       }).select(
-        "kitchOrderCancelation kitchOrdercancelationReason email createdAt items orderId"
+        "kitchOrderCancelation kitchOrdercancelationReason orderId orderType tableNumber orderedBy email createdAt items orderId kitchOrdercancelationReason orderCancelationReason"
       );
 
       if (!order) {
@@ -94,7 +95,7 @@ post_Reject_Order_Router.post(
           rejectionReason
         );
       }
-
+      await create_Notification(hotelKey,order,"cancelOrder",role as "manager" | "staff" | "guest");
       return;
     } catch (error) {
       console.error(error);
