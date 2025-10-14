@@ -89,7 +89,7 @@ import post_UpdateStatus_Stock_Table_Router from "./QuickOrder/stockTable/post_U
 
 //notification
 
-//import post_create_Notification_Router from "./QuickOrder/notification/post_create_Notification";
+import post_Update_Notification_Status_Router from "./QuickOrder/notification/post_Update_Notification_Status";
 
 
 
@@ -206,7 +206,7 @@ app.use(post_confirm_Order_Router);
 app.use(post_confirm_pending_Order);
 app.use(get_FetchMenuItems_Stock_Table_Router);
 app.use(post_UpdateStatus_Stock_Table_Router);
-//app.use(post_create_Notification_Router);
+app.use(post_Update_Notification_Status_Router);
 
 
 

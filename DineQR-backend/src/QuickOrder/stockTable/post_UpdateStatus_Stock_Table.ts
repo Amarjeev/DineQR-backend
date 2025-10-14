@@ -2,6 +2,8 @@ import { Router, Response } from "express";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
 import Menu_Item from "../../models/manager/mgr_MenuSchemaModel";
+import { create_Notification } from "../notification/post_create_Notification";
+import { Server as SocketIOServer } from "socket.io";
 
 const post_UpdateStatus_Stock_Table_Router = Router();
 
@@ -77,6 +79,9 @@ post_UpdateStatus_Stock_Table_Router.post(
           .json({ success: false, message: "Menu item not found" });
       }
 
+      const io = req.app.get("io") as SocketIOServer;
+      await create_Notification(hotelKey, updatedItem, 'stockAlert', undefined, io);
+console.log(updatedItem)
       // ------------------------------------------------------------------------
       // ✅ Send success response
       // ------------------------------------------------------------------------

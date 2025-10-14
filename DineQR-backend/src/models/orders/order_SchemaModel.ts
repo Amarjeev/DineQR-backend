@@ -51,6 +51,7 @@ export interface IOrder extends Document {
   hotelKey: string;
   orderId: string;
   orderedBy: "manager" | "staff";
+  orderedById: string;
   mobileNumber: string;
   orderType: "dining" | "parcel";
   tableNumber?: string;
@@ -113,6 +114,7 @@ const OrderSchema = new Schema<IOrder>(
       enum: ["manager", "staff"],
       required: true,
     },
+    orderedById: { type: String, required: true },
     mobileNumber: {
       type: String,
       required: true,

@@ -36,6 +36,7 @@ post_Confirm_Cart_Orders_Router.post(
       // 🔹 Extract hotelKey and user role from request (added by verifyToken)
       const hotelKey = req[role as keyof MultiUserRequest]?.hotelKey;
       const userType = req[role as keyof MultiUserRequest]?.role;
+      const userId = req[role as keyof MultiUserRequest]?.userId;
 
       // 🔹 Generate a unique order ID
       const orderId = generateOrderId();
@@ -53,6 +54,7 @@ post_Confirm_Cart_Orders_Router.post(
         ...orderData,
         hotelKey,
         orderedBy: userType,
+        orderedById: userId,
         orderId,
         orderAccepted: false, // default status
         orderCancelled: false, // default status
@@ -67,7 +69,6 @@ post_Confirm_Cart_Orders_Router.post(
 
       // 🔔 Emit the new order to all clients (can be restricted to hotel staff only)
       io.emit("newOrder", newOrder);
-
 
       // 🔹 Respond with success
       return res.status(201).json({

@@ -5,7 +5,7 @@ import mongoose, { Document, Schema, Model } from "mongoose";
 // =======================================================
 export interface INotification extends Document {
   hotelKey: string; // Hotel identifier
-  messageType: "orderSuccess" | 'cancelOrder'; // Can extend later with union type
+  messageType: "orderSuccess" | "cancelOrder" | "stockAlert"; // Can extend later with union type
   existUsers: string[]; // Current active hotel user IDs
   messageReaders: string[]; // Who viewed the message
   messageDelete: string[]; // Who deleted the message
@@ -22,7 +22,7 @@ const NotificationSchema: Schema<INotification> = new Schema(
 
     messageType: {
       type: String,
-      enum: ["orderSuccess",'cancelOrder'],
+      enum: ["orderSuccess", "cancelOrder", "stockAlert"],
       required: true,
     },
 
@@ -63,9 +63,7 @@ const NotificationSchema: Schema<INotification> = new Schema(
 // =======================================================
 // 🚀 Mongoose Model Export
 // =======================================================
- const NotificationSchemaModel: Model<INotification> = mongoose.model<INotification>(
-  "Notification",
-  NotificationSchema
-);
+const NotificationSchemaModel: Model<INotification> =
+  mongoose.model<INotification>("Notification", NotificationSchema);
 
-export default NotificationSchemaModel
+export default NotificationSchemaModel;
