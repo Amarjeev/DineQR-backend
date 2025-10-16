@@ -33,18 +33,17 @@ get_user_Id_Router.get(
       // Get userId based on role from token payload
       const userId = req[role as keyof MultiUserRequest]?.userId;
       const hotelKey = req[role as keyof MultiUserRequest]?.hotelKey;
+      const name = req[role as keyof MultiUserRequest]?.name;
 
       if (!userId) {
-        return res
-          .status(404)
-          .json({
-            success: false,
-            message: "User ID not found for this role.",
-          });
+        return res.status(404).json({
+          success: false,
+          message: "User ID not found for this role.",
+        });
       }
 
       // Send userId to frontend for cart operations or user identification
-      return res.status(200).json({ success: true, userId, hotelKey });
+      return res.status(200).json({ success: true, userId, hotelKey, name });
     } catch (error) {
       console.error("Error fetching user ID:", error);
       return res

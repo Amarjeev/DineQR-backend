@@ -99,6 +99,10 @@ import get_Order_History_Router from "./QuickOrder/historyTable/get_Order_Histor
 
 import check_TokenValidation_Router from "./controllers/checkTokenExiste/check-auth";
 
+//Logout
+
+import logout_Router from "./controllers/Logout/logout";
+
 // Load environment variables from .env
 dotenv.config();
 
@@ -215,6 +219,7 @@ app.use(post_UpdateStatus_Stock_Table_Router);
 app.use(post_Update_Notification_Status_Router);
 app.use(get_Order_History_Router);
 app.use(check_TokenValidation_Router);
+app.use(logout_Router);
 
 
 
