@@ -91,7 +91,9 @@ import post_UpdateStatus_Stock_Table_Router from "./QuickOrder/stockTable/post_U
 
 import post_Update_Notification_Status_Router from "./QuickOrder/notification/post_Update_Notification_Status";
 
+//history
 
+import get_Order_History_Router from "./QuickOrder/historyTable/get_Order_History";
 
 // Load environment variables from .env
 dotenv.config();
@@ -207,9 +209,7 @@ app.use(post_confirm_pending_Order);
 app.use(get_FetchMenuItems_Stock_Table_Router);
 app.use(post_UpdateStatus_Stock_Table_Router);
 app.use(post_Update_Notification_Status_Router);
-
-
-
+app.use(get_Order_History_Router);
 
 
 /**
