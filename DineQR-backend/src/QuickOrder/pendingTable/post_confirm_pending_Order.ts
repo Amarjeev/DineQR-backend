@@ -23,17 +23,17 @@ post_confirm_pending_Order.post(
       // ==============================================
       // 🧩 REQUEST DATA EXTRACTION
       // ==============================================
-      
+
       // Extract orderId from request body
       const { orderId } = req.body;
-      
+
       // Extract role from URL parameter and normalize
       const role = req.params.role?.toLowerCase().trim() || "";
 
       // ==============================================
       // 🧩 ROLE VALIDATION
       // ==============================================
-      
+
       // Validate that role is one of the allowed values
       if (!["manager", "staff", "guest"].includes(role)) {
         return res.status(400).json({
@@ -45,7 +45,7 @@ post_confirm_pending_Order.post(
       // ==============================================
       // 🧩 USER AND HOTEL INFORMATION EXTRACTION
       // ==============================================
-      
+
       // Extract hotelKey and userId from request based on role
       const hotelKey = req[role as keyof MultiUserRequest]?.hotelKey;
       const userId = req[role as keyof MultiUserRequest]?.userId;
@@ -60,7 +60,7 @@ post_confirm_pending_Order.post(
       // ==============================================
       // 🧩 ORDER ID VALIDATION
       // ==============================================
-      
+
       // Validate that orderId is provided in request body
       if (!orderId) {
         return res.status(400).json({ message: "Order ID is required" });
@@ -69,7 +69,7 @@ post_confirm_pending_Order.post(
       // ==============================================
       // 🧩 ORDER DATABASE LOOKUP
       // ==============================================
-      
+
       // Find the order in database with specific criteria:
       // - Matching hotelKey and orderId
       // - Not deleted or cancelled
@@ -81,7 +81,9 @@ post_confirm_pending_Order.post(
         orderCancelled: false,
         orderAccepted: true,
         orderDelivered: false,
-      }).select("orderDelivered email items orderId tableNumber orderId orderType");
+      }).select(
+        "orderDelivered email items orderId tableNumber orderId orderType"
+      );
 
       // Return error if order not found
       if (!order) {
@@ -91,33 +93,34 @@ post_confirm_pending_Order.post(
       // ==============================================
       // 🧩 ORDER STATUS UPDATE
       // ==============================================
-      
+
       // Update order status to delivered and save to database
       order.orderDelivered = true;
       await order.save();
-      
+
       // ==============================================
       // 🧩 SUCCESS RESPONSE
       // ==============================================
-      
+
       // Return success response to client
       res.status(200).json({ message: "Pending Order accepted successfully" });
 
       // ==============================================
       // 🧩 EMAIL NOTIFICATION
       // ==============================================
-      
+
       // Send email notification to customer if email exists
       if (order?.email) {
         await sendOrderNotification(hotelKey, order as OrderData, "deliverd");
       }
-      
+
       // ==============================================
       // 🧩 REAL-TIME NOTIFICATION
       // ==============================================
-      
+
       // Create real-time notification for manager & staff
       const io = req.app.get("io") as SocketIOServer;
+      io.emit("orderDelivered", orderId);
       await create_Notification(hotelKey, order, "orderSuccess", undefined, io);
 
       return;
@@ -125,7 +128,7 @@ post_confirm_pending_Order.post(
       // ==============================================
       // 🧩 ERROR HANDLING
       // ==============================================
-      
+
       console.error(error);
       // Return server error in case of exception
       return res.status(500).json({ message: "Server error" });
