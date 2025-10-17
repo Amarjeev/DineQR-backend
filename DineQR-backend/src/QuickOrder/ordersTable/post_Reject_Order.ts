@@ -154,6 +154,7 @@ post_Reject_Order_Router.post(
       
       // Create real-time notification for relevant users
       const io = req.app.get("io") as SocketIOServer;
+       io.emit("orderDelivered", orderId);
       await create_Notification(hotelKey,order,"cancelOrder",role as "manager" | "staff" | "guest",io);
       
       return;
