@@ -10,8 +10,9 @@ const JWT_EXPIRES_IN: SignOptions["expiresIn"] = "10d";
 export interface JwtPayload {
   hotelKey: string;
   email?: string;
-  userId: string;
+  userId?: string;
   name?: string;
+  mobileNumber?: string;
   role?: string;
 }
 
