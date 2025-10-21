@@ -6,6 +6,8 @@ import { sendOrderNotification } from "../emailServices/orderNotificationService
 import { type OrderData } from "../emailServices/orderNotificationService";
 import { create_Notification } from "../notification/post_create_Notification";
 import { Server as SocketIOServer } from "socket.io";
+import { redis } from "../../config/redis";
+import GuestProfileSchema from "../../models/guest/guest_ProfileSchemaModel";
 
 const post_Reject_Order_Router = Router();
 
@@ -23,6 +25,15 @@ const KitchenCancelationReasonsArray = [
   "Customer request",
   "Quality concerns",
   "Other reason",
+  "Change of plans",
+  "Found a better alternative",
+  "Order placed by mistake",
+  "Delivery time too long",
+  "Item unavailable",
+  "Duplicate order",
+  "Incorrect order details",
+  "Price too high",
+  "Other reason",
 ];
 
 /**
@@ -39,17 +50,17 @@ post_Reject_Order_Router.post(
       // ==============================================
       // 🧩 REQUEST DATA EXTRACTION
       // ==============================================
-      
+
       // Extract orderId and rejectionReason from request body
       const { orderId, rejectionReason } = req.body;
-      
+
       // Extract role from URL parameter and normalize to lowercase
       const role = req.params.role?.toLowerCase().trim() || "";
 
       // ==============================================
       // 🧩 ROLE VALIDATION
       // ==============================================
-      
+
       // Validate that role is one of the allowed values
       if (!["manager", "staff", "guest"].includes(role)) {
         return res.status(400).json({
@@ -61,7 +72,7 @@ post_Reject_Order_Router.post(
       // ==============================================
       // 🧩 HOTEL KEY VALIDATION
       // ==============================================
-      
+
       // Extract hotelKey from the request object (added by verifyToken middleware)
       const hotelKey = req[role as keyof MultiUserRequest]?.hotelKey;
 
@@ -75,7 +86,7 @@ post_Reject_Order_Router.post(
       // ==============================================
       // 🧩 INPUT VALIDATION
       // ==============================================
-      
+
       // Validate that both orderId and rejectionReason are provided
       if (!orderId && !rejectionReason) {
         return res
@@ -86,9 +97,9 @@ post_Reject_Order_Router.post(
       // ==============================================
       // 🧩 REJECTION REASON VALIDATION
       // ==============================================
-      
+
       // Validate rejectionReason against predefined allowed reasons
-      if (!KitchenCancelationReasonsArray.includes(rejectionReason)) {
+      if (!KitchenCancelationReasonsArray.includes(rejectionReason.trim())) {
         return res.status(400).json({
           success: false,
           message: "Invalid rejection reason.",
@@ -98,7 +109,7 @@ post_Reject_Order_Router.post(
       // ==============================================
       // 🧩 ORDER DATABASE LOOKUP
       // ==============================================
-      
+
       // Find the order in database with specific criteria:
       // - Matching hotelKey and orderId
       // - Not deleted or already cancelled
@@ -110,7 +121,7 @@ post_Reject_Order_Router.post(
         orderCancelled: false,
         kitchOrderCancelation: false,
       }).select(
-        "kitchOrderCancelation kitchOrdercancelationReason orderId orderType tableNumber orderedBy email createdAt items orderId kitchOrdercancelationReason orderCancelationReason"
+        "kitchOrderCancelation kitchOrdercancelationReason orderedById orderId orderType tableNumber orderedBy email createdAt items orderId kitchOrdercancelationReason orderCancelationReason"
       );
 
       // Return error if order not found
@@ -121,23 +132,50 @@ post_Reject_Order_Router.post(
       // ==============================================
       // 🧩 ORDER STATUS UPDATE
       // ==============================================
-      
-      // Update order cancellation status and reason
-      order.kitchOrderCancelation = true;
-      order.kitchOrdercancelationReason = rejectionReason;
+      if (role === "guest") {
+        // Update order cancellation status and reason
+        order.orderCancelled = true;
+        order.orderCancelationReason = rejectionReason;
+      } else {
+        // Update order cancellation status and reason
+        order.kitchOrderCancelation = true;
+        order.kitchOrdercancelationReason = rejectionReason;
+      }
+
       await order.save();
+
+      if (order.orderedBy === "guest") {
+        // Push order to user's hotelOrders
+        await GuestProfileSchema.findOneAndUpdate(
+          { mobileNumber: order?.orderedById },
+          {
+            $push: {
+              hotelOrders: { hotelId: hotelKey, orders: [order.orderId] },
+            },
+          }
+        );
+
+        const redisKey = `guestOrders-list:${hotelKey}:${order?.orderedById}`;
+        await redis.del(redisKey);
+      }
 
       // ==============================================
       // 🧩 SUCCESS RESPONSE
       // ==============================================
-      
+
       // Return success response to client
       res.status(200).json({ message: "Order rejected successfully" });
+
+      // 🔹 Invalidate the cached guest orders in Redis
+      // Deletes the cached list of orders for this specific guest (identified by hotelKey and orderedById)
+      // so that the next fetch will get fresh, updated data from the database
+      const redisKey = `guestOrders-list:${hotelKey}:${order?.orderedById}`;
+      await redis.del(redisKey);
 
       // ==============================================
       // 🧩 EMAIL NOTIFICATION
       // ==============================================
-      
+
       // Send cancellation email notification to customer if email exists
       if (order?.email) {
         await sendOrderNotification(
@@ -151,18 +189,35 @@ post_Reject_Order_Router.post(
       // ==============================================
       // 🧩 REAL-TIME NOTIFICATION
       // ==============================================
-      
+
       // Create real-time notification for relevant users
       const io = req.app.get("io") as SocketIOServer;
-       io.emit("orderDelivered", orderId);
-      await create_Notification(hotelKey,order,"cancelOrder",role as "manager" | "staff" | "guest",io);
-      
+
+      if (order.orderedBy === "guest") {
+        io.to(`${hotelKey}${order?.orderedById}`).emit(
+          "updateGuestOrders",
+          order
+        );
+
+        const redisKey = `guestOrders-list:${hotelKey}:${order?.orderedById}`;
+        await redis.del(redisKey);
+      }
+
+      io.emit("orderDelivered", orderId);
+      await create_Notification(
+        hotelKey,
+        order,
+        "cancelOrder",
+        role as "manager" | "staff" | "guest",
+        io
+      );
+
       return;
     } catch (error) {
       // ==============================================
       // 🧩 ERROR HANDLING
       // ==============================================
-      
+
       console.error(error);
       // Return server error in case of exception
       return res.status(500).json({ message: "Server error" });

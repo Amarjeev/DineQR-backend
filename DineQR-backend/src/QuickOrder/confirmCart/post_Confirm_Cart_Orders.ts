@@ -4,6 +4,8 @@ import { MultiUserRequest } from "../../types/user";
 import OrderSchemaModel from "../../models/orders/order_SchemaModel";
 import { Server as SocketIOServer } from "socket.io";
 import { generateOrderId } from "./generateOrderId";
+import GuestProfileSchema from "../../models/guest/guest_ProfileSchemaModel";
+import { redis } from "../../config/redis";
 
 // ================================
 // ✅ Express Router: Confirm Cart Orders
@@ -49,10 +51,13 @@ post_Confirm_Cart_Orders_Router.post(
         });
       }
 
+      const mobileNumberToSave = userType === "guest" ? userId : undefined;
+
       // 🔹 Create a new order object
       const newOrder = new OrderSchemaModel({
         ...orderData,
         hotelKey,
+        mobileNumber: mobileNumberToSave || orderData?.mobileNumber, // Only save for guest
         orderedBy: userType,
         orderedById: userId,
         orderId,
@@ -63,6 +68,23 @@ post_Confirm_Cart_Orders_Router.post(
 
       // 🔹 Save the order to MongoDB
       await newOrder.save();
+
+      if (userType === "guest") {
+        await GuestProfileSchema.findOneAndUpdate(
+          { mobileNumber: mobileNumberToSave },
+          {
+            $push: {
+              currentOrders: {
+                orderId: orderId,
+                 hotelId:hotelKey,
+                expireAt: new Date(Date.now() + 5 * 60 * 60 * 1000), // 5 hours TTL
+              },
+            },
+          }
+        );
+        const redisKey = `guestOrders-list:${hotelKey}:${userId}`;
+        await redis.del(redisKey);
+      }
 
       // 🔹 Get Socket.IO instance from Express app
       const io = req.app.get("io") as SocketIOServer;

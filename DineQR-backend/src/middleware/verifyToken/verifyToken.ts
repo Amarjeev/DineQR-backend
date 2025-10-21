@@ -10,13 +10,14 @@ export interface AuthRequest extends Request {
   cookies: { [key: string]: string };
   manager?: JwtPayload;
   staff?: JwtPayload;
+  guest?: JwtPayload;
 }
 
 /**
  * verifyTokenRole - returns middleware to verify JWT and user role
  * @param roleName - string, e.g., "manager",
  */
-export const verifyToken = (roleName: "manager" | "staff" | "") => {
+export const verifyToken = (roleName: "manager" | "staff" | "guest" | "") => {
   return (req: AuthRequest, res: Response, next: NextFunction): void => {
     try {
       const effectiveRole = (roleName || req?.params?.role || "").toLowerCase();
@@ -43,6 +44,7 @@ export const verifyToken = (roleName: "manager" | "staff" | "") => {
 
       if (effectiveRole === "manager") req.manager = decoded;
       if (effectiveRole === "staff") req.staff = decoded;
+       if (effectiveRole === "guest") req.guest = decoded;
 
       next();
     } catch (error) {

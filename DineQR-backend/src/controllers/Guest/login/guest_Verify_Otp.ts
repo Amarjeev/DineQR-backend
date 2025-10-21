@@ -33,7 +33,9 @@ guest_Verify_Otp_Router.post(
       }
 
       // 🔹 Fetch OTP from Redis
-      const originalOtp = await redis.get(`Guest_Login_otp:${mobileNumber}:${hotelKey}`);
+      const originalOtp = await redis.get(
+        `Guest_Login_otp:${mobileNumber}:${hotelKey}`
+      );
 
       if (!originalOtp) {
         return res.status(401).json({
@@ -55,7 +57,7 @@ guest_Verify_Otp_Router.post(
       // 🔹 Generate JWT token
       const token = generateToken({
         hotelKey,
-        mobileNumber,
+        userId: mobileNumber,
         role: "guest",
       });
 

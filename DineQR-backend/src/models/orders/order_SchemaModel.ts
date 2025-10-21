@@ -29,18 +29,20 @@ export enum KitchenCancelationReason {
   TECHNICAL_ISSUE = "Technical issue",
   CUSTOMER_REQUEST = "Customer request",
   QUALITY_CONCERNS = "Quality concerns",
-  OTHER_REASON = "Other reason",
 }
 
 /**
  * Enum for Guest Cancellation Reasons
  */
 export enum GuestCancelationReason {
-  CHANGED_MIND = "Changed my mind",
-  ORDER_DELAYED = "Order taking too long",
-  WRONG_ORDER_PLACED = "Placed the wrong order",
-  PRICE_ISSUE = "Price issue or too expensive",
-  FOUND_BETTER_OPTION = "Found a better option",
+  CHANGE_OF_PLANS = "Change of plans",
+  FOUND_BETTER_ALTERNATIVE = "Found a better alternative",
+  ORDER_PLACED_BY_MISTAKE = "Order placed by mistake",
+  DELIVERY_TIME_TOO_LONG = "Delivery time too long",
+  ITEM_UNAVAILABLE = "Item unavailable",
+  DUPLICATE_ORDER = "Duplicate order",
+  INCORRECT_ORDER_DETAILS = "Incorrect order details",
+  PRICE_TOO_HIGH = "Price too high",
   OTHER_REASON = "Other reason",
 }
 
@@ -50,7 +52,7 @@ export enum GuestCancelationReason {
 export interface IOrder extends Document {
   hotelKey: string;
   orderId: string;
-  orderedBy: "manager" | "staff";
+  orderedBy: "manager" | "staff" | "guest";
   orderedById: string;
   mobileNumber: string;
   orderType: "dining" | "parcel";
@@ -111,14 +113,14 @@ const OrderSchema = new Schema<IOrder>(
     orderId: { type: String, required: true, unique: true, index: true },
     orderedBy: {
       type: String,
-      enum: ["manager", "staff"],
+      enum: ["manager", "staff", "guest"],
       required: true,
     },
     orderedById: { type: String, required: true },
     mobileNumber: {
       type: String,
       required: true,
-      match: /^[0-9]{10}$/,
+      match: /^\+91[0-9]{10}$/,
       index: true,
     },
     email: {

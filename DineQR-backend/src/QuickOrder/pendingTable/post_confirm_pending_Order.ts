@@ -6,6 +6,8 @@ import { sendOrderNotification } from "../emailServices/orderNotificationService
 import { type OrderData } from "../emailServices/orderNotificationService";
 import { create_Notification } from "../notification/post_create_Notification";
 import { Server as SocketIOServer } from "socket.io";
+import { redis } from "../../config/redis";
+import GuestProfileSchema from "../../models/guest/guest_ProfileSchemaModel";
 
 const post_confirm_pending_Order = Router();
 
@@ -81,9 +83,7 @@ post_confirm_pending_Order.post(
         orderCancelled: false,
         orderAccepted: true,
         orderDelivered: false,
-      }).select(
-        "orderDelivered email items orderId tableNumber orderId orderType"
-      );
+      })
 
       // Return error if order not found
       if (!order) {
@@ -120,6 +120,27 @@ post_confirm_pending_Order.post(
 
       // Create real-time notification for manager & staff
       const io = req.app.get("io") as SocketIOServer;
+      if (order.orderedBy === "guest") {
+        io.to(`${hotelKey}${order?.orderedById}`).emit(
+          "updateGuestOrders",
+          order
+        );
+
+        // Push order to user's hotelOrders
+        await GuestProfileSchema.findOneAndUpdate(
+          { mobileNumber: order?.orderedById },
+          {
+            $push: {
+              hotelOrders: { hotelId: hotelKey, orders: [order.orderId] },
+            },
+          },
+          // { upsert: true, new: true } // create if not exists
+        );
+
+        const redisKey = `guestOrders-list:${hotelKey}:${order?.orderedById}`;
+        await redis.del(redisKey);
+      }
+
       io.emit("orderDelivered", orderId);
       await create_Notification(hotelKey, order, "orderSuccess", undefined, io);
 

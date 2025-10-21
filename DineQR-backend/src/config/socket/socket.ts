@@ -1,6 +1,6 @@
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { Server as HttpServer } from "http";
-import registerSocketEvents from "./eventHandlers";
+import registerSocketEvents from "./registerSocketEvents";
 
 /**
  * Initializes the Socket.IO server and attaches all event handlers.

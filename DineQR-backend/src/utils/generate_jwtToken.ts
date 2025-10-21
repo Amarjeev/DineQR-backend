@@ -12,7 +12,6 @@ export interface JwtPayload {
   email?: string;
   userId?: string;
   name?: string;
-  mobileNumber?: string;
   role?: string;
 }
 

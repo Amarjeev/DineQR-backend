@@ -5,6 +5,7 @@ import OrderSchemaModel from "../../models/orders/order_SchemaModel";
 import { Server as SocketIOServer } from "socket.io";
 import { sendOrderNotification } from "../emailServices/orderNotificationService";
 import { type OrderData } from "../emailServices/orderNotificationService";
+import { redis } from "../../config/redis";
 
 // ==========================
 // 🔹 Router Initialization
@@ -67,6 +68,17 @@ post_confirm_Order_Router.post(
       // 🔹 Emit Order via Socket.IO
       // ==========================
       const io = req.app.get("io") as SocketIOServer;
+      
+      if (order.orderedBy === "guest") {
+        io.to(`${hotelKey}${order?.orderedById}`).emit(
+          "updateGuestOrders",
+          order
+        );
+
+        const redisKey = `guestOrders-list:${hotelKey}:${order?.orderedById}`;
+        await redis.del(redisKey);
+      }
+
       io.emit("confirmOrders", order);
 
       res.status(200).json({ message: "Order approved successfully" });
