@@ -55,18 +55,12 @@ const CurrentOrderSchema = new Schema<ICurrentOrder>({
   },
 });
 
-const HotelOrderGroupSchema = new Schema<IHotelOrderGroup>({
-  hotelId: { type: String, required: true },
-  orders: { type: [String], default: [] },
-});
-
 // -------------------------------
 // Main User Schema
 // -------------------------------
 const UserSchema = new Schema<IUser>(
   {
     mobileNumber: { type: String, required: true, unique: true },
-    hotelOrders: { type: [HotelOrderGroupSchema], default: [] },
     currentOrders: { type: [CurrentOrderSchema], default: [] },
     notifications: { type: [NotificationSchema], default: [] },
   },

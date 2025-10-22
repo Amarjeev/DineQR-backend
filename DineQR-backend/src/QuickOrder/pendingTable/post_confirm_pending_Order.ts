@@ -7,7 +7,6 @@ import { type OrderData } from "../emailServices/orderNotificationService";
 import { create_Notification } from "../notification/post_create_Notification";
 import { Server as SocketIOServer } from "socket.io";
 import { redis } from "../../config/redis";
-import GuestProfileSchema from "../../models/guest/guest_ProfileSchemaModel";
 import { guest_Notifications } from "../../guest/notification/guest_Notifications";
 
 const post_confirm_pending_Order = Router();
@@ -125,17 +124,6 @@ post_confirm_pending_Order.post(
         io.to(`${hotelKey}${order?.orderedById}`).emit(
           "updateGuestOrders",
           order
-        );
-
-        // Push order to user's hotelOrders
-        await GuestProfileSchema.findOneAndUpdate(
-          { mobileNumber: order?.orderedById },
-          {
-            $push: {
-              hotelOrders: { hotelId: hotelKey, orders: [order.orderId] },
-            },
-          }
-          // { upsert: true, new: true } // create if not exists
         );
 
         const redisKey = `guestOrders-list:${hotelKey}:${order?.orderedById}`;
