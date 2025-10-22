@@ -1,18 +1,26 @@
-import { MultiUserRequest } from './../../../types/user';
+import { MultiUserRequest } from "./../../../types/user";
 import { Router, Response } from "express";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import HotelInfoSchema from "../../../models/manager/mgr_HotelInfoSchemaModel";
 import { redis } from "../../../config/redis";
 
-
 const mgr_get_Hotelinfo_Router = Router();
 
 mgr_get_Hotelinfo_Router.get(
-  "/api/v1/manager/get/Hotelinfo",
-  verifyToken("manager"),
+  "/api/v1/:role/get/Hotelinfo",
+  verifyToken(""),
   async (req: MultiUserRequest, res: Response) => {
     try {
-      const hotelKey = req.manager?.hotelKey;
+      const role = req.params.role?.toLowerCase().trim() || "";
+
+      if (!["manager", "staff", "guest"].includes(role)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid role. Allowed roles are manager, staff, guest.",
+        });
+      }
+
+      const hotelKey = req[role as keyof MultiUserRequest]?.hotelKey;
 
       if (!hotelKey) {
         res
@@ -21,7 +29,7 @@ mgr_get_Hotelinfo_Router.get(
         return;
       }
 
-      const redisKey = `mgr_HotelInfo:${hotelKey}`;
+      const redisKey = `HotelInfo:${hotelKey}`;
 
       // 1️⃣ Check Redis cache first
       const cachedData = await redis.get(redisKey);

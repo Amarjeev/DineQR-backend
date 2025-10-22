@@ -22,7 +22,7 @@ mgr_upload_Hotelinfo_Router.post(
           .json({ success: false, message: "Manager ID not provided" });
       }
 
-      const redisKey = `mgr_HotelInfo:${hotelKey}`;
+      const redisKey = `HotelInfo:${hotelKey}`;
 
       const hotelData = { ...req?.body?.formData, hotelKey };
 
