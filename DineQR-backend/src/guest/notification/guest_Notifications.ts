@@ -1,4 +1,4 @@
-import GuestProfileSchema from "../models/guest/guest_ProfileSchemaModel";
+import GuestProfileSchema from "../../models/guest/guest_ProfileSchemaModel";
 import { Server as SocketIOServer } from "socket.io";
 
 /**

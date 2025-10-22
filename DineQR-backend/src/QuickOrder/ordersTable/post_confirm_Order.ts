@@ -6,7 +6,7 @@ import { Server as SocketIOServer } from "socket.io";
 import { sendOrderNotification } from "../emailServices/orderNotificationService";
 import { type OrderData } from "../emailServices/orderNotificationService";
 import { redis } from "../../config/redis";
-import { guest_Notifications } from "../../guest/guest_Notifications";
+import { guest_Notifications } from "../../guest/notification/guest_Notifications";
 
 // ==========================
 // 🔹 Router Initialization
