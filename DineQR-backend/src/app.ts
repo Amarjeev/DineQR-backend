@@ -109,8 +109,9 @@ import logout_Router from "./controllers/Logout/logout";
 //guest routes
 import guest_SendOtp_Router from "./controllers/Guest/login/guest_SendOtp";
 import guest_Verify_Otp_Router from "./controllers/Guest/login/guest_Verify_Otp";
-// import guest_Get_Orders_Router from "./guest/guest_Get_Orders";
 import guest_del_Orders_Router from "./guest/guest_del_Orders";
+import guest_date_OrderHistory_Router from "./guest/history/guest_date_OrderHistory";
+import guest_getOrder_History_Router from "./guest/history/guest_getOrder_History";
 // --------------------------
 // Environment & App Setup
 // --------------------------
@@ -247,8 +248,10 @@ app.use(logout_Router);
 
 app.use(guest_SendOtp_Router);
 app.use(guest_Verify_Otp_Router);
-// app.use(guest_Get_Orders_Router);
+app.use(guest_date_OrderHistory_Router);
 app.use(guest_del_Orders_Router);
+app.use(guest_getOrder_History_Router);
+
 
 // --------------------------
 // Server Initialization
