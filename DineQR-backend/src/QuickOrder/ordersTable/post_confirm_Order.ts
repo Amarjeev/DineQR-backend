@@ -6,6 +6,7 @@ import { Server as SocketIOServer } from "socket.io";
 import { sendOrderNotification } from "../emailServices/orderNotificationService";
 import { type OrderData } from "../emailServices/orderNotificationService";
 import { redis } from "../../config/redis";
+import { guest_Notifications } from "../../guest/guest_Notifications";
 
 // ==========================
 // 🔹 Router Initialization
@@ -68,7 +69,7 @@ post_confirm_Order_Router.post(
       // 🔹 Emit Order via Socket.IO
       // ==========================
       const io = req.app.get("io") as SocketIOServer;
-      
+
       if (order.orderedBy === "guest") {
         io.to(`${hotelKey}${order?.orderedById}`).emit(
           "updateGuestOrders",
@@ -77,6 +78,7 @@ post_confirm_Order_Router.post(
 
         const redisKey = `guestOrders-list:${hotelKey}:${order?.orderedById}`;
         await redis.del(redisKey);
+        await guest_Notifications(io, order, "✅accepted");
       }
 
       io.emit("confirmOrders", order);

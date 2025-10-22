@@ -8,6 +8,7 @@ import { create_Notification } from "../notification/post_create_Notification";
 import { Server as SocketIOServer } from "socket.io";
 import { redis } from "../../config/redis";
 import GuestProfileSchema from "../../models/guest/guest_ProfileSchemaModel";
+import { guest_Notifications } from "../../guest/guest_Notifications";
 
 const post_confirm_pending_Order = Router();
 
@@ -83,7 +84,7 @@ post_confirm_pending_Order.post(
         orderCancelled: false,
         orderAccepted: true,
         orderDelivered: false,
-      })
+      });
 
       // Return error if order not found
       if (!order) {
@@ -133,12 +134,13 @@ post_confirm_pending_Order.post(
             $push: {
               hotelOrders: { hotelId: hotelKey, orders: [order.orderId] },
             },
-          },
+          }
           // { upsert: true, new: true } // create if not exists
         );
 
         const redisKey = `guestOrders-list:${hotelKey}:${order?.orderedById}`;
         await redis.del(redisKey);
+        await guest_Notifications(io, order, "⭐completed");
       }
 
       io.emit("orderDelivered", orderId);

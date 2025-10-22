@@ -76,12 +76,14 @@ post_Confirm_Cart_Orders_Router.post(
             $push: {
               currentOrders: {
                 orderId: orderId,
-                 hotelId:hotelKey,
+                hotelId: hotelKey,
                 expireAt: new Date(Date.now() + 5 * 60 * 60 * 1000), // 5 hours TTL
               },
             },
-          }
+          },
+          { upsert: true, new: true }
         );
+
         const redisKey = `guestOrders-list:${hotelKey}:${userId}`;
         await redis.del(redisKey);
       }

@@ -8,6 +8,7 @@ import { create_Notification } from "../notification/post_create_Notification";
 import { Server as SocketIOServer } from "socket.io";
 import { redis } from "../../config/redis";
 import GuestProfileSchema from "../../models/guest/guest_ProfileSchemaModel";
+import { guest_Notifications } from "../../guest/guest_Notifications";
 
 const post_Reject_Order_Router = Router();
 
@@ -121,7 +122,7 @@ post_Reject_Order_Router.post(
         orderCancelled: false,
         kitchOrderCancelation: false,
       }).select(
-        "kitchOrderCancelation kitchOrdercancelationReason orderedById orderId orderType tableNumber orderedBy email createdAt items orderId kitchOrdercancelationReason orderCancelationReason"
+        "kitchOrderCancelation hotelKey kitchOrdercancelationReason orderedById orderId orderType tableNumber orderedBy email createdAt items orderId kitchOrdercancelationReason orderCancelationReason"
       );
 
       // Return error if order not found
@@ -144,6 +145,9 @@ post_Reject_Order_Router.post(
 
       await order.save();
 
+      // Create real-time notification for relevant users
+      const io = req.app.get("io") as SocketIOServer;
+
       if (order.orderedBy === "guest") {
         // Push order to user's hotelOrders
         await GuestProfileSchema.findOneAndUpdate(
@@ -157,6 +161,11 @@ post_Reject_Order_Router.post(
 
         const redisKey = `guestOrders-list:${hotelKey}:${order?.orderedById}`;
         await redis.del(redisKey);
+        if (order?.kitchOrderCancelation) {
+          await guest_Notifications(io, order, "🚫rejected");
+        } else {
+          await guest_Notifications(io, order, "❌cancelled");
+        }
       }
 
       // ==============================================
@@ -189,9 +198,6 @@ post_Reject_Order_Router.post(
       // ==============================================
       // 🧩 REAL-TIME NOTIFICATION
       // ==============================================
-
-      // Create real-time notification for relevant users
-      const io = req.app.get("io") as SocketIOServer;
 
       if (order.orderedBy === "guest") {
         io.to(`${hotelKey}${order?.orderedById}`).emit(
