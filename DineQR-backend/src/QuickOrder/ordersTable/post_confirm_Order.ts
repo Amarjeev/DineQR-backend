@@ -1,7 +1,7 @@
 import { Router, Response } from "express";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
-import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import Order_Schema from "../../models/orders/order_SchemaModel";
 import { Server as SocketIOServer } from "socket.io";
 import { sendOrderNotification } from "../emailServices/orderNotificationService";
 import { type OrderData } from "../emailServices/orderNotificationService";
@@ -47,7 +47,7 @@ post_confirm_Order_Router.post(
       // ==========================
       // 🔹 Fetch Order from Database
       // ==========================
-      const order = await OrderSchemaModel.findOne({
+      const order = await Order_Schema.findOne({
         hotelKey,
         orderId,
         isDeleted: false,

@@ -2,7 +2,7 @@ import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import bcrypt from "bcryptjs";
-import StaffProfileSchema from "../../../models/manager/mgr_Staff_ProfileSchemaModel";
+import Staff_Profile_Schema from '../../../models/manager/mgr_Staff_ProfileSchemaModel';
 import { mgr_Staff_profileValidation } from "./validation/mgr_Staff_profileValidation";
 import { redis } from "../../../config/redis";
 
@@ -29,7 +29,7 @@ mgr_reset_staff_password_Router.post(
       }
 
       // Find staff by ID and ensure they belong to this manager
-      const staff = await StaffProfileSchema.findOne({ staffId, hotelKey });
+      const staff = await Staff_Profile_Schema.findOne({ staffId, hotelKey });
       if (!staff) {
         res.status(404).json({
           success: false,

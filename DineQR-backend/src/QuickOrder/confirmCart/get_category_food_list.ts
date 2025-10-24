@@ -1,7 +1,7 @@
 import { Router, Response } from "express";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { redis } from "../../config/redis";
-import Menu_Item from "../../models/manager/mgr_MenuSchemaModel";
+import Menu_Item_Schema from "../../models/manager/mgr_MenuSchemaModel";
 import { MultiUserRequest } from "../../types/user";
 
 // ================================
@@ -54,7 +54,7 @@ get_category_food_list_Router.get(
       }
 
       // 🔹 Count total matching food items in MongoDB
-      const totalCount = await Menu_Item.countDocuments({
+      const totalCount = await Menu_Item_Schema.countDocuments({
         hotelKey,
         foodCategory: dishName,
         isDeleted: false,
@@ -77,7 +77,7 @@ get_category_food_list_Router.get(
       }
 
       // 🔹 Fetch data from MongoDB if cache is empty
-      const response = await Menu_Item.find({
+      const response = await Menu_Item_Schema.find({
         hotelKey,
         foodCategory: dishName,
         isDeleted: false,

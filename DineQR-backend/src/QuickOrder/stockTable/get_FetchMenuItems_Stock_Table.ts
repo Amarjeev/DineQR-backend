@@ -1,7 +1,7 @@
 import { Router, Response } from "express";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
-import Menu_Item from "../../models/manager/mgr_MenuSchemaModel";
+import Menu_Item_Schema from "../../models/manager/mgr_MenuSchemaModel";
 
 const get_FetchMenuItems_Stock_Table_Router = Router();
 
@@ -53,7 +53,7 @@ get_FetchMenuItems_Stock_Table_Router.get(
       // ==========================
       // 🔹 Fetch Menu Items from DB with pagination
       // ==========================
-      const response = await Menu_Item.find({
+      const response = await Menu_Item_Schema.find({
         hotelKey,
         foodCategory: String(foodCategory).trim().toLowerCase(),
         availability: String(availability).trim(),

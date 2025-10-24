@@ -20,7 +20,7 @@
  */
 
 import { Router, Response } from "express";
-import tableSchema from "../../../models/manager/mgr_TableSchemaModel";
+import Table_Schema from "../../../models/manager/mgr_TableSchemaModel";
 import { MultiUserRequest } from './../../../types/user';
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { redis } from "../../../config/redis";
@@ -55,7 +55,7 @@ mgr_Create_Table_Router.post(
       }
 
       // Check if hotel document exists
-      let hotelTables = await tableSchema.findOne({ hotelKey });
+      let hotelTables = await Table_Schema.findOne({ hotelKey });
 
       if (hotelTables) {
         // Check if table already exists (case-insensitive)
@@ -78,7 +78,7 @@ mgr_Create_Table_Router.post(
         await hotelTables.save();
       } else {
         // Create new hotel document with first table
-        hotelTables = new tableSchema({
+        hotelTables = new Table_Schema({
           hotelKey,
           tableNames: [{ name: tableName, isDeleted: false }],
         });

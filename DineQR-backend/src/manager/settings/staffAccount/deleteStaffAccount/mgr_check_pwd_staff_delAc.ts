@@ -1,8 +1,8 @@
 import { MultiUserRequest } from './../../../../types/user';
 import { Router, Response } from "express";
 import { verifyToken } from "../../../../middleware/verifyToken/verifyToken";
-import ManagerProfileSchema from "../../../../models/manager/mgr_ProfileSchemaModel";
-import StaffProfileSchema from "../../../../models/manager/mgr_Staff_ProfileSchemaModel";
+import Manager_Profile_Schema from "../../../../models/manager/mgr_ProfileSchemaModel";
+import Staff_Profile_Schema from '../../../../models/manager/mgr_Staff_ProfileSchemaModel';
 import bcrypt from "bcryptjs";
 import { redis } from "../../../../config/redis";
 import { sendEmail } from "../../../../services/sendEmail";
@@ -46,7 +46,7 @@ mgr_check_pwd_staff_delAc_Router.post(
       // ===============================
       // Fetch staff and manager data in parallel using Promises
       const [staffData, managerData] = await Promise.all([
-        StaffProfileSchema.findOne({ staffId, hotelKey })
+        Staff_Profile_Schema.findOne({ staffId, hotelKey })
           .lean()
           .select("password name staffId") as Promise<{
           password: string;
@@ -54,7 +54,7 @@ mgr_check_pwd_staff_delAc_Router.post(
           staffId: string;
         } | null>,
 
-        ManagerProfileSchema.findById(hotelKey)
+        Manager_Profile_Schema.findById(hotelKey)
           .lean()
           .select("email") as Promise<{ email: string } | null>,
       ]);

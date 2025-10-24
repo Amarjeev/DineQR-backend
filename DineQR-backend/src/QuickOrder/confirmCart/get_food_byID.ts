@@ -1,7 +1,7 @@
 import { Router, Response } from "express";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { redis } from "../../config/redis";
-import Menu_Item from "../../models/manager/mgr_MenuSchemaModel";
+import Menu_Item_Schema from "../../models/manager/mgr_MenuSchemaModel";
 import { MultiUserRequest } from "../../types/user";
 
 // ================================
@@ -62,7 +62,7 @@ get_food_byId_Router.get(
       }
 
       // 🔹 Fetch food item from MongoDB
-      const foodItem = await Menu_Item.findById(dishId)
+      const foodItem = await Menu_Item_Schema.findById(dishId)
         .lean() // Convert to plain JS object
         .select("-createdAt -updatedAt -__v"); // Exclude unnecessary fields
 

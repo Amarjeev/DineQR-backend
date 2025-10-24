@@ -19,7 +19,7 @@ import { compress_ImageFC } from "./compress_Image";
 const upload = multer({ storage });
 import { uploadToS3 } from "../../../utils/Upload_s3";
 import { AddItemSchema } from "../MenuValidation/mgr_MenuValidation";
-import Menu_Item from "../../../models/manager/mgr_MenuSchemaModel";
+import Menu_Item_Schema from "../../../models/manager/mgr_MenuSchemaModel";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "./../../../types/user";
 
@@ -107,7 +107,7 @@ mgr_Menu_AddItem_Roter.post(
       }
 
       // Create new Menu Item document
-      const itemData = new Menu_Item({
+      const itemData = new Menu_Item_Schema({
         hotelKey: userId,
         productName: item.productName,
         sizes: item.sizes,

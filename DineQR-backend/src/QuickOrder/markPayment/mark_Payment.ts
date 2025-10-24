@@ -1,7 +1,7 @@
 import { Router, Response } from "express";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
-import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import Order_Schema from "../../models/orders/order_SchemaModel";
 import { redis } from "../../config/redis";
 
 const mark_Paid_Router = Router();
@@ -16,7 +16,7 @@ mark_Paid_Router.post(
       const hotelKey = req[role as keyof MultiUserRequest]?.hotelKey;
 
       // Find order
-      const order = await OrderSchemaModel.findOne({ hotelKey, orderId });
+      const order = await Order_Schema.findOne({ hotelKey, orderId });
       if (!order) {
         res.status(404).json({ message: "Order not found" });
         return;

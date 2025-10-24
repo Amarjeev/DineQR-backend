@@ -1,6 +1,6 @@
-import ManagerProfileSchema from "../../models/manager/mgr_ProfileSchemaModel";
-import StaffProfileSchema from "../../models/manager/mgr_Staff_ProfileSchemaModel";
-import NotificationSchemaModel from "../../models/notification/notification_SchemaModel";
+import Manager_Profile_Schema from "../../models/manager/mgr_ProfileSchemaModel";
+import Staff_Profile_Schema from "../../models/manager/mgr_Staff_ProfileSchemaModel";
+import Notification_Schema from "../../models/notification/notification_SchemaModel";
 import { Server as SocketIOServer } from "socket.io";
 import { redis } from "../../config/redis";
 
@@ -149,11 +149,11 @@ export const create_Notification = async (
       // Fetch manager and staff data in parallel for performance
       const [managerDoc, staffDocs] = await Promise.all([
         // Find manager profile by hotelKey
-        ManagerProfileSchema.findOne({ _id: hotelKey, isDeleted: false })
+         Manager_Profile_Schema.findOne({ _id: hotelKey, isDeleted: false })
           .lean()
           .select("_id"),
         // Find all staff profiles for this hotel
-        StaffProfileSchema.find({ hotelKey, isDeleted: false })
+        Staff_Profile_Schema.find({ hotelKey, isDeleted: false })
           .lean()
           .select("staffId -_id"),
       ]);
@@ -184,7 +184,7 @@ export const create_Notification = async (
     // ==============================================
 
     // Create new notification document in MongoDB
-    const message = new NotificationSchemaModel({
+    const message = new Notification_Schema({
       hotelKey,
       messageType,
       existUsers,

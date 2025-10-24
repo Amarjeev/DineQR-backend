@@ -25,9 +25,9 @@ const RestaurantSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-const HotelInfoSchema = mongoose.model<IRestaurant>(
+const HotelInfo_Schema = mongoose.model<IRestaurant>(
   "Hotel_info",
   RestaurantSchema
 );
 
-export default HotelInfoSchema;
+export default HotelInfo_Schema;

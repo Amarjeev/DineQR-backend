@@ -1,6 +1,6 @@
 import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
-import billSchema from "../../../models/manager/mgr_BillSchemaModel";
+import Bill_Schema from "../../../models/manager/mgr_BillSchemaModel";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { redis } from "../../../config/redis";
 import { diff } from "deep-diff";
@@ -44,7 +44,7 @@ mgr_Edit_Bill_Router.patch(
       // Only proceed if there are fields to update
       if (Object.keys(updateData).length > 0) {
         // 5️⃣ Update only changed fields in MongoDB
-        await billSchema.findOneAndUpdate(
+        await Bill_Schema.findOneAndUpdate(
           { hotelKey },
           { $set: updateData },
           { new: true } // return updated doc

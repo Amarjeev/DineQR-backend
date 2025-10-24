@@ -1,6 +1,6 @@
 import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
-import ManagerProfileSchema from "../../../models/manager/mgr_ProfileSchemaModel";
+import Manager_Profile_Schema from "../../../models/manager/mgr_ProfileSchemaModel";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { redis } from "../../../config/redis";
 
@@ -26,7 +26,7 @@ mgr_get_ManagerProfile_Router.get(
         return res.status(200).json(cachedProfile);
       }
 
-      const response = await ManagerProfileSchema.findById(hotelKey)
+      const response = await Manager_Profile_Schema.findById(hotelKey)
         .lean()
         .select("name email mobileNumber -_id");
 

@@ -1,7 +1,7 @@
 import { Router, Response } from "express";
 import { MultiUserRequest } from "../../types/user";
 import { redis } from "../../config/redis";
-import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import Order_Schema from "../../models/orders/order_SchemaModel";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 
 const guest_date_OrderHistory_Router = Router();
@@ -40,7 +40,7 @@ guest_date_OrderHistory_Router.get(
       }
 
       // Fetch orders from MongoDB
-      const orders = await OrderSchemaModel.find({
+      const orders = await Order_Schema.find({
         hotelKey,
         orderedById: userId,
       })

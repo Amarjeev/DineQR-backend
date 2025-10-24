@@ -14,7 +14,7 @@
  */
 
 import { Router, Response } from "express";
-import Menu_Item from "../../../models/manager/mgr_MenuSchemaModel";
+import Menu_Item_Schema from "../../../models/manager/mgr_MenuSchemaModel";
 import { foodCategories } from "../../../controllers/CategoriesList/FoodCategory";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from './../../../types/user';
@@ -67,7 +67,7 @@ mgr_get_MenuByCategory_Router.get(
       }
       // ✅ Fetch matching menu items and count in parallel
       const [response, totalCount] = await Promise.all([
-        Menu_Item.find({
+        Menu_Item_Schema.find({
           hotelKey,
           foodCategory,
           isDeleted: false,
@@ -77,7 +77,7 @@ mgr_get_MenuByCategory_Router.get(
           .limit(12) // limit to 12 items
           .lean(),
 
-        Menu_Item.countDocuments({
+        Menu_Item_Schema.countDocuments({
           hotelKey,
           foodCategory,
           isDeleted: false,

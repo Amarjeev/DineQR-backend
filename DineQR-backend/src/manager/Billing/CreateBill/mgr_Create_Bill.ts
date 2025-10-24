@@ -1,5 +1,5 @@
 import { Router, Response } from "express";
-import billSchema from "../../../models/manager/mgr_BillSchemaModel";
+import Bill_Schema from "../../../models/manager/mgr_BillSchemaModel";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { validateBillData } from "../ValidationBill/validationBill";
 import { MultiUserRequest } from "../../../types/user";
@@ -22,7 +22,7 @@ mgr_Create_Bill_Router.post(
       const { restaurantName, address, gstNumber, contactNumber } = req.body;
 
       // Check if GST already exists for this hotel
-      const existingBill = await billSchema.findOne({
+      const existingBill = await Bill_Schema.findOne({
         hotelKey,
         deleted: false,
       });
@@ -35,7 +35,7 @@ mgr_Create_Bill_Router.post(
       }
 
       // Create new bill
-      await billSchema.create({
+      await Bill_Schema.create({
         hotelKey,
         restaurantName,
         address,

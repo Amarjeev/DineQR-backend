@@ -1,11 +1,12 @@
 import { sendEmail } from "../../services/sendEmail";
 import orderApprovedUI from "../../emailTemplates/order_ApprovedUI";
 import orderCanceledUI from "../../emailTemplates/order_CanceledUI";
-import HotelInfoSchema from "../../models/manager/mgr_HotelInfoSchemaModel";
+import HotelInfo_Schema from "../../models/manager/mgr_HotelInfoSchemaModel";
 import orderDeliveredUI from "../../emailTemplates/order_DeliverdUI";
 import { redis } from "../../config/redis";
 import { calculate_Order_Total } from "../../utils/calculateTotal";
-import billSchema from "../../models/manager/mgr_BillSchemaModel";
+import Bill_Schema from "../../models/manager/mgr_BillSchemaModel";
+
 
 export interface IHotelInfo {
   name: string;
@@ -46,7 +47,7 @@ export const sendOrderNotification = async (
       // --------------------------
       // 🔹 Fetch from MongoDB if not cached
       // --------------------------
-      hotelInfo = await HotelInfoSchema.findOne({ hotelKey })
+      hotelInfo = await HotelInfo_Schema.findOne({ hotelKey })
         .select("name contactNumber address hotelKey")
         .lean<IHotelInfo>();
 
@@ -94,7 +95,7 @@ export const sendOrderNotification = async (
         new Date()
       );
     } else if (status === "deliverd") {
-      const BillInfo = await billSchema
+      const BillInfo = await Bill_Schema
         .findOne({ hotelKey, deleted: false })
         .select("gstNumber contactNumber");
 

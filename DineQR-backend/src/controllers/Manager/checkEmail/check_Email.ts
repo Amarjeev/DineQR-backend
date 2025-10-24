@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { redis } from "../../../config/redis";
-import mgr_ProfileSchemaModel from "../../../models/manager/mgr_ProfileSchemaModel";
+import Manager_Profile_Schema from "../../../models/manager/mgr_ProfileSchemaModel";
 
 const emailCheckRouter = Router();
 
@@ -28,7 +28,7 @@ emailCheckRouter.post(
       // ================================
       // Query database to check email existence
       // ================================
-      const existingManager = await mgr_ProfileSchemaModel
+      const existingManager = await Manager_Profile_Schema
         .findOne({ email, isDeleted: false }) // Only check non-deleted accounts
         .select("email password role")
         .lean();

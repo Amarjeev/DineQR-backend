@@ -55,5 +55,5 @@ const MenuItemSchema: Schema = new Schema<IMenuItem>(
 );
 
 // Create and export the model
-const Menu_Item = mongoose.model<IMenuItem>("Menu_Item", MenuItemSchema);
-export default Menu_Item;
+const Menu_Item_Schema = mongoose.model<IMenuItem>("Menu_Item", MenuItemSchema);
+export default Menu_Item_Schema;

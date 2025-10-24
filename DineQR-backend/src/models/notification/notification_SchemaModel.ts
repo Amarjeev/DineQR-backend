@@ -63,7 +63,7 @@ const NotificationSchema: Schema<INotification> = new Schema(
 // =======================================================
 // 🚀 Mongoose Model Export
 // =======================================================
-const NotificationSchemaModel: Model<INotification> =
+const Notification_Schema: Model<INotification> =
   mongoose.model<INotification>("Notification", NotificationSchema);
 
-export default NotificationSchemaModel;
+export default Notification_Schema;

@@ -2,7 +2,7 @@
 // 📦 Imports
 // ================================
 import { Router, Response } from "express";
-import GuestProfileSchema from "../../models/guest/guest_ProfileSchemaModel";
+import Guest_Profile_Schema from "../../models/guest/guest_ProfileSchemaModel";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
 import { redis } from "../../config/redis";
@@ -48,7 +48,7 @@ guest_del_Orders_Router.delete(
 
       // 🔹 MongoDB operation: Remove the specific order from currentOrders array
       // $pull operator removes array elements that match the given condition
-      const updatedGuest = await GuestProfileSchema.findOneAndUpdate(
+      const updatedGuest = await Guest_Profile_Schema.findOneAndUpdate(
         { mobileNumber: userId },           // Find the guest by mobile number
         { $pull: { currentOrders: { orderId } } }, // Remove the order with matching orderId
         { new: true }                        // Return the updated document

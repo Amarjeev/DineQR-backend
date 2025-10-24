@@ -1,5 +1,5 @@
 import { Router, Response } from "express";
-import billSchema from "../../../models/manager/mgr_BillSchemaModel";
+import Bill_Schema from "../../../models/manager/mgr_BillSchemaModel";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { redis } from "../../../config/redis";
 import { MultiUserRequest } from "../../../types/user";
@@ -15,7 +15,7 @@ mgr_Delete_Bill_Router.post(
 
     try {
       // 1️⃣ Mark bill as deleted in MongoDB
-      const response = await billSchema.findOneAndUpdate(
+      const response = await Bill_Schema.findOneAndUpdate(
         { hotelKey },
         { $set: { deleted: true } },
       );

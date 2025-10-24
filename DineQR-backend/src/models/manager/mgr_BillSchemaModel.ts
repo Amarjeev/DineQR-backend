@@ -54,6 +54,6 @@ const BillSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-const billSchema = mongoose.model<IBill>("Bill", BillSchema);
+const Bill_Schema = mongoose.model<IBill>("Bill", BillSchema);
 
-export default billSchema;
+export default Bill_Schema;

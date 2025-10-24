@@ -1,7 +1,7 @@
 import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
-import ManagerProfileSchema from "../../../models/manager/mgr_ProfileSchemaModel";
+import Manager_Profile_Schema from '../../../models/manager/mgr_ProfileSchemaModel';
 import { redis } from "../../../config/redis";
 
 const mgr_Otpverify_deleteAccount_Router = Router();
@@ -22,7 +22,7 @@ mgr_Otpverify_deleteAccount_Router.post(
         return;
       }
 
-      const manager = await ManagerProfileSchema.findById(hotelKey);
+      const manager = await Manager_Profile_Schema.findById(hotelKey);
 
       if (!manager) {
         res.status(404).json({ success: false, message: "Manager not found" });

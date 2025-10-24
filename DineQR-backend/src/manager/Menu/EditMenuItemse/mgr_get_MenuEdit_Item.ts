@@ -18,7 +18,7 @@
 
 import { Router, Request, Response } from "express";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
-import Menu_Item from "../../../models/manager/mgr_MenuSchemaModel";
+import Menu_Item_Schema from "../../../models/manager/mgr_MenuSchemaModel";
 import { redis } from "../../../config/redis";
 const mgr_get_MenuEdit_Router = Router();
 
@@ -46,7 +46,7 @@ mgr_get_MenuEdit_Router.get(
       }
 
       // Fetch menu item from database where it's not deleted
-      const response = await Menu_Item.findOne({
+      const response = await Menu_Item_Schema.findOne({
         _id: productid,
         isDeleted: false,
       }).lean();

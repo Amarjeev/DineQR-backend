@@ -1,6 +1,6 @@
 import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
-import tableSchema from "../../../models/manager/mgr_TableSchemaModel";
+import Table_Schema from "../../../models/manager/mgr_TableSchemaModel";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { redis } from "../../../config/redis";
 
@@ -35,7 +35,7 @@ mgr_get_TableList_Router.get(
       }
 
       // ✅ Fetch data from MongoDB
-      const result = await tableSchema.aggregate([
+      const result = await Table_Schema.aggregate([
         { $match: { hotelKey } },
         {
           $project: {

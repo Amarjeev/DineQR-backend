@@ -1,6 +1,6 @@
 import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
-import tableSchema from "../../../models/manager/mgr_TableSchemaModel";
+import Table_Schema from "../../../models/manager/mgr_TableSchemaModel";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { redis } from "../../../config/redis";
 
@@ -34,7 +34,7 @@ mgr_edit_Table_Router.patch(
       }
 
       // ✅ Check if hotel document exists
-      const hotelTables = await tableSchema.findOne({ hotelKey });
+      const hotelTables = await Table_Schema.findOne({ hotelKey });
 
       if (!hotelTables) {
         return res
@@ -57,7 +57,7 @@ mgr_edit_Table_Router.patch(
       }
 
       // ✅ Update the specific table inside the array
-      await tableSchema.updateOne(
+      await Table_Schema.updateOne(
         { hotelKey, "tableNames._id": editItemId },
         {
           $set: {

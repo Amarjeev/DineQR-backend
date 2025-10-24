@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import express, { Router, Request, Response } from "express";
-import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import Order_Schema from "../../models/orders/order_SchemaModel";
 import { redis } from "../../config/redis";
 
 const razorPay_Verify_payment_Router = Router();
@@ -26,7 +26,7 @@ razorPay_Verify_payment_Router.post(
 
       try {
         // 2️⃣ Find order by Razorpay order ID or receipt
-        const order = await OrderSchemaModel.findOne({
+        const order = await Order_Schema.findOne({
           razorpayOrderId: razorpay_order_id,
         });
 

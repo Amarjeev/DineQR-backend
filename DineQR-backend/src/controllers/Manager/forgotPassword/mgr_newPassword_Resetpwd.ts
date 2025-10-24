@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import managerProfileModel from "../../../models/manager/mgr_ProfileSchemaModel";
+import Manager_Profile_Schema from "../../../models/manager/mgr_ProfileSchemaModel";
 import bcrypt from "bcryptjs";
 
 const mgr_newPassword_Resetpwd_Router = Router();
@@ -79,7 +79,7 @@ mgr_newPassword_Resetpwd_Router.post(
       // ================================
       // 3. Update manager's password in DB
       // ================================
-      const updatedManager = await managerProfileModel.findOneAndUpdate(
+      const updatedManager = await Manager_Profile_Schema.findOneAndUpdate(
         { email, isDeleted: false },
         { password: hashedPassword },
         { new: true }

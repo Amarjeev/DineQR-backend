@@ -10,7 +10,7 @@ import { uploadToS3 } from "../../../utils/Upload_s3"; // AWS S3 upload helper
 import { redis } from "../../../config/redis"; // Redis client instance
 import { diff } from "deep-diff"; // Deep comparison function for detecting changes
 import { AddItemSchema } from "../MenuValidation/mgr_MenuValidation"; // Zod schema for validating menu items
-import Menu_Item from "../../../models/manager/mgr_MenuSchemaModel"; // Mongoose model for menu items
+import Menu_Item_Schema from "../../../models/manager/mgr_MenuSchemaModel"; // Mongoose model for menu items
 
 const mgr_update_EditMenuItem_Router = Router();
 
@@ -118,7 +118,7 @@ mgr_update_EditMenuItem_Router.post(
       }
 
       // ✅ Update the menu item document in MongoDB
-      const updatedDoc = await Menu_Item.findByIdAndUpdate(
+      const updatedDoc = await Menu_Item_Schema.findByIdAndUpdate(
         productid,
         { $set: results },
         { new: true } // Return the updated document

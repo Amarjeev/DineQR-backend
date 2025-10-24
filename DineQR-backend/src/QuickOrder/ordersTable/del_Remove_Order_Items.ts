@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import Order_Schema from "../../models/orders/order_SchemaModel";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 
 
@@ -34,7 +34,7 @@ del_Remove_Order_Items_Router.delete(
       }
 
       // 🔹 Find the order that is not accepted, cancelled, or deleted
-      const order = await OrderSchemaModel.findOne({
+      const order = await Order_Schema.findOne({
         orderId,
         orderAccepted: false,
         orderCancelled: false,

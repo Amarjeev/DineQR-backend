@@ -2,7 +2,7 @@ import { Router, Response } from "express";
 import razorpay from "./razorpay";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
-import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import Order_Schema from "../../models/orders/order_SchemaModel";
 import { calculate_Order_Total } from "../../utils/calculateTotal";
 
 const razorPay_CreateOrder_Router = Router();
@@ -18,7 +18,7 @@ razorPay_CreateOrder_Router.post(
       const hotelKey = req[role as keyof MultiUserRequest]?.hotelKey; // get hotelKey
 
       // fetch order from DB
-      const response = await OrderSchemaModel.findOne({ hotelKey, orderId })
+      const response = await Order_Schema.findOne({ hotelKey, orderId })
         .select("orderId items")
         .lean();
 
@@ -44,7 +44,7 @@ razorPay_CreateOrder_Router.post(
       // create order on Razorpay
       const order = await razorpay.orders.create(options as any);
       // save razorpayOrderId to your order document
-      await OrderSchemaModel.findOneAndUpdate(
+      await Order_Schema.findOneAndUpdate(
         { _id: response._id },
         { razorpayOrderId: order.id } // save Razorpay order id
       );

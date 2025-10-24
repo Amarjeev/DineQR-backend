@@ -1,4 +1,4 @@
-import GuestProfileSchema from "../../models/guest/guest_ProfileSchemaModel";
+import Guest_Profile_Schema from "../../models/guest/guest_ProfileSchemaModel";
 import { Server as SocketIOServer } from "socket.io";
 
 /**
@@ -51,7 +51,7 @@ export const guest_Notifications = async (
     };
 
     // ✅ Save notification in MongoDB
-    await GuestProfileSchema.findOneAndUpdate(
+    await Guest_Profile_Schema.findOneAndUpdate(
       { mobileNumber: order?.orderedById },
       { $push: { notifications: notification } },
       { upsert: true, new: true }

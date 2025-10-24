@@ -176,6 +176,6 @@ const OrderSchema = new Schema<IOrder>(
   { timestamps: true }
 );
 
-const OrderSchemaModel = mongoose.model<IOrder>("Orders", OrderSchema);
+const Order_Schema = mongoose.model<IOrder>("Orders", OrderSchema);
 
-export default OrderSchemaModel;
+export default Order_Schema;

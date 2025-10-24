@@ -1,10 +1,10 @@
 import { Router, Response } from "express";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
-import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import Order_Schema from "../../models/orders/order_SchemaModel";
 import { Server as SocketIOServer } from "socket.io";
 import { generateOrderId } from "./generateOrderId";
-import GuestProfileSchema from "../../models/guest/guest_ProfileSchemaModel";
+import Guest_Profile_Schema from "../../models/guest/guest_ProfileSchemaModel";
 import { redis } from "../../config/redis";
 
 // ================================
@@ -54,7 +54,7 @@ post_Confirm_Cart_Orders_Router.post(
       const mobileNumberToSave = userType === "guest" ? userId : undefined;
 
       // 🔹 Create a new order object
-      const newOrder = new OrderSchemaModel({
+      const newOrder = new Order_Schema({
         ...orderData,
         hotelKey,
         mobileNumber: mobileNumberToSave || orderData?.mobileNumber, // Only save for guest
@@ -70,7 +70,7 @@ post_Confirm_Cart_Orders_Router.post(
       await newOrder.save();
 
       if (userType === "guest") {
-        await GuestProfileSchema.findOneAndUpdate(
+        await Guest_Profile_Schema.findOneAndUpdate(
           { mobileNumber: mobileNumberToSave },
           {
             $push: {

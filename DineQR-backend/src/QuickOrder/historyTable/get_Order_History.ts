@@ -3,7 +3,7 @@
 // ============================================================
 import { Router, Response } from "express";
 import { MultiUserRequest } from "../../types/user";
-import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import Order_Schema from "../../models/orders/order_SchemaModel";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 
 // ============================================================
@@ -114,10 +114,10 @@ get_Order_History_Router.get(
       // ============================================================
       let totalCount;
       if (Number(page) === 1) {
-        totalCount = await OrderSchemaModel.countDocuments(mappedObject);
+        totalCount = await Order_Schema.countDocuments(mappedObject);
       }
 
-      const response = await OrderSchemaModel.find(mappedObject)
+      const response = await Order_Schema.find(mappedObject)
         .skip(skip)
         .limit(limit)
         .lean()

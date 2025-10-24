@@ -1,6 +1,6 @@
 import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
-import billSchema from "../../../models/manager/mgr_BillSchemaModel";
+import Bill_Schema from "../../../models/manager/mgr_BillSchemaModel";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { redis } from "../../../config/redis";
 
@@ -32,7 +32,7 @@ mgr_Get_Bill_Router.get(
       }
 
       // 2️⃣ If not cached, fetch from MongoDB
-      const existingBill = await billSchema
+      const existingBill = await Bill_Schema
         .findOne({
           hotelKey,
           deleted: false,

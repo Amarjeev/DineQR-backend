@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import manager_profileModel from "../../../models/manager/mgr_ProfileSchemaModel";
+import Manager_Profile_Schema from "../../../models/manager/mgr_ProfileSchemaModel";
 import { redis } from "../../../config/redis";
 import { sendEmail } from "../../../services/sendEmail";
 import mgr_LoginOtpUI from "../../../emailTemplates/mgr_LoginOtpUI";
@@ -46,7 +46,7 @@ mgr_Login_Router.post(
       let manager;
       if (!userDataString) {
         // If not in cache, fetch from MongoDB
-        manager = await manager_profileModel
+        manager = await Manager_Profile_Schema
           .findOne({ email, isDeleted: false })
           .select("email password") // include password for bcrypt comparison
           .lean();

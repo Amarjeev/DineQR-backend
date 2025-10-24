@@ -1,7 +1,7 @@
 import { Router, Response } from "express";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
-import tableSchema from "../../models/manager/mgr_TableSchemaModel";
+import Table_Schema from "../../models/manager/mgr_TableSchemaModel";
 
 const get_Table_List_Router = Router();
 
@@ -23,7 +23,7 @@ get_Table_List_Router.get(
       }
 
       // Query table schema
-      const response = await tableSchema
+      const response = await Table_Schema
         .findOne({ hotelKey })
         .lean()
         .select("tableNames.name tableNames.isDeleted");

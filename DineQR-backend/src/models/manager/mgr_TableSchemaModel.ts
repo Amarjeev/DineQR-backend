@@ -21,5 +21,5 @@ const TableSchema = new Schema<TableDoc>({
   tableNames: { type: [TableItemSchema], required: true, default: [] }, // array of objects
 });
 
-const tableSchema = mongoose.model<TableDoc>("table_list", TableSchema);
-export default tableSchema;
+const Table_Schema = mongoose.model<TableDoc>("table_list", TableSchema);
+export default Table_Schema;

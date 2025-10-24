@@ -1,6 +1,6 @@
 // Import required modules
 import { Router, Response } from "express";
-import tableSchema from "../../../models/manager/mgr_TableSchemaModel";
+import Table_Schema from "../../../models/manager/mgr_TableSchemaModel";
 import { MultiUserRequest } from './../../../types/user';
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { redis } from "../../../config/redis";
@@ -27,7 +27,7 @@ mgr_delete_Table_Router.post(
       }
 
       // ✅ Check if hotel document exists
-      const hotelTables = await tableSchema.findOne({ hotelKey });
+      const hotelTables = await Table_Schema.findOne({ hotelKey });
       if (!hotelTables) {
         return res
           .status(404)
@@ -35,7 +35,7 @@ mgr_delete_Table_Router.post(
       }
 
       // ✅ Soft delete: mark specific table as deleted
-      await tableSchema.updateOne(
+      await Table_Schema.updateOne(
         { hotelKey, "tableNames._id": itemId },
         { $set: { "tableNames.$.isDeleted": true } }
       );

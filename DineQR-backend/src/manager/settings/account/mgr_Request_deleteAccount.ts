@@ -1,7 +1,7 @@
 import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
-import ManagerProfileSchema from "../../../models/manager/mgr_ProfileSchemaModel";
+import Manager_Profile_Schema from "../../../models/manager/mgr_ProfileSchemaModel";
 import bcrypt from "bcryptjs";
 
 
@@ -32,7 +32,7 @@ mgr_Request_deleteAccount_Router.post(
           .json({ success: false, message: "Password is required" });
       }
 
-      const response = await ManagerProfileSchema.findOne({ _id:hotelKey }).lean();
+      const response = await Manager_Profile_Schema.findOne({ _id:hotelKey }).lean();
 
       if (!response) {
         return res

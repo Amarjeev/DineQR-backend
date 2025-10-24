@@ -1,7 +1,7 @@
 import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
-import StaffProfileSchema from "../../../models/manager/mgr_Staff_ProfileSchemaModel";
+import Staff_Profile_Schema from '../../../models/manager/mgr_Staff_ProfileSchemaModel';
 import { redis } from "../../../config/redis";
 
 
@@ -34,7 +34,7 @@ mgr_Get_staff_account_Router.get(
       }
 
       // Fetch staff accounts for this manager's hotel
-      const staffAccounts = await StaffProfileSchema.find({
+      const staffAccounts = await Staff_Profile_Schema.find({
         hotelKey,
         isDeleted: false,
       })

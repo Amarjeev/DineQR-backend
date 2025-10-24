@@ -102,9 +102,9 @@ cron.schedule("*/10 * * * *", async () => {
 // -------------------------------
 // Model Export
 // -------------------------------
-const GuestProfileSchema: Model<IUser> = mongoose.model<IUser>(
+const Guest_Profile_Schema: Model<IUser> = mongoose.model<IUser>(
   "Guest_profile",
   UserSchema
 );
 
-export default GuestProfileSchema;
+export default Guest_Profile_Schema;

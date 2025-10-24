@@ -1,7 +1,7 @@
 import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
-import HotelInfoSchema from "../../../models/manager/mgr_HotelInfoSchemaModel";
+import HotelInfo_Schema from "../../../models/manager/mgr_HotelInfoSchemaModel";
 import { mgr_HotelInfo_Validation_Middleware } from "./validation/mgr_HotelInfoValidation";
 
 import { redis } from "../../../config/redis";
@@ -27,7 +27,7 @@ mgr_upload_Hotelinfo_Router.post(
       const hotelData = { ...req?.body?.formData, hotelKey };
 
       // ✅ Check if record already exists
-      const existing = await HotelInfoSchema.findOne({ hotelKey });
+      const existing = await HotelInfo_Schema.findOne({ hotelKey });
 
       if (existing) {
         // Update fields
@@ -43,7 +43,7 @@ mgr_upload_Hotelinfo_Router.post(
       }
 
       // ✅ Otherwise create new record
-      const newHotelInfo = new HotelInfoSchema(hotelData);
+      const newHotelInfo = new HotelInfo_Schema(hotelData);
       await newHotelInfo.save();
 
       return res.status(201).json({

@@ -1,7 +1,7 @@
 import { Router, Response } from "express";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
-import NotificationSchemaModel from "../../models/notification/notification_SchemaModel";
+import Notification_Schema from "../../models/notification/notification_SchemaModel";
 import { Server as SocketIOServer } from "socket.io";
 
 const post_Update_Notification_Status_Router = Router();
@@ -83,7 +83,7 @@ post_Update_Notification_Status_Router.post(
       // Find notification by ID and add userId to the appropriate array
       // $addToSet prevents duplicate entries in the array
       const updatedNotification =
-        await NotificationSchemaModel.findByIdAndUpdate(
+        await Notification_Schema.findByIdAndUpdate(
           itemId,
           { $addToSet: { [updateField]: userId } }, // $addToSet prevents duplicates
           { new: true } // Return updated document

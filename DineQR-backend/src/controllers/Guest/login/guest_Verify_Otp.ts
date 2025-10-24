@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import GuestProfileSchema from "../../../models/guest/guest_ProfileSchemaModel";
+import Guest_Profile_Schema from "../../../models/guest/guest_ProfileSchemaModel";
 import { generateToken } from "../../../utils/generate_jwtToken";
 import { redis } from "../../../config/redis";
 
@@ -77,10 +77,10 @@ guest_Verify_Otp_Router.post(
       });
 
       // 🔹 Check if guest already exists
-      let user = await GuestProfileSchema.findOne({ mobileNumber });
+      let user = await Guest_Profile_Schema.findOne({ mobileNumber });
 
       if (!user) {
-        user = new GuestProfileSchema({
+        user = new Guest_Profile_Schema({
           mobileNumber,
           hotelOrders: [],
           currentOrders: [],

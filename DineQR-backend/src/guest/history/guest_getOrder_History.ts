@@ -1,7 +1,7 @@
 import { Router, Response } from "express";
 import { MultiUserRequest } from "../../types/user";
 import { redis } from "../../config/redis";
-import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import Order_Schema from "../../models/orders/order_SchemaModel";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 
 const guest_getOrder_History_Router = Router();
@@ -48,7 +48,7 @@ guest_getOrder_History_Router.get(
       }
 
       // 🔹 Fetch from MongoDB if not cached
-      const order = await OrderSchemaModel.findOne({
+      const order = await Order_Schema.findOne({
         hotelKey,
         orderedById: userId,
         orderId,

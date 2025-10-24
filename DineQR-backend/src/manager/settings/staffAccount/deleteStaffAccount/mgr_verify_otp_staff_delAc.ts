@@ -1,8 +1,8 @@
 import { MultiUserRequest } from './../../../../types/user';
 import { Router, Response } from "express";
 import { verifyToken } from "../../../../middleware/verifyToken/verifyToken";
-import StaffProfileSchema from "../../../../models/manager/mgr_Staff_ProfileSchemaModel";
-import ManagerProfileSchema from "../../../../models/manager/mgr_ProfileSchemaModel";
+import Manager_Profile_Schema from "../../../../models/manager/mgr_ProfileSchemaModel";
+import Staff_Profile_Schema from '../../../../models/manager/mgr_Staff_ProfileSchemaModel';
 
 import { redis } from "../../../../config/redis";
 
@@ -40,7 +40,7 @@ mgr_verify_otp_staff_delAc_Router.post(
       // ==============================
       // Fetch manager from DB and ensure not deleted
       // ==============================
-      const manager = await ManagerProfileSchema.findOne({
+      const manager = await Manager_Profile_Schema.findOne({
         _id: hotelKey,
         isDeleted: false,
       });
@@ -77,7 +77,7 @@ mgr_verify_otp_staff_delAc_Router.post(
       // ==============================
       // Mark the staff account as deleted
       // ==============================
-      await StaffProfileSchema.findOneAndUpdate(
+      await Staff_Profile_Schema.findOneAndUpdate(
         {
           hotelKey,
           staffId,

@@ -1,7 +1,7 @@
 import { MultiUserRequest } from "./../../../types/user";
 import { Router, Response } from "express";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
-import HotelInfoSchema from "../../../models/manager/mgr_HotelInfoSchemaModel";
+import HotelInfo_Schema from "../../../models/manager/mgr_HotelInfoSchemaModel";
 import { redis } from "../../../config/redis";
 
 const mgr_get_Hotelinfo_Router = Router();
@@ -42,7 +42,7 @@ mgr_get_Hotelinfo_Router.get(
       }
 
       // Find hotel info by hotelKey
-      const hotelInfo = await HotelInfoSchema.findOne({ hotelKey })
+      const hotelInfo = await HotelInfo_Schema.findOne({ hotelKey })
         .lean()
         .select("-createdAt -updatedAt -hotelKey -_id");
 

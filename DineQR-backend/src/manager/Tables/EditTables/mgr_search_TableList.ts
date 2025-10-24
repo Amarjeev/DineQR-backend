@@ -1,6 +1,6 @@
 import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
-import tableSchema from "../../../models/manager/mgr_TableSchemaModel";
+import Table_Schema from "../../../models/manager/mgr_TableSchemaModel";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 
 
@@ -32,7 +32,7 @@ mgr_search_TableList_Router.get(
         return;
       }
 
-      const result = await tableSchema.findOne(
+      const result = await Table_Schema.findOne(
         {
           hotelKey,
           tableNames: {

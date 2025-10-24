@@ -39,5 +39,5 @@ const StaffSchema: Schema = new Schema<IStaff>(
   { timestamps: true }
 );
 
-const StaffProfileSchema = mongoose.model<IStaff>("Staff_profile", StaffSchema);
-export default StaffProfileSchema;
+const Staff_Profile_Schema = mongoose.model<IStaff>("Staff_profile", StaffSchema);
+export default Staff_Profile_Schema;

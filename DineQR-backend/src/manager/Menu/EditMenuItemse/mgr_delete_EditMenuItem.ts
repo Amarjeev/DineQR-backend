@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
-import Menu_Item from "../../../models/manager/mgr_MenuSchemaModel";
+import Menu_Item_Schema from "../../../models/manager/mgr_MenuSchemaModel";
 import { redis } from "../../../config/redis"; // Redis client instance
 
 const mgr_delete_EditMenuItem = Router();
@@ -13,7 +13,7 @@ mgr_delete_EditMenuItem.post(
 
     try {
       // Check if the menu item exists
-      const existingItem = await Menu_Item.findById({ _id: productid });
+      const existingItem = await Menu_Item_Schema.findById({ _id: productid });
       if (!existingItem) {
         res.status(404).json({ message: "Menu item not found" });
         return;

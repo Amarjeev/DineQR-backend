@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import Order_Schema from "../../models/orders/order_SchemaModel";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 
 // ================================
@@ -50,7 +50,7 @@ put_Edit_Orders_Router.put(
       }
 
       // 🔹 Find the order by orderId
-      const order = await OrderSchemaModel.findOne({ orderId });
+      const order = await Order_Schema.findOne({ orderId });
       if (!order) {
         return res
           .status(404)

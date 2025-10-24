@@ -1,6 +1,6 @@
 import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
-import ManagerProfileSchema from "../../../models/manager/mgr_ProfileSchemaModel";
+import Manager_Profile_Schema from '../../../models/manager/mgr_ProfileSchemaModel';
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import { mgr_Profile_Validation_Middleware } from "./validation/mgr_profileValidation";
 import bcrypt from "bcryptjs";
@@ -25,7 +25,7 @@ mgr_edit_ManagerProfile_Router.post(
       const { name, email, mobileNumber, password } = req?.body?.formData;
 
       // Check if email already exists for another active manager
-      const existingEmail = await ManagerProfileSchema.findOne({
+      const existingEmail = await Manager_Profile_Schema.findOne({
         email,
         isDeleted: false, // only consider managers that are not deleted
         _id: { $ne: hotelKey }, // exclude the current manager
@@ -49,7 +49,7 @@ mgr_edit_ManagerProfile_Router.post(
       }
 
       // Update manager profile
-      const updatedProfile = await ManagerProfileSchema.findByIdAndUpdate(
+      const updatedProfile = await Manager_Profile_Schema.findByIdAndUpdate(
         hotelKey,
         { $set: updateData },
         { new: true, select: "_id" } // return updated fields

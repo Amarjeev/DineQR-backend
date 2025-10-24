@@ -1,7 +1,7 @@
 import { Router, Response } from "express";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
-import Menu_Item from "../../models/manager/mgr_MenuSchemaModel";
+import Menu_Item_Schema from "../../models/manager/mgr_MenuSchemaModel";
 import { create_Notification } from "../notification/post_create_Notification";
 import { Server as SocketIOServer } from "socket.io";
 
@@ -67,7 +67,7 @@ post_UpdateStatus_Stock_Table_Router.post(
       // ------------------------------------------------------------------------
       // 🔹 Update Menu Item availability in DB
       // ------------------------------------------------------------------------
-      const updatedItem = await Menu_Item.findOneAndUpdate(
+      const updatedItem = await Menu_Item_Schema.findOneAndUpdate(
         { hotelKey, _id: itemId, isDeleted: false },
         { availability: updateStatus.trim() },
         { new: true } // Return updated document

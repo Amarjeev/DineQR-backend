@@ -29,8 +29,8 @@ const ManagerProfileSchemaModel: Schema = new Schema({
   deletedAt: { type: Date, default: null },
 });
 
-const ManagerProfileSchema = mongoose.model<ManagerProfile>(
+const Manager_Profile_Schema = mongoose.model<ManagerProfile>(
   "Manager_Profile",
   ManagerProfileSchemaModel
 );
-export default ManagerProfileSchema;
+export default Manager_Profile_Schema;

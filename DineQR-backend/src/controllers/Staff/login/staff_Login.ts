@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import StaffProfileSchema from "../../../models/manager/mgr_Staff_ProfileSchemaModel";
+import Staff_Profile_Schema from "../../../models/manager/mgr_Staff_ProfileSchemaModel";
 import { generateToken } from "../../../utils/generate_jwtToken";
 
 const staff_Login_Router = Router();
@@ -70,7 +70,7 @@ staff_Login_Router.post(
       }
 
       // Step 6: Database lookup - Find active staff member
-      const userData = await StaffProfileSchema.findOne({
+      const userData = await Staff_Profile_Schema.findOne({
         staffId: trimmedStaffId, // Use trimmed staffId for query
         isDeleted: false,
       })

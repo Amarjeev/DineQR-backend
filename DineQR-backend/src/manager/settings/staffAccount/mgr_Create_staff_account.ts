@@ -2,7 +2,7 @@ import { MultiUserRequest } from './../../../types/user';
 import { Router, Response } from "express";
 import { verifyToken } from "../../../middleware/verifyToken/verifyToken";
 import bcrypt from "bcryptjs";
-import StaffProfileSchema from "../../../models/manager/mgr_Staff_ProfileSchemaModel";
+import Staff_Profile_Schema from '../../../models/manager/mgr_Staff_ProfileSchemaModel';
 import { mgr_Staff_profileValidation } from "./validation/mgr_Staff_profileValidation";
 
 
@@ -27,7 +27,7 @@ mgr_Create_staff_account_Router.post(
       }
 
       // Check if staff ID already exists
-      const existestaff = await StaffProfileSchema.findOne({
+      const existestaff = await Staff_Profile_Schema.findOne({
         staffId,
         hotelKey,
         isDeleted:false
@@ -43,7 +43,7 @@ mgr_Create_staff_account_Router.post(
       const hashedPassword = await bcrypt.hash(password, 10); // 10 salt rounds
 
       // Create new staff
-      const staffData = new StaffProfileSchema({
+      const staffData = new Staff_Profile_Schema({
         hotelKey,
         staffId,
         name,

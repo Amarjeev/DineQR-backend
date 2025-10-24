@@ -1,7 +1,7 @@
 import { Router, Response } from "express";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
-import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import Order_Schema from "../../models/orders/order_SchemaModel";
 import { sendOrderNotification } from "../emailServices/orderNotificationService";
 import { type OrderData } from "../emailServices/orderNotificationService";
 import { create_Notification } from "../notification/post_create_Notification";
@@ -115,7 +115,7 @@ post_Reject_Order_Router.post(
       // - Matching hotelKey and orderId
       // - Not deleted or already cancelled
       // - Not previously cancelled by kitchen
-      const order = await OrderSchemaModel.findOne({
+      const order = await Order_Schema.findOne({
         hotelKey,
         orderId,
         isDeleted: false,
