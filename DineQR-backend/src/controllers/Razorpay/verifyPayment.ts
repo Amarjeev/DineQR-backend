@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import express, { Router, Request, Response } from "express";
 import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import { redis } from "../../config/redis";
 
 const razorPay_Verify_payment_Router = Router();
 
@@ -33,6 +34,10 @@ razorPay_Verify_payment_Router.post(
           order.paymentStatus = true;
           order.razorpayPaymentId = razorpay_payment_id;
           await order.save();
+
+          // This ensures the next fetch retrieves fresh data
+          const redisKey = `guestOrders-list:${order.hotelKey}:${order.orderedById}`;
+          await redis.del(redisKey);
         }
         res.status(200).json({ success: true });
       } catch (error) {

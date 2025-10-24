@@ -2,6 +2,7 @@ import { Router, Response } from "express";
 import { verifyToken } from "../../middleware/verifyToken/verifyToken";
 import { MultiUserRequest } from "../../types/user";
 import OrderSchemaModel from "../../models/orders/order_SchemaModel";
+import { redis } from "../../config/redis";
 
 const mark_Paid_Router = Router();
 
@@ -24,6 +25,11 @@ mark_Paid_Router.post(
       // Update paymentStatus manually
       order.paymentStatus = true;
       await order.save();
+
+      // 🔹 Invalidate cache in Redis for this guest's orders
+      // This ensures the next fetch retrieves fresh data
+      const redisKey = `guestOrders-list:${hotelKey}:${order.orderedById}`;
+      await redis.del(redisKey);
 
       res
         .status(200)
