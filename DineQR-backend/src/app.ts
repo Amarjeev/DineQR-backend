@@ -112,6 +112,11 @@ import guest_Verify_Otp_Router from "./controllers/Guest/login/guest_Verify_Otp"
 import guest_del_Orders_Router from "./guest/orders/guest_del_Orders";
 import guest_date_OrderHistory_Router from "./guest/history/guest_date_OrderHistory";
 import guest_getOrder_History_Router from "./guest/history/guest_getOrder_History";
+
+//RazoPay
+import razorPay_CreateOrder_Router from "./controllers/Razorpay/payment";
+import razorPay_Verify_payment_Router from "./controllers/Razorpay/verifyPayment";
+import mark_Paid_Router from "./QuickOrder/markPayment/mark_Payment";
 // --------------------------
 // Environment & App Setup
 // --------------------------
@@ -245,12 +250,17 @@ app.use(check_TokenValidation_Router);
 app.use(logout_Router);
 
 //guest login
-
 app.use(guest_SendOtp_Router);
 app.use(guest_Verify_Otp_Router);
 app.use(guest_date_OrderHistory_Router);
 app.use(guest_del_Orders_Router);
 app.use(guest_getOrder_History_Router);
+
+//RazoPay
+app.use(razorPay_CreateOrder_Router);
+app.use(razorPay_Verify_payment_Router);
+app.use(mark_Paid_Router);
+
 
 
 // --------------------------

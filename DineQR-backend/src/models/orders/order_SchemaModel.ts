@@ -72,8 +72,9 @@ export interface IOrder extends Document {
   orderAccepted: boolean;
   orderDelivered: boolean;
   paymentStatus: boolean;
+  razorpayOrderId: string;
+  razorpayPaymentId: string;
   isDeleted: boolean;
-
   createdAt: Date;
   updatedAt: Date;
 }
@@ -168,6 +169,8 @@ const OrderSchema = new Schema<IOrder>(
     orderAccepted: { type: Boolean, default: false },
     orderDelivered: { type: Boolean, default: false },
     paymentStatus: { type: Boolean, default: false },
+    razorpayOrderId: { type: String },
+    razorpayPaymentId: { type: String },
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }
