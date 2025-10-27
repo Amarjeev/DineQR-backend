@@ -1,5 +1,6 @@
 import Guest_Profile_Schema from "../../models/guest/guest_ProfileSchemaModel";
 import { Server as SocketIOServer } from "socket.io";
+import { redis } from "../../config/redis";
 
 /**
  * Send a structured notification object to a guest.
@@ -59,6 +60,10 @@ export const guest_Notifications = async (
 
     // ✅ Emit as a single object
     const roomId = `${order.hotelKey}${order.orderedById}`;
+    // ✅ Check Redis cache first to reduce DB queries
+    const redisKey = `guestOrders-notification:${order.hotelKey}:${order.orderedById}`;
+    await redis.del(redisKey);
+
     io.to(roomId).emit("guestNewNotifications", notification);
 
     console.log(
