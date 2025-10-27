@@ -334,7 +334,7 @@ function orderDeliveredUI(
           <div class="payment-section">
             <div>Ready to Pay?</div>
             <div class="payment-amount">₹${totalAmount.toFixed(2)}</div>
-            <a href="https://yourpaymentlink.com/pay/${orderId}" class="pay-button">Pay Now</a>
+            <a href="https://dine-qr-website-vbdf.vercel.app/guest-dashboard/orders" class="pay-button">Pay Now</a>
             <div style="font-size:11px;opacity:0.85;">Secure SSL Payment</div>
           </div>
 
