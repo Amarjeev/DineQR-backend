@@ -10,6 +10,7 @@ razorPay_Verify_payment_Router.post(
   "/api/v1/webhook",
   express.raw({ type: "application/json" }),
   async (req: Request, res: Response) => {
+    console.log("Razorpay webhook called");
     const signature = req.headers["x-razorpay-signature"] as string;
     const secret = process.env.RAZORPAY_KEY_SECRET || "";
 
