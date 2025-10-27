@@ -17,7 +17,6 @@ import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import compression from "compression";
 import { createServer } from "http";
-import razorPay_Verify_payment_Router from "./controllers/Razorpay/verifyPayment";
 
 
 // Custom imports
@@ -33,6 +32,8 @@ const app: Application = express(); // Initialize Express app
 // --------------------------
 // Route Imports
 // --------------------------
+
+import razorPay_Webhook_Router from "./controllers/Razorpay/verifyPayment";// RazoPay webhook route
 
 // Manager routes
 import emailCheckRouter from "./controllers/Manager/checkEmail/check_Email";
@@ -132,7 +133,7 @@ declare global {
     }
   }
 }
-app.use("/api/v1/webhook", razorPay_Verify_payment_Router);// Razorpay webhook route
+app.use("/api/v1/webhook", razorPay_Webhook_Router);// Razorpay webhook route
 // --------------------------
 // Middleware Setup
 // --------------------------
