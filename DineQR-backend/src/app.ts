@@ -17,9 +17,12 @@ import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import compression from "compression";
 import { createServer } from "http";
+import razorPay_Verify_payment_Router from "./controllers/Razorpay/verifyPayment";
 
+const app: Application = express(); // Initialize Express app
 // Custom imports
 import { securityHeaders } from "./middleware/WebsiteSecurity/securityHeaders";
+app.use("/api/v1/webhook", razorPay_Verify_payment_Router);// Razorpay webhook route
 import fileManagerRoutes from "./middleware/WebsiteSecurity/fileRoutes";
 import { initSocket } from "./config/socket/socket";
 import connectDB from "./config/mongoDb";
@@ -116,13 +119,11 @@ import guest_getOrder_History_Router from "./guest/history/guest_getOrder_Histor
 
 //RazoPay
 import razorPay_CreateOrder_Router from "./controllers/Razorpay/payment";
-import razorPay_Verify_payment_Router from "./controllers/Razorpay/verifyPayment";
 import mark_Paid_Router from "./QuickOrder/markPayment/mark_Payment";
 // --------------------------
 // Environment & App Setup
 // --------------------------
 dotenv.config(); // Load .env variables
-const app: Application = express(); // Initialize Express app
 
 // Extend Express Request to include safeFilePath
 declare global {
@@ -260,7 +261,6 @@ app.use(guest_getOrder_History_Router);
 
 //RazoPay
 app.use(razorPay_CreateOrder_Router);
-app.use(razorPay_Verify_payment_Router);
 app.use(mark_Paid_Router);
 
 // --------------------------
