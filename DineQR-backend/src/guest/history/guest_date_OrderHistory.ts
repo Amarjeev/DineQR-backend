@@ -12,11 +12,11 @@ const guest_date_OrderHistory_Router = Router();
  * @access  Protected
  */
 guest_date_OrderHistory_Router.get(
-  "/api/v1/:role/get/orders-date",
-  verifyToken(""), // Enable token verification
+  "/api/v1/get/orders-date",
+  verifyToken("guest"), // Enable token verification
   async (req: MultiUserRequest, res: Response) => {
     try {
-      const role = req.params.role?.toLowerCase().trim() || "";
+      const role = "guest";
       const userId = req[role as keyof MultiUserRequest]?.userId;
       const hotelKey = req[role as keyof MultiUserRequest]?.hotelKey;
 
