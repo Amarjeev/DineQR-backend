@@ -133,7 +133,7 @@ declare global {
     }
   }
 }
-app.use("/api/v1/webhook", razorPay_Webhook_Router);// Razorpay webhook route
+app.use("/", razorPay_Webhook_Router);// Razorpay webhook route
 
 // --------------------------
 // Middleware Setup
