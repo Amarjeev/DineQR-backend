@@ -13,7 +13,7 @@ export const initSocket = (httpServer: HttpServer) => {
       origin: [
         "http://localhost:5173",
         "http://localhost:5174",
-        "https://dine-qr-website-vbdf.vercel.app/",
+        "https://dine-qr-website-vbdf.vercel.app",
       ],
       credentials: true,
     },
