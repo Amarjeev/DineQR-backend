@@ -19,11 +19,16 @@ razorPay_CreateOrder_Router.post(
 
       // fetch order from DB
       const response = await Order_Schema.findOne({ hotelKey, orderId })
-        .select("orderId items")
+        .select("orderId items paymentStatus")
         .lean();
 
       if (!response) {
         res.status(404).json({ message: "Order not found" });
+        return;
+      }
+
+      if(response?.paymentStatus){
+        res.status(400).json({ message: "Order is already paid" });
         return;
       }
 

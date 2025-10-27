@@ -10,6 +10,9 @@ razorPay_Webhook_Router.post(
   express.raw({ type: "application/json" }),
   async (req: Request, res: Response) => {
     console.log("✅ Razorpay webhook received");
+    console.log("🛰️ Incoming webhook headers:", req.headers);
+    console.log("🛰️ Raw body type:", typeof req.body);
+    console.log("🛰️ Raw body value:", req.body);
 
     const signature = req.headers["x-razorpay-signature"] as string;
     const secret = process.env.RAZORPAY_KEY_SECRET || "";
