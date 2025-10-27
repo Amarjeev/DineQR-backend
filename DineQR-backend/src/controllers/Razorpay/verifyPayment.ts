@@ -1,11 +1,10 @@
-import crypto from "crypto";
 import express, { Request, Response, Router } from "express";
+import crypto from "crypto";
 import Order_Schema from "../../models/orders/order_SchemaModel";
 import { redis } from "../../config/redis";
 
 const razorPay_Webhook_Router = Router();
 
-// Must use express.raw for Razorpay
 razorPay_Webhook_Router.post(
   "/",
   express.raw({ type: "application/json" }),
@@ -16,10 +15,16 @@ razorPay_Webhook_Router.post(
     const secret = process.env.RAZORPAY_KEY_SECRET || "";
 
     try {
-      const body = req.body.toString(); // must convert buffer to string
+      // Razorpay sends raw body, not parsed JSON
+      const rawBody =
+        req.body instanceof Buffer
+          ? req.body.toString()
+          : JSON.stringify(req.body);
+
+      // Verify signature
       const expectedSignature = crypto
         .createHmac("sha256", secret)
-        .update(body)
+        .update(rawBody)
         .digest("hex");
 
       if (expectedSignature !== signature) {
@@ -28,21 +33,28 @@ razorPay_Webhook_Router.post(
         return;
       }
 
-      const event = JSON.parse(body);
-      const razorpay_order_id = event.payload.payment.entity.order_id;
-      const razorpay_payment_id = event.payload.payment.entity.id;
+      // Parse event
+      const event = JSON.parse(rawBody);
+      console.log("📦 Event Type:", event.event);
+      console.log("📦 Full Payload:", JSON.stringify(event, null, 2));
 
-      const order = await Order_Schema.findOne({
-        razorpayOrderId: razorpay_order_id,
-      });
-      if (order) {
-        order.paymentStatus = true;
-        order.razorpayPaymentId = razorpay_payment_id;
-        await order.save();
+      // Example: handle captured payment
+      if (event.event === "payment.captured") {
+        const payment = event.payload.payment.entity;
+        const order = await Order_Schema.findOne({
+          razorpayOrderId: payment.order_id,
+        });
 
-        // Clear Redis cache
-        const redisKey = `guestOrders-list:${order.hotelKey}:${order.orderedById}`;
-        await redis.del(redisKey);
+        if (order) {
+          order.paymentStatus = true;
+          order.razorpayPaymentId = payment.id;
+          await order.save();
+
+          // Clear cache
+          const redisKey = `guestOrders-list:${order.hotelKey}:${order.orderedById}`;
+          await redis.del(redisKey);
+          console.log("✅ Order updated & cache cleared");
+        }
       }
 
       res.status(200).json({ success: true });
