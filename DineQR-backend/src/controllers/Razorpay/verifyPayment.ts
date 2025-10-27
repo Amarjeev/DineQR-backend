@@ -28,7 +28,7 @@ razorPay_Webhook_Router.post(
         .digest("hex");
 
       if (expectedSignature !== signature) {
-        console.warn("❌ Invalid signature");
+        console.log("❌ Invalid signature");
         res.status(400).json({ success: false, message: "Invalid signature" });
         return;
       }
