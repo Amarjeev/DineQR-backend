@@ -2,6 +2,7 @@ import express, { Request, Response, Router } from "express";
 import crypto from "crypto";
 import Order_Schema from "../../models/orders/order_SchemaModel";
 import { redis } from "../../config/redis";
+import { Server as SocketIOServer } from "socket.io";
 
 const razorPay_Webhook_Router = Router();
 
@@ -9,11 +10,6 @@ razorPay_Webhook_Router.post(
   "/api/v1/webhook",
   express.raw({ type: "application/json" }),
   async (req: Request, res: Response) => {
-    console.log("✅ Razorpay webhook received");
-    console.log("🛰️ Incoming webhook headers:", req.headers);
-    console.log("🛰️ Raw body type:", typeof req.body);
-    console.log("🛰️ Raw body value:", req.body);
-
     const signature = req.headers["x-razorpay-signature"] as string;
     const secret = process.env.RAZORPAY_KEY_SECRET || "";
 
@@ -52,6 +48,13 @@ razorPay_Webhook_Router.post(
           order.paymentStatus = true;
           order.razorpayPaymentId = payment.id;
           await order.save();
+
+          const io = req.app.get("io") as SocketIOServer;
+          // Emit real-time update to clients
+          io.to(`${order.hotelKey}${order?.orderedById}`).emit(
+            "updatePaymentStatusOrder",
+            order?.orderId
+          );
 
           // Clear cache
           const redisKey = `guestOrders-list:${order.hotelKey}:${order.orderedById}`;
