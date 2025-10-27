@@ -144,7 +144,7 @@ const corsOptions: CorsOptions = {
   origin: [
     "http://localhost:5173",
     "http://localhost:5174",
-    "https://dine-qr-website.vercel.app",
+    "https://dine-qr-website-vbdf.vercel.app/",
   ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type"],
