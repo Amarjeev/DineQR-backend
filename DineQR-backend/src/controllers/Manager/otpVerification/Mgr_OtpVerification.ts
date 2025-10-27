@@ -82,7 +82,7 @@ Mgr_OtpVerification_Router.post(
       res.cookie("manager_Token", token, {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        sameSite: "none",
         maxAge: 5 * 24 * 60 * 60 * 1000,
       });
 

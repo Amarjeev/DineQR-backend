@@ -114,7 +114,7 @@ staff_Login_Router.post(
       res.cookie("staff_Token", token, {
         httpOnly: true,    // Prevents XSS attacks
         secure: true,      // Only sent over HTTPS
-        sameSite: "strict", // CSRF protection
+        sameSite: "none",   // CSRF protection
         maxAge: 5 * 24 * 60 * 60 * 1000, // 5 days expiration
       });
 
