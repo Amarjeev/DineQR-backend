@@ -7,7 +7,7 @@ const razorPay_Webhook_Router = Router();
 
 // Must use express.raw for Razorpay
 razorPay_Webhook_Router.post(
-  "/api/v1/webhook",
+  "/",
   express.raw({ type: "application/json" }),
   async (req: Request, res: Response) => {
     console.log("✅ Razorpay webhook received");
