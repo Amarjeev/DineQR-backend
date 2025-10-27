@@ -3,6 +3,11 @@ import crypto from "crypto";
 import Order_Schema from "../../models/orders/order_SchemaModel";
 import { redis } from "../../config/redis";
 import { Server as SocketIOServer } from "socket.io";
+import { guest_Notifications } from "../../guest/notification/guest_Notifications";
+import HotelInfo_Schema from "../../models/manager/mgr_HotelInfoSchemaModel";
+import paymentSuccesUI from "../../emailTemplates/payment_Succes";
+import { sendEmail } from "../../services/sendEmail";
+import { calculate_Order_Total } from "../../utils/calculateTotal";
 
 const razorPay_Webhook_Router = Router();
 
@@ -55,6 +60,37 @@ razorPay_Webhook_Router.post(
             "updatePaymentStatusOrder",
             order?.orderId
           );
+
+          await guest_Notifications(io, order, "💳payment");
+
+          // Find hotel info by hotelKey
+          const hotelInfo = await HotelInfo_Schema.findOne({
+            hotelKey: order?.hotelKey,
+          })
+            .lean()
+            .select("-createdAt -updatedAt -hotelKey -_id");
+
+          const totalAmount = calculate_Order_Total(order);
+
+          // 📧 Create Email Template
+          const emailTemplate = paymentSuccesUI(
+            hotelInfo?.email || "", // guest email preferred
+            hotelInfo?.name || "",
+            hotelInfo?.address || "",
+            hotelInfo?.contactNumber || "",
+            order?.orderId,
+            totalAmount
+          );
+
+          // 📬 Send Email (only if email exists)
+          if (order?.email) {
+            await sendEmail({
+              toEmail: order?.email || hotelInfo?.email || "",
+              subject: "💳 Payment Successful - DineQR",
+              htmlContent: emailTemplate.html,
+            });
+            console.log("📧 Payment success email sent!");
+          }
 
           // Clear cache
           const redisKey = `guestOrders-list:${order.hotelKey}:${order.orderedById}`;
