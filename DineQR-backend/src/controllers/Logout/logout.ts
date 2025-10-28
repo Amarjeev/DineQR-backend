@@ -20,7 +20,7 @@ logout_Router.post(
       res.clearCookie(`${role}_Token`, {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        sameSite: "none",
       });
 
       // Send success response
