@@ -22,7 +22,7 @@ logout_Router.post(
         secure: true,
         sameSite: "none",
         path: "/", // must match login cookie path
-        domain: ".dineqr.cfd",
+        domain: "dineqr-backend-3.onrender.com",
       });
 
       res.setHeader(
