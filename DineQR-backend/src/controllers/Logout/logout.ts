@@ -21,7 +21,7 @@ logout_Router.post(
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        domain:"https://dineqr-frontend.netlify.app",
+        path: "/",
       });
 
       // Send success response
