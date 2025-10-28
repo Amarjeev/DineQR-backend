@@ -83,8 +83,8 @@ post_Confirm_Cart_Orders_Router.post(
           },
           { upsert: true, new: true }
         );
-
-        const redisKey = `guestOrders-list:${hotelKey}:${userId}`;
+   // 🔹 Invalidate guest order history cache in Redis
+        const redisKey = `guestOrders_dates_list:${hotelKey}:${userId}`;
         await redis.del(redisKey);
       }
 

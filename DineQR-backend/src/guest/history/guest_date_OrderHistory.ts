@@ -27,10 +27,11 @@ guest_date_OrderHistory_Router.get(
         });
       }
 
-      const redisKey = `guestOrders-list:${hotelKey}:${userId}`;
+      const redisKey = `guestOrders_dates_list:${hotelKey}:${userId}`;
 
       // Try to fetch from Redis cache
       const cachedData = await redis.get(redisKey);
+
       if (cachedData) {
         return res.status(200).json({
           success: true,
