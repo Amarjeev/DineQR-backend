@@ -17,11 +17,17 @@ logout_Router.post(
       const role = req.params.role?.toLowerCase().trim() || "";
 
       // Clear the JWT cookie associated with this role
-      res.clearCookie(`${role}_Token`, {
+      // res.clearCookie(`${role}_Token`, {
+      //   httpOnly: true,
+      //   secure: true,
+      //   sameSite: "none",
+      // });
+      res.cookie(`${role}_Token`, {
         httpOnly: true,
         secure: true,
-        domain: ".dineqr.cfd",
         sameSite: "none",
+        domain: ".dineqr.cfd", // 👈 This is crucial!
+        path: "/", // required to ensure deletion works later
       });
 
       // Send success response

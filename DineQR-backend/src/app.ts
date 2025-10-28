@@ -148,7 +148,7 @@ const corsOptions: CorsOptions = {
     "https://dineqr.cfd", // your custom domain
   ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true, // Enable cookies/auth headers
 };
 app.use(cors(corsOptions));
