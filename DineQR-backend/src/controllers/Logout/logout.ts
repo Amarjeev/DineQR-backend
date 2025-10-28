@@ -11,24 +11,17 @@ const logout_Router = express.Router();
 logout_Router.post(
   "/api/v1/:role/Logout",
   verifyToken(""), // Middleware to verify token (can check role if needed)
-  (_req: Request, res: Response) => {
+  (req: Request, res: Response) => {
     try {
       // Get role from URL parameter
-      // const role = req.params.role?.toLowerCase().trim() || "";
+      const role = req.params.role?.toLowerCase().trim() || "";
 
-      // Clear the JWT cookie associated with this role
-      //  res.clearCookie(`${role}_Token`, "", {
-      //   httpOnly: true,
-      //   secure: true,
-      //   sameSite: "none",
-      //   path: "/",
-      //   expires: new Date(0),
-      // });
-      res.clearCookie("manager_Token", {
+      // ✅ This matches exactly how it was set during login
+      res.clearCookie(`${role}_Token`, {
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        path: "/", // must match how it was set
+        path: "/", // must match login cookie path
       });
 
       // Send success response
