@@ -29,7 +29,6 @@ logout_Router.post(
         secure: true,
         sameSite: "none",
         path: "/", // must match how it was set
-        expires: new Date(0),
       });
 
       // Send success response
