@@ -83,6 +83,7 @@ Mgr_OtpVerification_Router.post(
         httpOnly: true,
         secure: true,
         sameSite: "none",
+        path: "/",
         maxAge: 5 * 24 * 60 * 60 * 1000,
       });
 
