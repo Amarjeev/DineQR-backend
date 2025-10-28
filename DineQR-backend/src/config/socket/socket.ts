@@ -11,9 +11,8 @@ export const initSocket = (httpServer: HttpServer) => {
   const io = new SocketIOServer(httpServer, {
     cors: {
       origin: [
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "https://dine-qr-website-vbdf.vercel.app",
+        "https://dineqr-frontend.netlify.app", // Netlify live site
+        "https://dineqr.cfd", // your custom domain
       ],
       credentials: true,
     },
@@ -21,13 +20,11 @@ export const initSocket = (httpServer: HttpServer) => {
 
   // ✅ Handle client connection
   io.on("connection", (socket: Socket) => {
-
     // Register all event handlers for this socket
     registerSocketEvents(io, socket);
 
     // Handle disconnection
-    socket.on("disconnect", () => {
-    });
+    socket.on("disconnect", () => {});
   });
 
   return io;

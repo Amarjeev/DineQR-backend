@@ -18,7 +18,6 @@ import helmet from "helmet";
 import compression from "compression";
 import { createServer } from "http";
 
-
 // Custom imports
 import { securityHeaders } from "./middleware/WebsiteSecurity/securityHeaders";
 import fileManagerRoutes from "./middleware/WebsiteSecurity/fileRoutes";
@@ -33,7 +32,7 @@ const app: Application = express(); // Initialize Express app
 // Route Imports
 // --------------------------
 
-import razorPay_Webhook_Router from "./controllers/Razorpay/verifyPayment";// RazoPay webhook route
+import razorPay_Webhook_Router from "./controllers/Razorpay/verifyPayment"; // RazoPay webhook route
 
 // Manager routes
 import emailCheckRouter from "./controllers/Manager/checkEmail/check_Email";
@@ -126,8 +125,6 @@ import guest_getOrder_History_Router from "./guest/history/guest_getOrder_Histor
 import razorPay_CreateOrder_Router from "./controllers/Razorpay/payment";
 import mark_Paid_Router from "./QuickOrder/markPayment/mark_Payment";
 
-
-
 // Extend Express Request to include safeFilePath
 declare global {
   namespace Express {
@@ -136,7 +133,7 @@ declare global {
     }
   }
 }
-app.use("/", razorPay_Webhook_Router);// Razorpay webhook route
+app.use("/", razorPay_Webhook_Router); // Razorpay webhook route
 
 // --------------------------
 // Middleware Setup
@@ -147,9 +144,8 @@ app.use(express.json()); // Parse JSON requests
 // CORS configuration
 const corsOptions: CorsOptions = {
   origin: [
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "https://dine-qr-website-vbdf.vercel.app",
+    "https://dineqr-frontend.netlify.app", // Netlify live site
+    "https://dineqr.cfd", // your custom domain
   ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type"],
