@@ -564,7 +564,7 @@ function orderApprovedUI(
             
             <!-- Payment CTA -->
             <div class="payment-cta">
-              <a href="https://dine-qr-website-vbdf.vercel.app/guest-dashboard/orders" class="pay-button">
+              <a href="https://dineqr.cfd/guest-dashboard/orders" class="pay-button">
                 Proceed to Secure Payment
               </a>
               <p style="color: #6b7280; font-size: 12px; margin-top: 10px; line-height: 1.4;">
