@@ -24,6 +24,11 @@ logout_Router.post(
         path: "/", // must match login cookie path
       });
 
+       res.setHeader(
+        "Set-Cookie",
+        `${role}_Token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=None`
+      );
+
       // Send success response
       return res
         .status(200)
