@@ -29,6 +29,7 @@ logout_Router.post(
         secure: true,
         sameSite: "none",
         path: "/", // must match how it was set
+         domain: "dineqr-frontend.netlify.app",
       });
 
       // Send success response
