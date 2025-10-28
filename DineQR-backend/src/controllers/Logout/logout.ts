@@ -17,11 +17,12 @@ logout_Router.post(
       const role = req.params.role?.toLowerCase().trim() || "";
 
       // Clear the JWT cookie associated with this role
-      res.clearCookie(`${role}_Token`, {
+      res.cookie(`${role}_Token`, "", {
         httpOnly: true,
         secure: true,
         sameSite: "none",
         path: "/",
+        expires: new Date(0),
       });
 
       // Send success response
