@@ -22,9 +22,10 @@ logout_Router.post(
         secure: true,
         sameSite: "none",
         path: "/", // must match login cookie path
+        domain: ".dineqr.cfd",
       });
 
-       res.setHeader(
+      res.setHeader(
         "Set-Cookie",
         `${role}_Token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=None`
       );
