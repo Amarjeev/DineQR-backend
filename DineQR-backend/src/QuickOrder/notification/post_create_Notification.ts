@@ -200,9 +200,6 @@ export const create_Notification = async (
 
     // Broadcast new notification via Socket.IO if available
     if (io) io.emit("newNotification", message);
-
-    // Log successful notification creation
-    console.log("📢 Notification created:", messageContent);
     return;
   } catch (error) {
     // ==============================================

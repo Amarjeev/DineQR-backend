@@ -40,7 +40,6 @@ export default function hotelGuestNotificationRoom(
         // ✅ Construct a unique room ID for this guest + hotel
         const roomId = `${hotelKey}${guestUserId}`;
         socket.join(roomId);
-        console.log(`✅ Guest joined notification room: ${roomId}`);
 
         // ✅ Check Redis cache first to reduce DB queries
         const redisKey = `guestOrders-notification:${hotelKey}:${guestUserId}`;
@@ -92,10 +91,6 @@ export default function hotelGuestNotificationRoom(
 
         // ✅ Cache the notifications in Redis for 3 hours (10800 seconds)
         await redis.set(redisKey, JSON.stringify(notifications), { ex: 10800 });
-
-        console.log(
-          `📨 Sent ${notifications.length} hotel-specific notifications to guest ${guestUserId}`
-        );
       } catch (error) {
         // ❌ Handle any errors during fetching or emitting notifications
         console.error("❌ Error fetching hotel-specific notifications:", error);

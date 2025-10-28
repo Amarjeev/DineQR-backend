@@ -26,7 +26,6 @@ export default function hotelGuestOrdersRoom(_io: Server, socket: Socket) {
 
       // Join the hotel and user specific room for real-time updates
       socket.join(`${hotelKey}${userId}`);
-      console.log(`✅ Joined hotel room:${hotelKey}${userId}`);
 
       // Redis cache key for guest orders
       const redisKey = `guestOrders-list:${hotelKey}:${userId}`;

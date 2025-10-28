@@ -81,7 +81,6 @@ post_UpdateStatus_Stock_Table_Router.post(
 
       const io = req.app.get("io") as SocketIOServer;
       await create_Notification(hotelKey, updatedItem, 'stockAlert', undefined, io);
-console.log(updatedItem)
       // ------------------------------------------------------------------------
       // ✅ Send success response
       // ------------------------------------------------------------------------

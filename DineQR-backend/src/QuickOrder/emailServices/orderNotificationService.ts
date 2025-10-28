@@ -131,10 +131,6 @@ export const sendOrderNotification = async (
           : `🎉 Order Delivered - ${hotelName}`,
       htmlContent: (await emailTemplate)?.html || "",
     });
-
-    console.log(
-      `Email sent successfully to ${orderData.email} for order ${orderData.orderId}`
-    );
   } catch (error) {
     console.error("❌ Error sending order notification:", error);
     throw error;

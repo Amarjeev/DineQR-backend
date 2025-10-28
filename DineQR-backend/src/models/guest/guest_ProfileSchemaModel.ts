@@ -81,7 +81,6 @@ UserSchema.statics.cleanupExpiredData = async function () {
       },
     }
   );
-  console.log("🧹 Expired currentOrders & notifications cleaned.");
 };
 
 // -------------------------------
@@ -92,7 +91,6 @@ cron.schedule("*/10 * * * *", async () => {
     const model = mongoose.models.Guest_profile as any;
     if (model && model.cleanupExpiredData) {
       await model.cleanupExpiredData();
-      console.log("✅ Cron cleanup ran successfully");
     }
   } catch (err) {
     console.error("❌ Cron cleanup failed:", err);

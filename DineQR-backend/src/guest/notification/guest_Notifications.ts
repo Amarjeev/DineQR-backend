@@ -66,9 +66,6 @@ export const guest_Notifications = async (
 
     io.to(roomId).emit("guestNewNotifications", notification);
 
-    console.log(
-      `📩 Notification sent (${title}) for order ${order?.orderId} to ${roomId}`
-    );
   } catch (error) {
     console.error("❌ Error sending guest notification:", error);
   }

@@ -19,11 +19,10 @@ export const sendEmail = async ({
   try {
     await sgMail.send({
       to: toEmail,
-      from: process.env.EMAIL_USER || "amarjeevm@gmail.com", // verified sender
+      from: process.env.EMAIL_USER as string,
       subject,
       html: htmlContent,
     });
-    console.log("✅ Email sent successfully via SendGrid API");
   } catch (error) {
     console.error("❌ Error sending email:", error);
     throw error;

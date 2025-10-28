@@ -19,7 +19,6 @@ export default function hotelConfirmedOrdersRoom(_io: Server, socket: Socket) {
   socket.on("joinHotelConfirmedOrdersChannel", async (hotelKey: string) => {
     // Join the hotel-specific room for real-time confirmed order updates
     socket.join(hotelKey);
-    console.log(`✅ Joined hotel room: ${hotelKey}`);
 
     try {
       // Fetch confirmed orders from database that meet specific criteria

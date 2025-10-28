@@ -23,7 +23,6 @@ export default function hotelNotificationRoom(_io: Server, socket: Socket) {
 
     // Join the hotel-specific room for real-time notification updates
     socket.join(hotelKey);
-    console.log(`✅ Joined hotel room: ${hotelKey}`);
 
     try {
       // Fetch unread notifications for the staff user

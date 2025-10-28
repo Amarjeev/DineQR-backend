@@ -19,7 +19,6 @@ export default function hotelOrdersRoom(_io: Server, socket: Socket) {
   socket.on("joinHotelOrdersChannel", async (hotelKey: string) => {
     // Join the hotel-specific room for real-time updates
     socket.join(hotelKey);
-    console.log(`✅ Joined hotel room: ${hotelKey}`);
 
     try {
       // Fetch initial pending orders from database

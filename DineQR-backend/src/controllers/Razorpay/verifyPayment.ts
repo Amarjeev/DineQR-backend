@@ -32,15 +32,12 @@ razorPay_Webhook_Router.post(
         .digest("hex");
 
       if (expectedSignature !== signature) {
-        console.log("❌ Invalid signature");
         res.status(400).json({ success: false, message: "Invalid signature" });
         return;
       }
 
       // Parse event
       const event = JSON.parse(rawBody);
-      console.log("📦 Event Type:", event.event);
-      console.log("📦 Full Payload:", JSON.stringify(event, null, 2));
 
       // Example: handle captured payment
       if (event.event === "payment.captured") {
@@ -89,13 +86,11 @@ razorPay_Webhook_Router.post(
               subject: "💳 Payment Successful - DineQR",
               htmlContent: emailTemplate.html,
             });
-            console.log("📧 Payment success email sent!");
           }
 
           // Clear cache
           const redisKey = `guestOrders-list:${order.hotelKey}:${order.orderedById}`;
           await redis.del(redisKey);
-          console.log("✅ Order updated & cache cleared");
         }
       }
 

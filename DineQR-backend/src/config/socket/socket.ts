@@ -21,14 +21,12 @@ export const initSocket = (httpServer: HttpServer) => {
 
   // ✅ Handle client connection
   io.on("connection", (socket: Socket) => {
-    console.log(`🟢 Client connected: ${socket.id}`);
 
     // Register all event handlers for this socket
     registerSocketEvents(io, socket);
 
     // Handle disconnection
     socket.on("disconnect", () => {
-      console.log(`🔴 Client disconnected: ${socket.id}`);
     });
   });
 
