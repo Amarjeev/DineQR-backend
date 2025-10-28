@@ -80,6 +80,7 @@ import mgr_reset_staff_password_Router from "./manager/settings/staffAccount/mgr
 import mgr_Get_staff_account_Router from "./manager/settings/staffAccount/mgr_Get_staff_account";
 import mgr_check_pwd_staff_delAc_Router from "./manager/settings/staffAccount/deleteStaffAccount/mgr_check_pwd_staff_delAc";
 import mgr_verify_otp_staff_delAc_Router from "./manager/settings/staffAccount/deleteStaffAccount/mgr_verify_otp_staff_delAc";
+import guest_Verify_TrailMode_Router from "./controllers/Guest/login/guest_Verify_TrailMode"; //trail mode login
 
 // Staff routes
 import staff_Login_Router from "./controllers/Staff/login/staff_Login";
@@ -124,6 +125,8 @@ import guest_getOrder_History_Router from "./guest/history/guest_getOrder_Histor
 //RazoPay
 import razorPay_CreateOrder_Router from "./controllers/Razorpay/payment";
 import mark_Paid_Router from "./QuickOrder/markPayment/mark_Payment";
+
+
 
 // Extend Express Request to include safeFilePath
 declare global {
@@ -223,6 +226,7 @@ app.use(mgr_reset_staff_password_Router);
 app.use(mgr_Get_staff_account_Router);
 app.use(mgr_check_pwd_staff_delAc_Router);
 app.use(mgr_verify_otp_staff_delAc_Router);
+app.use(guest_Verify_TrailMode_Router); //trail mode login
 
 // QuickOrder & Cart
 app.use(get_category_food_list_Router);
