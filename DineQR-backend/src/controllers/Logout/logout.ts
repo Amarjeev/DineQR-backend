@@ -20,14 +20,19 @@ logout_Router.post(
       res.clearCookie(`${role}_Token`, {
         httpOnly: true,
         secure: true,
+        domain: ".dineqr.cfd",
         sameSite: "none",
       });
 
       // Send success response
-      return res.status(200).json({ message: "Logged out successfully", success: true });
+      return res
+        .status(200)
+        .json({ message: "Logged out successfully", success: true });
     } catch (err) {
       console.error("Logout error:", err);
-      return res.status(500).json({ message: "Logout failed", error: err, success: false });
+      return res
+        .status(500)
+        .json({ message: "Logout failed", error: err, success: false });
     }
   }
 );

@@ -144,8 +144,8 @@ app.use(express.json()); // Parse JSON requests
 // CORS configuration
 const corsOptions: CorsOptions = {
   origin: [
-    "https://dineqr-frontend.netlify.app", // Netlify live site
-    "https://dineqr.cfd", // your custom domain
+    "https://dineqr.cfd", // your custom domain (main frontend)
+    "https://dineqr-frontend.netlify.app", // optional Netlify preview
   ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type"],
