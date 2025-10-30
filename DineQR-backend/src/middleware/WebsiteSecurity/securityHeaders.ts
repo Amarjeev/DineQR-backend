@@ -18,10 +18,9 @@ export const securityHeaders = [
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       connectSrc: [
         "'self'",
-        "http://localhost:5000",
-        "http://localhost:5173",
-        "https://dine-qr-website.vercel.app",
-        "https://api.com",
+        "https://dineqr.cfd",
+        "https://www.dineqr.cfd",
+        "https://dineqr-backend-3.onrender.com",
       ],
       frameAncestors: ["'none'"],
       objectSrc: ["'none'"],
