@@ -146,6 +146,7 @@ const corsOptions: CorsOptions = {
   origin: [
     "https://dineqr-frontend.netlify.app", // Netlify live site
     "https://dineqr.cfd", // your custom domain
+    "https://api.dineqr.cfd",
     "https://www.dineqr.cfd", // your custom domain with www
   ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -158,10 +159,9 @@ app.use(cookieParser());
 app.use(
   helmet({
     crossOriginOpenerPolicy: false, // disable overrides
-    crossOriginResourcePolicy: false,// disable overrides
+    crossOriginResourcePolicy: false, // disable overrides
   })
 );
-
 
 // Apply compression for responses > 1KB
 app.use(
