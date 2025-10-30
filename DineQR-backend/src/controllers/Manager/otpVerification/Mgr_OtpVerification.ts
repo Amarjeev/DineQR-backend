@@ -84,7 +84,6 @@ Mgr_OtpVerification_Router.post(
         secure: true,
         sameSite: "none",
         path: "/",
-        domain: ".dineqr.cfd",
         maxAge: 5 * 24 * 60 * 60 * 1000,
       });
 
