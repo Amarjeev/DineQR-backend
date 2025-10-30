@@ -21,7 +21,8 @@ logout_Router.post(
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        path: "/", 
+        domain: ".dineqr.cfd",
+        path: "/",
       });
 
       // Send success response
