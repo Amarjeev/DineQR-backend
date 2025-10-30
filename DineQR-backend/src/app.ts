@@ -155,7 +155,13 @@ const corsOptions: CorsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(cookieParser());
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginOpenerPolicy: false, // disable overrides
+    crossOriginResourcePolicy: false,
+  })
+);
+
 
 // Apply compression for responses > 1KB
 app.use(
