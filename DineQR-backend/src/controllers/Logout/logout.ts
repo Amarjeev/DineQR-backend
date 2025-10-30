@@ -22,6 +22,7 @@ logout_Router.post(
         secure: true,
         sameSite: "none",
         path: "/", // must match login cookie path
+        domain: "api.dineqr.cfd",
       });
 
       // Send success response
