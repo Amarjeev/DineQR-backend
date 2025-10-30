@@ -134,12 +134,12 @@ mgr_update_EditMenuItem_Router.post(
       // ✅ Update Redis cache with fresh data and set expiration
       await redis.set(cacheKey, JSON.stringify(updatedDoc), { ex: 3600 });
 
-        // ✅ Clear related menu list cache for the manager to reflect changes
-        
-      // Loop from page 1 up to the current page
-      const pageNumber: number = Number(currentPage);
+      // ✅ Clear related menu list cache for the manager to reflect changes
 
-      for (let page: number = 1; page <= pageNumber; page++) {
+      // Loop from page 1 up to the current page
+      const pageNumber = Number(currentPage);
+
+      for (let page = 1; page <= pageNumber; page++) {
         const MenuListRedisKey = `mgr_menu_list:${UpdatedData.foodCategory}:${pageNumber}:${UpdatedData.hotelKey}`;
 
         // Delete each redis key

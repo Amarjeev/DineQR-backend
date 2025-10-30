@@ -23,9 +23,9 @@ mgr_delete_EditMenuItem.post(
       existingItem.isDeleted = true;
       await existingItem.save();
 
-      const pageNumber: number = Number(currentPage);
+      const pageNumber = Number(currentPage);
 
-      for (let page: number = 1; page <= pageNumber; page++) {
+      for (let page = 1; page <= pageNumber; page++) {
         const MenuListRedisKey = `mgr_menu_list:${existingItem.foodCategory}:${pageNumber}:${existingItem.hotelKey}`;
 
         // Delete each redis key
