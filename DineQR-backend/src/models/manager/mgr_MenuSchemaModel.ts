@@ -18,8 +18,8 @@ export interface IMenuItem extends Document {
   foodCategory: string; // category list
   availability: "Available" | "SoldOut" | "ComingSoon";
   isDeleted: boolean; // soft delete flag
-  s3Url: { type: String }; // main image stored in S3
-  blurHash: { type: String }; // lightweight placeholder
+  s3Url: { type: string }; // main image stored in S3
+  blurHash: { type: string }; // lightweight placeholder
 }
 
 const validAvailability = ["Available", "SoldOut", "ComingSoon"] as const;
