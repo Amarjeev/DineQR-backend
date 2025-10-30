@@ -146,7 +146,6 @@ const corsOptions: CorsOptions = {
   origin: [
     "https://dineqr-frontend.netlify.app", // Netlify live site
     "https://dineqr.cfd", // your custom domain
-    "https://api.dineqr.cfd",
     "https://www.dineqr.cfd", // your custom domain with www
   ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],

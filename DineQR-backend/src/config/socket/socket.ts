@@ -11,10 +11,8 @@ export const initSocket = (httpServer: HttpServer) => {
   const io = new SocketIOServer(httpServer, {
     cors: {
       origin: [
-        "https://dineqr.cfd", // ✅ custom domain
-        "https://www.dineqr.cfd", // ✅ www version (important)
-        "https://api.dineqr.cfd", // ✅ backend subdomain
-        "https://dineqr-frontend.netlify.app", // ✅ Netlify preview/live frontend
+        "https://dineqr-frontend.netlify.app", // Netlify live site
+        "https://dineqr.cfd", // your custom domain
       ],
       credentials: true,
     },
