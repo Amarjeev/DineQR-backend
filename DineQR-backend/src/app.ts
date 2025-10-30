@@ -158,7 +158,7 @@ app.use(cookieParser());
 app.use(
   helmet({
     crossOriginOpenerPolicy: false, // disable overrides
-    crossOriginResourcePolicy: false,
+    crossOriginResourcePolicy: false,// disable overrides
   })
 );
 
