@@ -22,9 +22,11 @@ export const securityHeaders = [
         "https://www.dineqr.cfd",
         "https://dineqr-backend-3.onrender.com",
       ],
+      formAction: ["'self'", "https://dineqr.cfd"],
       frameAncestors: ["'none'"],
       objectSrc: ["'none'"],
       upgradeInsecureRequests: [],
+      baseUri: ["'self'"],
     },
   }),
 ];
