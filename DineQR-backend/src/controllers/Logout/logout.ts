@@ -17,11 +17,11 @@ logout_Router.post(
       const role = req.params.role?.toLowerCase().trim() || "";
 
       // ✅ This matches exactly how it was set during login
-      res.clearCookie(`${role}_Token`, {
+      res.cookie(`${role}_Token`, '', {
+        expires: new Date(0), // Set cookie expiration to past date
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        path: "/",
       });
 
       // Send success response
