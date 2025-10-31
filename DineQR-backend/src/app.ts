@@ -144,9 +144,9 @@ app.use(express.json()); // Parse JSON requests
 // CORS configuration
 const corsOptions: CorsOptions = {
   origin: [
-    "https://dineqr-frontend.netlify.app", // Netlify live site
-    "https://dineqr.cfd", // your custom domain
-    "https://www.dineqr.cfd", // your custom domain with www
+    "https://www.dineqr.cfd", // ✅ Your Cloudflare Pages custom domain
+    "https://dineqr.cfd", // (optional, if users can also access without www)
+    "https://dineqr-website.pages.dev", // ✅ Cloudflare preview domain (for testing)
   ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
