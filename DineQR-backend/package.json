@@ -36,7 +36,7 @@
   "dependencies": {
     "@sendgrid/mail": "^8.1.6",
     "@sendinblue/client": "^3.3.1",
-    "@upstash/redis": "^1.35.3",
+    "@upstash/redis": "^1.35.5",
     "aws-sdk": "^2.1692.0",
     "axios": "^1.12.2",
     "bcryptjs": "^3.0.2",
